@@ -1,4 +1,4 @@
-# The Founder's Marketer — v0 build (Claude Code handoff)
+# Nice Line Marketing — v0 build (Claude Code handoff)
 
 Put this file and `content.ts` in the repo, then start Claude Code with:
 
@@ -31,7 +31,7 @@ Reference for structure, not visuals: fletchpmm.com (problem → checklist → p
 - Next.js (App Router), TypeScript, deployed on Netlify. Match the conventions of the existing Next.js/Netlify sites in this account (Netlify plugin, `netlify.toml`, Node version) rather than inventing new ones.
 - No CMS, no database, no auth, no client-side storage of any kind.
 - One route `/`. Add `/diagnostic` only if `release.directDiagnosticRoute` is true (it's false in v0; the anchor is enough).
-- Custom domain `thefoundersmarketer.com` — configure in Netlify; DNS is being pointed separately.
+- Custom domain `niceline.marketing` — configure in Netlify; DNS is being pointed separately. (The old `thefoundersmarketer.com` redirects to it; see `netlify.toml`.)
 - Keep dependencies to Next, React and the font loader. No UI kit, no animation library, no analytics SDK.
 
 ## Page structure and behaviour

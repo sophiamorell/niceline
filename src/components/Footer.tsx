@@ -11,12 +11,16 @@ function MailIcon() {
 }
 
 /**
- * Footer: the logo, the email (when set) and the tagline,
- * the nav list (plus LinkedIn when set), and the CTA.
+ * Footer: a full-width drawn pink line along the top, then the logo, the
+ * email (when set) and the tagline, the nav list (plus LinkedIn when set),
+ * and the CTA.
  */
 export function Footer() {
   return (
     <footer className="footer">
+      <svg className="footer__line" viewBox="0 0 1000 24" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 16 C 250 10, 620 20, 900 12 S 976 8, 982 1" />
+      </svg>
       <div>
         <div className="footer__brand">
           <Logo variant="footer" />
@@ -51,7 +55,7 @@ export function Footer() {
           </li>
         )}
       </ul>
-      <div>
+      <div className="footer__cta-col">
         <a href={footer.cta.href} className="button button--primary footer__cta">
           {footer.cta.label}
         </a>

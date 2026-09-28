@@ -6,7 +6,8 @@ import { mutedClass } from "@/lib/copy";
 
 /**
  * 8 · FAQ: an accordion of the items whose `show` is true, all closed by
- * default, one open at a time, with a sea-glass +/−.
+ * default, one open at a time. Closed items show a sea-glass +; the open
+ * one shows a short pink dash.
  */
 export function Faq() {
   const items = faq.items.filter((item) => item.show);
@@ -14,6 +15,7 @@ export function Faq() {
 
   return (
     <section className="section" aria-labelledby="faq-heading">
+      <p className="kicker">{faq.kicker}</p>
       <h2 id="faq-heading" className="h2 faq__heading">
         {faq.heading}
       </h2>
@@ -34,9 +36,13 @@ export function Faq() {
                   onClick={() => setOpenIndex(open ? null : i)}
                 >
                   <span className={mutedClass(item.question, item.status)}>{item.question}</span>
-                  <span className="faq__sign" aria-hidden="true">
-                    {open ? "−" : "+"}
-                  </span>
+                  {open ? (
+                    <span className="faq__dash" aria-hidden="true" />
+                  ) : (
+                    <span className="faq__sign" aria-hidden="true">
+                      +
+                    </span>
+                  )}
                 </button>
               </h3>
               <p

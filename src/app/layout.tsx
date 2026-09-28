@@ -1,22 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Alfa_Slab_One, Lato, Libre_Franklin, Montserrat } from "next/font/google";
+import { Lato, Libre_Franklin, Montserrat } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content";
 
-/* The v4 design system's four faces (all Google Fonts, OFL), self-hosted by
+/* The design system's three faces (all Google Fonts, OFL), self-hosted by
    next/font and subset to latin:
-   FM Slab  = Alfa Slab One 400   (numerals and quote marks only)
-   FM Head  = Montserrat 600/700/800 (headings, nav, buttons, logo wordmark)
+   FM Head  = Montserrat 600/700/800 (headings, nav, buttons, logo wordmark, numerals, quote marks)
    FM Body  = Lato 400/700        (body copy)
    FM Label = Libre Franklin 600  (uppercase kickers and labels) */
-const slab = Alfa_Slab_One({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-  variable: "--font-slab",
-  fallback: ["Georgia", "serif"],
-});
-
 const head = Montserrat({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
@@ -61,7 +52,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${slab.variable} ${head.variable} ${body.variable} ${label.variable}`}>
+    <html lang="en" className={`${head.variable} ${body.variable} ${label.variable}`}>
       <body>{children}</body>
     </html>
   );
