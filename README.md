@@ -39,8 +39,9 @@ One-time setup in the Netlify dashboard:
    A third form, `contact`, holds the "Let's talk" messages from the
    pricing section.
 2. Open that form → **Notifications** → email notification to Sophie's address.
-3. **Domain management** → add `thefoundersmarketer.com` (DNS is pointed
-   separately).
+3. **Domain management** → make `niceline.marketing` the primary domain.
+   Keep `thefoundersmarketer.com` attached as a domain alias: `netlify.toml`
+   redirects it (and `www.`) to `niceline.marketing` with a 301.
 
 Submissions are also listed under Forms in Netlify. No environment variables
 are needed.

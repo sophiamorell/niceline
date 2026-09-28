@@ -84,12 +84,12 @@ export const release = {
 
 export const site = {
   name: "Nice Line Marketing",
-  domain: "thefoundersmarketer.com",
+  domain: "niceline.marketing",
   title: "Nice Line Marketing: marketing for B2B companies before their first marketing hire",
   description:
     "A fixed-scope, fixed-price program that builds the marketing function for B2B software companies with founder-led sales, in three steps, and leaves you running it.",
   tagline: "Fractional marketing leadership for B2B software companies.",
-  email: "sophie@thefoundersmarketer.com" as string | null,
+  email: "sophie@niceline.marketing" as string | null,
   linkedin: null as string | null, // TODO(sophie)
   bookingUrl: null as string | null, // TODO(sophie): Calendly or equivalent; used in thank-you state and results email only
   bookingLabel: "Book the free 45-minute walkthrough",
