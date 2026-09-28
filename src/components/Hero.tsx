@@ -1,10 +1,12 @@
 import { anchors, hero } from "@/content";
 import { DiagnosticCard } from "@/components/DiagnosticCard";
 import { HeckYes } from "@/components/HeckYes";
+import { Swash } from "@/components/Line";
 
 /**
  * 1 · Hero (#top): two columns. Left, the kicker, the opener line with its tooltip, the
- * highlighted headline, subhead, three coral-dot bullets and two buttons.
+ * headline with "sell more" drawn over in the pink swash, subhead, three pink-dash
+ * bullets and two buttons.
  * Right, the stacked question card that opens the diagnostic popup.
  */
 export function Hero() {
@@ -16,7 +18,10 @@ export function Hero() {
           <HeckYes text={hero.opener} tooltip={hero.tooltip} />
           <br />
           <span className="hero__line">{hero.headline}</span>
-          <span className="hl">{hero.headlineHighlight}</span>
+          <span>
+            <Swash>{hero.headlineHighlight}</Swash>
+            {hero.headlineAfter}
+          </span>
         </h1>
         <p className="hero__subhead">{hero.subhead}</p>
         <ul className="dots hero__bullets">

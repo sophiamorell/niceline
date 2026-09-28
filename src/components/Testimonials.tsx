@@ -3,7 +3,8 @@ import { anchors, proof } from "@/content";
 import { mutedClass } from "@/lib/copy";
 
 /**
- * 9 · Testimonials (#testimonials): three quote cards with an 84px circular
+ * 9 · Testimonials (#testimonials): three quote cards, each opening with a
+ * pink quote mark, with an 84px circular
  * photo slot (a swipeable gallery on phones, focusable so arrow keys scroll
  * it). Rendered while release.showProof is true; the quotes, names and
  * photos are the design's slots until real ones arrive.

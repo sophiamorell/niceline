@@ -123,7 +123,7 @@ export const nav = {
     { label: "What you get", href: `#${anchors.deliverables}` },
     { label: "About", href: `#${anchors.about}` },
   ],
-  cta: { label: "What to fix first", href: `#${anchors.diagnostic}` },
+  cta: { label: "See what to fix first", href: `#${anchors.diagnostic}` }, // matches every other CTA
 };
 
 /* ------------------------------------------------------------------ */
@@ -135,7 +135,8 @@ export const hero = {
   opener: "You built something people buy.", // the 40px regular line; hover shows the tooltip
   tooltip: "Nice line.", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
-  headlineHighlight: "sell more of it.", // the highlighter
+  headlineHighlight: "sell more", // drawn over with the pink swash
+  headlineAfter: " of it.",
   subhead: "Growth stalls when nobody owns marketing.",
   bullets: [
     "Most wins still come from referrals and who you know",
@@ -188,7 +189,7 @@ export const whyNow = {
       title: "Marketing",
       lead: "Marketing, who?",
       body: "Without marketing, you aren't building pipeline and ",
-      bodyHighlight: "growth is capped",
+      bodyHighlight: "growth is capped", // the drawn pink underline
       bodyAfter: ".",
       current: true,
     },
@@ -200,6 +201,7 @@ export const whyNow = {
 /* ------------------------------------------------------------------ */
 
 export const checklist = {
+  kicker: "Quick check",
   heading: "Does this sound like you?",
   subheading: "Check all that feel true to you.",
   items: [
@@ -386,7 +388,7 @@ export const pricing = {
   // Shown while release.showLocalsNote is true
   localsNote: {
     before: "Early-stage company in Durango, CO? Let's ",
-    emphasis: "definitely", // bold
+    emphasis: "definitely", // bold, with the drawn pink underline
     after: " talk.",
   },
   // Shown while release.showPricingTerms is true
@@ -438,10 +440,6 @@ export const about = {
     "Then I led product marketing at the acquirer and built the function from zero. So I've done it without a marketer, and I've built the team that came after.",
     "Why Nice Line? I live outside Durango and ski every chance I get. \"Nice line\" is what you say at the bottom when someone picked a smart way down. Picking the right line, in the right order, is most of this job too. (And a good line of copy never hurts.)",
   ],
-  testimonialSlot: {
-    label: "Testimonial slot",
-    quote: "A client quote goes here, ideally one that names a number and the decision it changed.", // TODO(sophie)
-  },
   status: "draft" as CopyStatus,
 };
 
@@ -450,6 +448,7 @@ export const about = {
 /* ------------------------------------------------------------------ */
 
 export const faq = {
+  kicker: "Questions",
   heading: "Maybe you're wondering ...",
   items: [
     {

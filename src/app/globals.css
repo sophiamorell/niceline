@@ -1,7 +1,14 @@
 /* Nice Line Marketing: styles.
    Visual system: the v4 design handoff (Sea Glass), with the Nice Line mark. Each rule here
    reproduces an inline style from that reference. Copy comes from content.ts
-   and is never restated here. */
+   and is never restated here.
+
+   The line motif: the logo's hand-drawn pink line is the site's one playful
+   element. Pink only ever appears as a drawn stroke (round ends, long strokes
+   finishing in a small upward flick), never as a flat fill; the 3+ verdict
+   bar and the tooltip are the exceptions. Outlines stay 2px ink. SVG lines use
+   preserveAspectRatio="none" with vector-effect: non-scaling-stroke so they
+   stretch with the layout while the stroke weight stays fixed. */
 
 :root {
   /* Colors: Sea Glass, with two site overrides: the main buttons and the
@@ -28,8 +35,12 @@
   --rule: rgba(29, 42, 41, 0.14);
   --track: rgba(29, 42, 41, 0.12); /* empty progress segments */
 
+  /* The hero quiz card's stacked sheets, as a shadow */
+  --shadow-stack:
+    7px 7px 0 -2px var(--sunflower-tint), 7px 7px 0 0 var(--ink), 14px 14px 0 -2px var(--mist),
+    14px 14px 0 0 var(--ink);
+
   /* Type: next/font supplies the self-hosted families as variables */
-  --fm-slab: var(--font-slab), Georgia, serif;
   --fm-head: var(--font-head), system-ui, sans-serif;
   --fm-body: var(--font-body), system-ui, sans-serif;
   --fm-label: var(--font-label), system-ui, sans-serif;
@@ -167,6 +178,23 @@ img {
   text-transform: uppercase;
   color: var(--primary);
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* A short pink dash before every section label */
+.kicker::before {
+  content: "";
+  flex: none;
+  width: 22px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--pink);
+}
+
+.kicker--onpine {
+  color: var(--mist);
 }
 
 .label {
@@ -205,18 +233,41 @@ img {
   color: var(--muted);
 }
 
-/* The highlighter */
-.hl {
-  display: inline;
-  background: linear-gradient(180deg, transparent 28%, var(--pink-light) 28%, var(--pink-light) 76%, transparent 76%);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  padding: 0 0.1em;
+/* The swash: the pink line drawn behind a word or two, over the lower
+   part of the letters. One per screen. */
+.swash {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  white-space: nowrap;
 }
 
-.hl--wide {
-  background: linear-gradient(transparent 22%, var(--pink-light) 22%, var(--pink-light) 82%, transparent 82%);
-  padding: 0 0.12em;
+.swash svg {
+  position: absolute;
+  z-index: -1;
+  left: -0.06em;
+  bottom: 0.1em;
+  width: calc(100% + 0.18em);
+  height: 0.36em;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.swash path {
+  fill: none;
+  stroke: var(--pink);
+  stroke-width: 0.17em;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* A drawn pink underline, for a phrase inside running text */
+.underline {
+  background: no-repeat 0 100% / 100% 0.32em
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5 C 30 2.5, 70 2.5, 99 4.5' fill='none' stroke='%23ec6f88' stroke-width='2.5' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  padding-bottom: 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 /* A check inside a filled circle, drawn once. */
@@ -341,6 +392,28 @@ img {
   color: var(--sea-ink);
 }
 
+.nav__links a:not(.nav__cta) {
+  position: relative;
+  padding: 6px 0;
+  white-space: nowrap;
+}
+
+/* The section in view: ink text over a small pink swash */
+.nav__links a[aria-current="location"] {
+  color: var(--ink);
+}
+
+.nav__links a[aria-current="location"]::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  bottom: -4px;
+  height: 9px;
+  background: no-repeat center / 100% 100%
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M3 6 C 30 3, 70 3, 92 5 S 98 4, 99 1.5' fill='none' stroke='%23ec6f88' stroke-width='3' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
 .nav__links .nav__cta {
   background: var(--sunflower);
   color: var(--ink);
@@ -402,6 +475,10 @@ img {
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: clamp(32px, 5vw, 72px);
   align-items: start;
+}
+
+.hero__kicker {
+  margin-bottom: 22px;
 }
 
 .hero__headline {
@@ -491,14 +568,15 @@ img {
   line-height: 1.4;
 }
 
+/* Short pink dashes, sitting on the x-height */
 .dots li::before {
   content: "";
   flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+  width: 16px;
+  height: 4px;
+  border-radius: 4px;
   background: var(--pink);
-  transform: translateY(-3px);
+  transform: translateY(-5px);
 }
 
 .hero__bullets {
@@ -719,15 +797,46 @@ textarea.input {
   position: relative;
 }
 
+/* Desktop draws one segment per step (below); the rail is the phone version. */
 .timeline__rail {
+  display: none;
+}
+
+/* A step's segment runs from its dot to the next step's dot, across the gap. */
+.step__seg {
   position: absolute;
-  left: 13px;
-  right: 0;
-  top: 13px;
-  height: 2px;
-  background:
-    linear-gradient(90deg, var(--primary) 0%, var(--primary) 66%, transparent 66%),
-    repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 16px);
+  left: 14px;
+  top: 4px;
+  width: calc(100% + clamp(20px, 3vw, 40px));
+  height: 20px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.step__seg--last {
+  width: calc(100% - 14px);
+}
+
+.step__seg path {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.step__seg--done path {
+  stroke: var(--primary);
+  stroke-width: 4px;
+}
+
+.step__seg--draw path {
+  stroke: var(--pink);
+  stroke-width: 6px;
+}
+
+.step__seg--future path {
+  stroke: var(--pink);
+  stroke-width: 5px;
+  stroke-dasharray: 0.5px 12px;
 }
 
 .timeline__steps {
@@ -740,7 +849,13 @@ textarea.input {
   gap: clamp(20px, 3vw, 40px);
 }
 
+.step {
+  position: relative;
+}
+
 .step__marker {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -758,9 +873,20 @@ textarea.input {
 }
 
 .step__dot--here {
-  background: var(--ground);
-  border: 3px solid var(--pink);
-  box-shadow: 0 0 0 6px var(--pink-tint);
+  background: var(--surface);
+  border: 2.5px solid var(--ink);
+}
+
+.step__dot--here::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--pink);
+}
+
+.step__marker .badge {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
 }
 
 .badge {
@@ -803,23 +929,27 @@ textarea.input {
 }
 
 /* Phones and narrow tablets: a compact vertical timeline. The rail runs
-   down the left through the dots (solid for the built steps, dashed for
-   what's next); each step's label, badge, title and text sit beside its
+   down the left through the dots (sea glass for the built steps, then the
+   pink line, then pink dots for what's next); each step's label, badge, title and text sit beside its
    dot, so the whole section fits on one screen. */
 @media (max-width: 900px) {
   .why__heading {
     margin-bottom: 26px;
   }
+  .step__seg {
+    display: none;
+  }
   .timeline__rail {
-    left: 13px;
-    right: auto;
+    display: block;
+    position: absolute;
+    left: 12.5px;
     top: 14px;
     bottom: 0;
-    width: 2px;
-    height: auto;
+    width: 3px;
+    border-radius: 3px;
     background:
-      linear-gradient(180deg, var(--primary) 0%, var(--primary) 62%, transparent 62%),
-      repeating-linear-gradient(180deg, var(--ink) 0 6px, transparent 6px 12px);
+      linear-gradient(180deg, var(--primary) 0%, var(--primary) 40%, var(--pink) 40%, var(--pink) 62%, transparent 62%),
+      repeating-linear-gradient(180deg, var(--pink) 0 3px, transparent 3px 12px);
   }
   .timeline__steps {
     grid-template-columns: minmax(0, 1fr);
@@ -905,8 +1035,20 @@ textarea.input {
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px 32px;
+}
+
+@media (max-width: 1000px) {
+  .checklist__items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .checklist__items {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .checklist__item {
@@ -926,6 +1068,7 @@ textarea.input {
 }
 
 .checklist__box {
+  position: relative;
   flex: none;
   width: 24px;
   height: 24px;
@@ -937,8 +1080,27 @@ textarea.input {
   transition: background-color 160ms var(--ease);
 }
 
+/* Checked: the box fills pale and a pink pen tick is drawn over it, past the edge. */
 .checklist__item[aria-pressed="true"] .checklist__box {
-  background: var(--pink);
+  background: var(--on-primary);
+  border-color: var(--on-primary);
+}
+
+.checklist__tick {
+  position: absolute;
+  left: -2px;
+  top: -11px;
+  width: 32px;
+  height: 28px;
+  overflow: visible;
+}
+
+.checklist__tick path {
+  fill: none;
+  stroke: var(--pink);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .checklist__text {
@@ -1006,25 +1168,63 @@ textarea.input {
   margin-bottom: 40px;
 }
 
-/* Step lengths in weeks, as pills: 4, then about 6 and 6. */
-.how__bar {
+/* The phase line: same grid and gap as the step cards, so each node sits
+   over its card. The line fades sea glass, mid, mist, and ends in a pink flick. */
+.phaseline {
   display: grid;
-  gap: 6px;
-  margin-bottom: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  height: 24px;
+  margin-bottom: 14px;
 }
 
-.how__bar span {
-  height: 10px;
+.phaseline__seg {
+  position: relative;
+}
+
+.phaseline__seg svg {
+  position: absolute;
+  left: 12px;
+  top: 2px;
+  width: calc(100% + 22px);
+  height: 20px;
+  overflow: visible;
+}
+
+.phaseline__seg:last-child svg {
+  width: calc(100% - 12px);
+}
+
+.phaseline__seg path {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 7px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.phaseline__seg:nth-child(2) path {
+  stroke: var(--sea-mid);
+}
+
+.phaseline__seg:nth-child(3) path {
+  stroke: var(--mist);
+}
+
+.phaseline__seg path.phaseline__flick {
+  stroke: var(--pink);
+  stroke-width: 5px;
+}
+
+.phaseline__node {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 20px;
+  height: 20px;
   border-radius: 999px;
-  background: var(--primary);
-}
-
-.how__bar span:nth-child(2) {
-  background: var(--sea-mid);
-}
-
-.how__bar span:nth-child(3) {
-  background: var(--mist);
+  background: var(--surface);
+  border: 2.5px solid var(--ink);
 }
 
 .steps {
@@ -1048,7 +1248,7 @@ textarea.input {
 
 .stepcard--featured {
   background: var(--surface);
-  box-shadow: 6px 6px 0 var(--ink);
+  box-shadow: var(--shadow-stack);
 }
 
 .stepcard__meta {
@@ -1131,11 +1331,11 @@ textarea.input {
 .stepcard__list li::before {
   content: "";
   flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+  width: 13px;
+  height: 3px;
+  border-radius: 3px;
   background: var(--primary);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 .stepcard__time {
@@ -1250,12 +1450,9 @@ textarea.input {
   max-width: 72ch;
 }
 
-/* The Durango note: bigger, ink, right-aligned, with a pink rule on its right. */
+/* The Durango note: bigger, ink, with "definitely" underlined in pink. */
 .how__locals {
-  margin-top: 22px;
-  padding-right: 14px;
-  border-right: 4px solid var(--pink);
-  text-align: right;
+  margin-top: 30px;
   font-family: var(--fm-head);
   font-weight: 600;
   font-size: 1.125rem;
@@ -1268,7 +1465,7 @@ textarea.input {
 }
 
 @media (max-width: 900px) {
-  .how__bar {
+  .phaseline {
     display: none;
   }
   .steps {
@@ -1417,6 +1614,11 @@ textarea.input {
   overflow: hidden;
 }
 
+/* No screenshot yet: a shorter slot until one arrives. */
+.slot--empty {
+  aspect-ratio: 2 / 1;
+}
+
 /* The numeral in its own column, so the title, pill and body share one edge. */
 .tool__body {
   display: grid;
@@ -1426,9 +1628,23 @@ textarea.input {
 }
 
 .tool__numeral {
-  font-family: var(--fm-slab);
+  position: relative;
+  font-family: var(--fm-head);
+  font-weight: 800;
   font-size: 1.125rem;
+  letter-spacing: -0.01em;
   color: var(--primary);
+}
+
+.tool__numeral::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--pink);
 }
 
 .tool h3 {
@@ -1443,7 +1659,7 @@ textarea.input {
   color: var(--ink-2);
 }
 
-/* "Built in Step 2", as a mist pill */
+/* "Built in Step 2", as an outlined pill */
 .tool__step {
   display: inline-block;
   font-family: var(--fm-label);
@@ -1451,8 +1667,9 @@ textarea.input {
   font-size: 10.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sea-ink);
-  background: var(--mist);
+  color: var(--ink);
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--ink);
   border-radius: 999px;
   padding: 5px 12px;
   margin-bottom: 10px;
@@ -1527,6 +1744,29 @@ textarea.input {
   opacity: 0.6;
 }
 
+/* The pink line traced around the right of the arch, trailing off left */
+.portrait-wrap {
+  position: relative;
+}
+
+.portrait-wrap__line {
+  position: absolute;
+  left: -5%;
+  top: -4%;
+  width: 110%;
+  height: 108%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.portrait-wrap__line path {
+  fill: none;
+  stroke: var(--pink);
+  stroke-width: 5px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
 .about__heading {
   margin-bottom: 22px;
 }
@@ -1539,34 +1779,14 @@ textarea.input {
 }
 
 .about__text p.about__para:last-of-type {
-  margin-bottom: 28px;
-}
-
-.quote-slot {
-  background: var(--mist);
-  border-radius: 20px;
-  padding: 26px 30px;
-}
-
-.quote-slot .label {
-  display: block;
-  color: var(--sea-ink);
-  margin-bottom: 14px;
-}
-
-.quote-slot p {
-  font-family: var(--fm-head);
-  font-weight: 700;
-  font-size: 1.125rem;
-  line-height: 1.45;
-  color: var(--ink);
+  margin-bottom: 0;
 }
 
 @media (max-width: 900px) {
   .about {
     grid-template-columns: minmax(0, 1fr);
   }
-  .portrait {
+  .portrait-wrap {
     width: 100%;
     max-width: 300px;
     justify-self: center;
@@ -1618,6 +1838,15 @@ textarea.input {
   color: var(--primary);
 }
 
+.faq__dash {
+  flex: none;
+  width: 16px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--pink);
+  margin-right: 1px;
+}
+
 .faq__answer {
   font-size: 1.0625rem;
   line-height: 1.6;
@@ -1663,11 +1892,12 @@ textarea.input {
 }
 
 .quote__mark {
-  font-family: var(--fm-slab);
-  font-size: 3rem;
-  line-height: 0.6;
+  font-family: var(--fm-head);
+  font-weight: 800;
+  font-size: 3.6rem;
+  line-height: 0.8;
   color: var(--pink);
-  height: 22px;
+  height: 26px;
 }
 
 .quote blockquote {
@@ -1744,9 +1974,13 @@ textarea.input {
 
 /* 10 · The diagnostic ------------------------------------------------- */
 
+/* Bordered and stacked: a panel you can act on. The margin keeps the stack in view. */
 .diag {
   background: var(--mist);
   color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-stack);
+  margin-right: 14px;
   border-radius: 28px;
   padding: clamp(32px, 5vw, 60px) clamp(24px, 4vw, 56px);
   display: grid;
@@ -2158,13 +2392,38 @@ textarea.input {
 /* Footer -------------------------------------------------------------- */
 
 .footer {
-  padding: clamp(48px, 6vw, 72px) var(--page-x) clamp(40px, 5vw, 56px);
+  position: relative;
+  padding: clamp(56px, 7vw, 80px) var(--page-x) clamp(40px, 5vw, 56px);
   margin-top: clamp(48px, 6vw, 72px);
-  border-top: 1px solid var(--rule);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 28px;
   align-items: start;
+}
+
+/* The footer's one big swash, full width along the top */
+.footer__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.footer__line path {
+  fill: none;
+  stroke: var(--pink);
+  stroke-width: 4px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Nudged down so the links and CTA line up with the logo */
+.footer__links,
+.footer__cta-col {
+  padding-top: 6px;
 }
 
 .footer__brand {

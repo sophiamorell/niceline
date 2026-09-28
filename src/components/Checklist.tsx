@@ -6,7 +6,7 @@ import { fill } from "@/lib/copy";
 
 /**
  * 3 · Does this sound like you? A sea-glass band of six toggle checkboxes;
- * checked boxes fill pink. The verdict bar below changes with the count:
+ * a checked box fills pale and gets a pink pen tick drawn over it. The verdict bar below changes with the count:
  * mist at zero, sunflower tint at one or two, sunflower at three or more. State lives in React.
  */
 export function Checklist() {
@@ -36,6 +36,7 @@ export function Checklist() {
     <section className="section" aria-labelledby="checklist-heading">
       <div className="checklist">
         <div className="checklist__top">
+          <p className="kicker kicker--onpine">{checklist.kicker}</p>
           <h2 id="checklist-heading" className="checklist__heading">
             {checklist.heading}
           </h2>
@@ -46,8 +47,8 @@ export function Checklist() {
                 <button type="button" className="checklist__item" aria-pressed={on[i]} onClick={() => toggle(i)}>
                   <span className="checklist__box" aria-hidden="true">
                     {on[i] && (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f6faf9" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 6 9 17l-5-5" />
+                      <svg className="checklist__tick" viewBox="0 0 30 26">
+                        <path d="M4 15 C 8 17, 10 21, 12 23 C 16 14, 22 6, 30 1" />
                       </svg>
                     )}
                   </span>

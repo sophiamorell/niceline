@@ -40,8 +40,9 @@ function datedIntro(): string {
 
 /**
  * 4 · How it works (#how), option 1a: steps and pricing in one section.
- * Kicker, heading and a dated lead (today, and today plus three months); a
- * duration bar sized by each step's weeks; three step cards with every
+ * Kicker, heading and a dated lead (today, and today plus four months); the
+ * phase line (a node over each card, the line fading from sea glass to mist
+ * and ending in a pink flick); three step cards with every
  * deliverable visible (Step 1 featured, with the badge; on phones each card
  * collapses to its step, outcome and price, with a +/− to open it); then the bundle row
  * (#pricing): the total, computed from the step prices and shown only when
@@ -77,10 +78,19 @@ export function HowItWorks() {
       </h2>
       <DatedIntro />
 
-      <div className="how__bar" aria-hidden="true" style={{ gridTemplateColumns: phases.map((p) => `${p.weeks}fr`).join(" ") }}>
-        {phases.map((phase) => (
-          <span key={phase.id} />
-        ))}
+      <div className="phaseline" aria-hidden="true">
+        {phases.map((phase, i) => {
+          const last = i === phases.length - 1;
+          return (
+            <span key={phase.id} className="phaseline__seg">
+              <svg viewBox="0 0 100 20" preserveAspectRatio="none">
+                <path d={last ? "M0 10 C 30 8, 60 12, 90 9" : "M0 10 C 30 8, 70 12, 100 10"} />
+                {last && <path className="phaseline__flick" d="M90 9 C 96 8, 99 5, 100 1" />}
+              </svg>
+              <i className="phaseline__node" />
+            </span>
+          );
+        })}
       </div>
 
       <ol className="steps">
@@ -162,7 +172,7 @@ export function HowItWorks() {
       {release.showLocalsNote && (
         <p className="how__locals">
           {pricing.localsNote.before}
-          <strong>{pricing.localsNote.emphasis}</strong>
+          <strong className="underline">{pricing.localsNote.emphasis}</strong>
           {pricing.localsNote.after}
         </p>
       )}

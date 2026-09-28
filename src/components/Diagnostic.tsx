@@ -4,7 +4,8 @@ import { anchors, diagnostic } from "@/content";
 import { openDiagnostic } from "@/lib/diagnostic-modal";
 
 /**
- * 10 · The diagnostic (#diagnostic): the mist block. Left, the heading,
+ * 10 · The diagnostic (#diagnostic): the mist block, outlined and stacked
+ * like the hero card because you can act on it. Left, the heading,
  * intro and the yellow "See what to fix first" button, which opens the
  * diagnostic popup. Right, the "What comes back" card.
  */
