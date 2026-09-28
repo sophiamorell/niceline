@@ -1,9 +1,9 @@
 /**
- * The Founder's Marketer: site content
+ * Nice Line Marketing: site content
  *
  * Single source of truth for every string, price, placeholder and diagnostic
  * rule on the page. Components read from here and never carry copy of their own.
- * Copy and structure: "Founders Marketer Site v2" design handoff (Claude Design),
+ * Copy and structure: the site v2 design handoff (Claude Design),
  * with the standing rules from site-edits.md applied to it (American English,
  * no em or en dashes; ranges use a plain hyphen).
  *
@@ -83,9 +83,9 @@ export const release = {
 /* ------------------------------------------------------------------ */
 
 export const site = {
-  name: "The Founder's Marketer",
+  name: "Nice Line Marketing",
   domain: "thefoundersmarketer.com",
-  title: "The Founder's Marketer: marketing for B2B companies before their first marketing hire",
+  title: "Nice Line Marketing: marketing for B2B companies before their first marketing hire",
   description:
     "A fixed-scope, fixed-price program that builds the marketing function for B2B software companies with founder-led sales, in three steps, and leaves you running it.",
   tagline: "Fractional marketing leadership for B2B software companies.",
@@ -106,13 +106,14 @@ export const anchors = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Logo (final: v4 option 3e, 3f in the footer) and nav               */
+/*  Logo (Nice Line Marketing: S-curve mark and wordmark) and nav      */
 /* ------------------------------------------------------------------ */
 
 export const logo = {
-  lead: "The Founder’s", // curly apostrophe, per the logo spec
-  highlight: "Marketer",
-  ariaLabel: "The Founder’s Marketer, home",
+  lead: "Nice Line",
+  highlight: "Marketing",
+  ariaLabel: "Nice Line Marketing, home",
+  mark: "/images/nice-line-mark.png", // the S-curve mark, 512px, transparent
 };
 
 export const nav = {
@@ -427,7 +428,7 @@ export const about = {
   kicker: "Who you'll work with",
   heading: "The founder who had to do it without a marketer.",
   photo: "/images/sophie.jpg", // renders as the arch placeholder if the file is missing
-  photoAlt: "Sophie, founder of The Founder’s Marketer",
+  photoAlt: "Sophie, founder of Nice Line Marketing",
   photoPlaceholder: "Portrait goes here",
   paragraphs: [
     "Co-founded and ran an enterprise mentoring software company for eleven years, through acquisition. Wrote the positioning, built the decks, ran the launches, closed the deals, the whole marketing job before there was a title.",

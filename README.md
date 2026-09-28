@@ -1,4 +1,4 @@
-# The Founder's Marketer — website
+# Nice Line Marketing — website
 
 One-page marketing site for the practice. Next.js (App Router), TypeScript,
 deployed on Netlify. Built to `BUILD.md`; every word on the page comes from

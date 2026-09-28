@@ -1,5 +1,5 @@
 import { footer, nav, site } from "@/content";
-import { Nameplate } from "@/components/Logo";
+import { Logo } from "@/components/Logo";
 
 function MailIcon() {
   return (
@@ -11,7 +11,7 @@ function MailIcon() {
 }
 
 /**
- * Footer: the nameplate logo, the email (when set) and the tagline,
+ * Footer: the logo, the email (when set) and the tagline,
  * the nav list (plus LinkedIn when set), and the CTA.
  */
 export function Footer() {
@@ -19,7 +19,7 @@ export function Footer() {
     <footer className="footer">
       <div>
         <div className="footer__brand">
-          <Nameplate />
+          <Logo variant="footer" />
         </div>
         {site.email !== null && (
           <a href={`mailto:${site.email}`} className="footer__email">
