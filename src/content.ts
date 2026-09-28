@@ -136,11 +136,11 @@ export const hero = {
   tooltip: "Nice line.", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
   headlineHighlight: "sell more of it.", // the highlighter
-  subhead: "You're winning deals, but how's your pipeline?",
+  subhead: "Growth is happening, but whose job is marketing?",
   bullets: [
-    "You say yes to every deal (even bad ones)",
+    "Most wins still come from referrals and who you know",
     "Your pitch, your deck and your website say different things",
-    "The CRM is a contact list, not a pipeline",
+    "You know you'll need a marketer, but not who or when",
   ],
   primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
   secondaryCta: { label: "Steps & pricing", href: `#${anchors.howItWorks}` },
@@ -208,7 +208,7 @@ export const checklist = {
     "Most of your wins come from referrals, and referrals are unpredictable",
     "Ask your team who the ideal customer is, and you'd get a different answer from each person",
     "Your website says one thing, your sales deck says another ... and reps say all sorts of sh*t",
-    "Marketing is on everyone's list and nobody's job",
+    "Nobody could tell you what last quarter's marketing actually produced",
   ],
   // The verdict bar under the checks. {n} = checked count, {total} = items.length
   verdicts: {
