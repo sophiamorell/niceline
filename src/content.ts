@@ -131,7 +131,7 @@ export const nav = {
 /* ------------------------------------------------------------------ */
 
 export const hero = {
-  kicker: "Fractional marketing for B2B companies with product-market fit", // small line above the opener; the name no longer says who this is for
+  kicker: "Fractional marketing leadership for B2B companies", // small line above the opener; the name no longer says who this is for
   opener: "You built something people buy.", // the 40px regular line; hover shows the tooltip
   tooltip: "Nice line.", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
