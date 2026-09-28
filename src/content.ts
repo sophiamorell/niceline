@@ -87,8 +87,9 @@ export const site = {
   domain: "niceline.marketing",
   title: "Nice Line Marketing: marketing for B2B companies before their first marketing hire",
   description:
-    "A fixed-scope, fixed-price program that builds the marketing function for B2B software companies with founder-led sales, in three steps, and leaves you running it.",
-  tagline: "Fractional marketing leadership for B2B software companies.",
+    "Fractional marketing for B2B companies with product-market fit and no marketing team. A fixed-price program in three steps, run by Sophie Williams in Durango, Colorado.",
+  tagline: "People buy what you built. I'll help you sell more of it.",
+  location: "Durango, Colorado",
   email: "sophie@niceline.marketing" as string | null,
   linkedin: null as string | null, // TODO(sophie)
   bookingUrl: null as string | null, // TODO(sophie): Calendly or equivalent; used in thank-you state and results email only
@@ -130,8 +131,9 @@ export const nav = {
 /* ------------------------------------------------------------------ */
 
 export const hero = {
+  kicker: "Fractional marketing for B2B companies with product-market fit", // small line above the opener; the name no longer says who this is for
   opener: "You built something people buy.", // the 40px regular line; hover shows the tooltip
-  tooltip: "heck yes",
+  tooltip: "Nice line.", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
   headlineHighlight: "sell more of it.", // the highlighter
   subhead: "You're winning deals, but how's your pipeline?",
@@ -168,8 +170,8 @@ export const whyNow = {
       numeral: "01",
       status: "Built",
       title: "Product",
-      lead: "You built something people buy.",
-      body: "Nice work, you found product-market fit (the hardest part).",
+      lead: "You found product-market fit.",
+      body: "Nice work. That's the hardest part.",
       current: false,
     },
     {
@@ -210,10 +212,10 @@ export const checklist = {
   ],
   // The verdict bar under the checks. {n} = checked count, {total} = items.length
   verdicts: {
-    none: "Nothing checked yet. Most founders check three.",
+    none: "Nothing checked yet. Most teams check three.",
     one: "{n} of {total}. Definitely worth a free check.",
     two: "{n} of {total}. Yeah ... probably want to see what to fix first.",
-    threeOrMore: "{n} of {total}. This is your sign to click the button",
+    threeOrMore: "{n} of {total}. This is your sign to click the button.",
   },
   threshold: 3,
   ctaLabel: "See what to fix first",
@@ -225,13 +227,13 @@ export const checklist = {
 /* ------------------------------------------------------------------ */
 
 export const howItWorks = {
-  kicker: "How it works",
+  kicker: "The line",
   heading: "A marketing function in about four months.",
-  intro: "Three steps, starting with wins.", // shown until the dated line below renders in the browser
+  intro: "Three steps, in the right order, starting with wins.", // shown until the dated line below renders in the browser
   // {today} and {target} are filled in the visitor's browser: today, and today plus targetMonths
   datedIntro:
-    "Today is {today} ... wouldn't it be great to have a marketing function in place by {target}? Start with these 3 steps, starting with wins.",
-  targetMonths: 3,
+    "Today is {today} ... wouldn't it be great to have a marketing function in place by {target}? Three steps, in the right order, starting with wins.",
+  targetMonths: 4, // matches the "about four months" heading (the steps run 12-20 weeks)
   youKeepLabel: "You keep",
   // Phones: each step card collapses; the +/− button's accessible names
   toggleShow: "Show what {step} includes",
@@ -260,7 +262,7 @@ export const phases: Phase[] = [
   {
     id: 2,
     tag: "Step 2",
-    duration: "4–8 weeks",
+    duration: "4-8 weeks",
     weeks: 6,
     question: "Who do we sell to, and how?",
     outcome: "A sales process and CRM your team actually runs on.",
@@ -277,7 +279,7 @@ export const phases: Phase[] = [
   {
     id: 3,
     tag: "Step 3",
-    duration: "4–8 weeks",
+    duration: "4-8 weeks",
     weeks: 6,
     question: "How do we reach them?",
     outcome: "A marketing function you own, ready for your first hire.",
@@ -416,6 +418,7 @@ export const contact = {
     kicker: "Sent",
     heading: "Thanks. I'll be in touch.",
     sub: "Expect a reply within two business days.",
+    signOff: "Tips up, Sophie",
     closeLabel: "Close",
   },
 };
@@ -426,17 +429,18 @@ export const contact = {
 
 export const about = {
   kicker: "Who you'll work with",
-  heading: "The founder who had to do it without a marketer.",
+  heading: "Hi, I'm Sophie.",
   photo: "/images/sophie.jpg", // renders as the arch placeholder if the file is missing
-  photoAlt: "Sophie, founder of Nice Line Marketing",
+  photoAlt: "Sophie Williams, Nice Line Marketing",
   photoPlaceholder: "Portrait goes here",
   paragraphs: [
-    "Co-founded and ran an enterprise mentoring software company for eleven years, through acquisition. Wrote the positioning, built the decks, ran the launches, closed the deals, the whole marketing job before there was a title.",
-    "Then Director of Product Marketing at the acquirer, building the function from zero. This practice is both halves of that: the founder who had to do it without a marketer, and the marketer who built it after.",
+    "I co-founded and ran an enterprise mentoring software company for eleven years, through acquisition. I wrote the positioning, built the decks, ran the launches and closed the deals: the whole marketing job before anyone had the title.",
+    "Then I led product marketing at the acquirer and built the function from zero. So I've done it without a marketer, and I've built the team that came after.",
+    "Why Nice Line? I live outside Durango and ski every chance I get. \"Nice line\" is what you say at the bottom when someone picked a smart way down. Picking the right line, in the right order, is most of this job too. (And a good line of copy never hurts.)",
   ],
   testimonialSlot: {
     label: "Testimonial slot",
-    quote: "A founder quote goes here, ideally one that names a number and the decision it changed.", // TODO(sophie)
+    quote: "A client quote goes here, ideally one that names a number and the decision it changed.", // TODO(sophie)
   },
   status: "draft" as CopyStatus,
 };
@@ -451,14 +455,14 @@ export const faq = {
     {
       question: "What do you need from us before Step 1?",
       answer:
-        "A CRM export, access to whatever analytics you have, and two hours of your calendar in week one. If the data is a mess, that is itself a finding. We work with what exists.",
+        "A CRM export, access to whatever analytics you have, and two hours of your calendar in week one. If the data is a mess, that is itself a finding. I work with what exists.",
       status: "final",
       show: true,
     },
     {
       question: "We don't have a CRM, or ours is a spreadsheet.",
       answer:
-        "That is common and it is fine. Step 1 works from the spreadsheet; Step 2 is where we decide whether a real CRM is worth standing up, and stand it up if it is.",
+        "That is common and it is fine. Step 1 works from the spreadsheet; Step 2 is where we decide whether a real CRM is worth standing up, and I stand it up if it is.",
       status: "final",
       show: true,
     },
@@ -479,7 +483,7 @@ export const faq = {
     {
       question: "Will you talk to our customers?",
       answer:
-        "Yes, in Step 2: four to six conversations, scheduled by us, with a written synthesis. It is the fastest way to find out whether your positioning survives contact with buyers.",
+        "Yes, in Step 2: four to six conversations, scheduled by me, with a written synthesis. It is the fastest way to find out whether your positioning survives contact with buyers.",
       status: "final",
       show: true,
     },
@@ -518,8 +522,8 @@ export const faq = {
 /* ------------------------------------------------------------------ */
 
 export const proof = {
-  kicker: "From our customers",
-  heading: "Our Founders & CEOs",
+  kicker: "From clients",
+  heading: "What clients say",
   // TODO(sophie): real quotes, names and photos. These are the design's slots.
   testimonials: [
     {
@@ -596,7 +600,7 @@ export const diagnostic = {
       kind: "single",
       options: [
         { id: "nobody", label: "Nobody", score: 0 },
-        { id: "founder", label: "The founder", score: 0 },
+        { id: "founder", label: "The founder or CEO", score: 0 },
         { id: "generalist", label: "A generalist", score: 1 },
         { id: "marketer", label: "A marketer", score: 2 },
       ],
@@ -611,7 +615,7 @@ export const diagnostic = {
       options: [
         { id: "unknown", label: "Don't know", score: 0 },
         { id: "referrals", label: "Referrals", score: 1 },
-        { id: "network", label: "Founder's network", score: 1 },
+        { id: "network", label: "Leadership's network", score: 1 },
         { id: "outbound", label: "Outbound", score: 2 },
         { id: "inbound", label: "Inbound", score: 2 },
       ],
@@ -637,7 +641,7 @@ export const diagnostic = {
       prompt: "Is your ICP written down somewhere sales uses it?",
       kind: "single",
       options: [
-        { id: "head", label: "In the founder's head", score: 0 },
+        { id: "head", label: "In one person's head", score: 0 },
         { id: "rough", label: "A rough idea", score: 1 },
         { id: "yes", label: "Yes", score: 2 },
       ],
@@ -748,6 +752,7 @@ export const diagnostic = {
       "The free-fix list in full",
       "The verdict",
       "One link: book the free 45-minute walkthrough",
+      "Signed off: Tips up, Sophie",
     ],
     excludes: ["Pricing recap", "Attachments", "Anything else"],
     responseTime: "within two business days",
@@ -759,7 +764,7 @@ export const diagnostic = {
 /* ------------------------------------------------------------------ */
 
 export const footer = {
-  taglineLines: [site.tagline],
+  taglineLines: [site.tagline, site.location],
   cta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
 };
 

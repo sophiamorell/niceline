@@ -5,7 +5,7 @@ import { publicFileExists } from "@/lib/public-file";
 
 /**
  * 7 · About (#about): the arch-topped portrait (a captioned placeholder
- * until the photo lands in public/), the kicker, heading, two paragraphs
+ * until the photo lands in public/), the kicker, heading, the paragraphs
  * and the testimonial slot.
  */
 export function About() {

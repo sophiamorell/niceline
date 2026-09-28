@@ -122,6 +122,7 @@ export function ContactModal() {
               {contact.sent.heading}
             </h3>
             <p className="cdialog__sub">{contact.sent.sub}</p>
+            <p className="cdialog__sub cdialog__signoff">{contact.sent.signOff}</p>
             <button type="button" className="button button--outline button--small" onClick={close}>
               {contact.sent.closeLabel}
             </button>

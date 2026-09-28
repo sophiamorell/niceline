@@ -3,7 +3,7 @@ import { DiagnosticCard } from "@/components/DiagnosticCard";
 import { HeckYes } from "@/components/HeckYes";
 
 /**
- * 1 · Hero (#top): two columns. Left, the opener line with its tooltip, the
+ * 1 · Hero (#top): two columns. Left, the kicker, the opener line with its tooltip, the
  * highlighted headline, subhead, three coral-dot bullets and two buttons.
  * Right, the stacked question card that opens the diagnostic popup.
  */
@@ -11,6 +11,7 @@ export function Hero() {
   return (
     <section id={anchors.top} className="section hero" aria-labelledby="hero-heading">
       <div>
+        <p className="kicker hero__kicker">{hero.kicker}</p>
         <h1 id="hero-heading" className="hero__headline">
           <HeckYes text={hero.opener} tooltip={hero.tooltip} />
           <br />
