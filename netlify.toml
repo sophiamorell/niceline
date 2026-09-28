@@ -17,5 +17,19 @@
 
 # The diagnostic uses Netlify Forms (public/__forms.html, form name
 # "diagnostic"). Turn on form detection in the Netlify dashboard and add an
-# email notification there. The custom domain (thefoundersmarketer.com) is
+# email notification there. The custom domain (niceline.marketing) is
 # also configured in the dashboard, not here.
+
+# The practice was The Founder's Marketer. Keep the old domain attached to the
+# site as an alias so these send its visitors, with the path, to the new one.
+[[redirects]]
+  from = "https://thefoundersmarketer.com/*"
+  to = "https://niceline.marketing/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.thefoundersmarketer.com/*"
+  to = "https://niceline.marketing/:splat"
+  status = 301
+  force = true
