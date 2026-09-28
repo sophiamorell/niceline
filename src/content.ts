@@ -136,7 +136,7 @@ export const hero = {
   tooltip: "Nice line.", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
   headlineHighlight: "sell more of it.", // the highlighter
-  subhead: "You're growing. Time to give marketing an owner.",
+  subhead: "Growth stalls when nobody owns marketing.",
   bullets: [
     "Most wins still come from referrals and who you know",
     "Your pitch, your deck and your website say different things",
