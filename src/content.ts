@@ -112,8 +112,8 @@ export const anchors = {
 export const logo = {
   lead: "Nice Line",
   highlight: "Marketing",
+  tagline: "with Sophie Williams", // under the lockup in the footer
   ariaLabel: "Nice Line Marketing, home",
-  mark: "/images/nice-line-mark.png", // the S-curve mark, 512px, transparent
 };
 
 export const nav = {
