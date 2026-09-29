@@ -246,7 +246,7 @@ img {
   position: absolute;
   z-index: -1;
   left: -0.06em;
-  bottom: 0.1em;
+  bottom: -0.08em; /* sits just under the baseline, touching the letters */
   width: calc(100% + 0.18em);
   height: 0.36em;
   overflow: visible;
