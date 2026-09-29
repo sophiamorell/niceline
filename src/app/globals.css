@@ -1403,14 +1403,15 @@ textarea.input {
   letter-spacing: -0.02em;
 }
 
-/* The ink strip (#pricing): the total, the cost note and "Let's talk" on one
-   pill-shaped row. Stacks into a block under 900px. */
+/* The total strip (#pricing): the total, the cost note and "Let's talk" on one
+   pill-shaped row, in the same dark teal as the scrolled header. Stacks into
+   a block under 900px. */
 .bundle {
   display: flex;
   align-items: center;
   gap: 28px;
   margin-top: 20px;
-  background: var(--ink);
+  background: var(--primary);
   border-radius: 999px;
   padding: 14px 14px 14px 36px;
   scroll-margin-top: var(--nav-h);

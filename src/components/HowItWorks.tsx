@@ -62,7 +62,7 @@ function datedIntro(): string {
  * date pills); three step cards with every deliverable visible, each Step 1
  * and 2 list ending on its campaign in a soft pink box with a pulse (Step 1
  * featured, with the badge; on phones each card collapses to its step,
- * outcome and price, with a +/− to open it); then the ink strip (#pricing):
+ * outcome and price, with a +/− to open it); then the teal strip (#pricing):
  * the total, computed from the step prices (emptyPrice until all are set),
  * the cost note and the "Let's talk" button that opens the contact popup. The locals note and payment
  * terms sit under it behind release flags.
