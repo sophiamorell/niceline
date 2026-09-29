@@ -28,8 +28,12 @@ export function About() {
             {about.heading}
           </h2>
           {about.paragraphs.map((paragraph) => (
-            <p key={paragraph} className={["about__para", mutedClass(paragraph, about.status)].filter(Boolean).join(" ")}>
-              {paragraph}
+            <p
+              key={paragraph.text}
+              className={["about__para", mutedClass(paragraph.text, about.status)].filter(Boolean).join(" ")}
+            >
+              {paragraph.lead && <strong>{paragraph.lead} </strong>}
+              {paragraph.text}
             </p>
           ))}
         </div>

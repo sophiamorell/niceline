@@ -190,10 +190,6 @@ img {
   margin-bottom: 16px;
 }
 
-.kicker--onpine {
-  color: var(--mist);
-}
-
 .label {
   font-family: var(--fm-label);
   font-weight: 600;
@@ -647,10 +643,6 @@ textarea.input {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
-}
-
-.dcard__time {
-  color: var(--primary);
 }
 
 .dcard__progress {
@@ -1108,6 +1100,13 @@ textarea.input {
   margin-bottom: 40px;
 }
 
+/* The two dates in the lead: set apart from the sentence */
+.how__date {
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
 /* The line: same grid and gap as the step cards, so each node sits over
    its card. The same plain mist bar as the Why now timeline, overlapping
    each node by 2px, with the nodes above it. No echo. */
@@ -1244,10 +1243,7 @@ textarea.input {
   margin-bottom: 22px;
 }
 
-.stepcard .stepcard__keep {
-  margin-bottom: 12px;
-}
-
+/* What you keep, as a bulleted list: small sea-glass dots */
 .stepcard__list {
   flex: 1;
   list-style: none;
@@ -1255,13 +1251,43 @@ textarea.input {
   margin: 0 0 20px;
   display: grid;
   align-content: start;
-  gap: 8px; /* no markers: spacing alone separates the rows */
+  gap: 8px;
 }
 
 .stepcard__list li {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
   font-size: 15px;
   line-height: 1.4;
   color: var(--ink-2);
+}
+
+.stepcard__list li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--primary);
+  transform: translateY(-2px);
+}
+
+/* The win: a campaign in market, last in its list so each card ends on it.
+   Bold, with a filled sunflower marker in place of the dot. */
+.stepcard__list li.stepcard__win {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.stepcard__list li.stepcard__win::before {
+  width: 12px;
+  height: 12px;
+  margin-left: -3px;
+  margin-right: -3px;
+  background: var(--sunflower);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+  transform: translateY(0);
 }
 
 .stepcard__time {
@@ -1376,9 +1402,10 @@ textarea.input {
   max-width: 72ch;
 }
 
-/* The Durango note: bigger, ink, with "definitely" on the highlighter. */
+/* The Durango note: bigger, ink, right-aligned, with "definitely" on the highlighter. */
 .how__locals {
   margin-top: 30px;
+  text-align: right;
   font-family: var(--fm-head);
   font-weight: 600;
   font-size: 1.125rem;

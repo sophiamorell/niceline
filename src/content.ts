@@ -30,6 +30,7 @@ export interface Phase {
   outcome: string; // what you have at the end of the step: the card's heading
   yourTime: string | null;
   youKeep: string[];
+  win?: string; // a campaign in market: shown last in the list, styled as an outcome
   status: CopyStatus;
 }
 
@@ -150,7 +151,6 @@ export const hero = {
   card: {
     ariaLabel: "See what to fix first: start the 10-question diagnostic",
     progressLabel: "Question 1 of 10",
-    timeLabel: "About 2 min",
     prompt: "Who owns marketing at your company today?",
     options: ["Nobody. Marketing, who?", "Someone, on the side", "We're about to hire for it"], // the three answers founders give most
     selectedIndex: 0, // drawn as selected
@@ -202,17 +202,16 @@ export const whyNow = {
 /* ------------------------------------------------------------------ */
 
 export const checklist = {
-  kicker: "Quick check",
   heading: "Does this sound like you?",
   subheading: "Check all that feel true to you.",
   items: [
     "Your CRM has thousands of contacts and no way to tell which ones matter",
     "You'd hesitate to show the board your pipeline report",
-    "Most of your wins come from referrals, and referrals are unpredictable",
-    "Ask your team who the ideal customer is, and you'd get a different answer from each person",
-    "Your website says one thing, your sales deck says another ... and reps say all sorts of sh*t",
-    "Nobody could tell you what last quarter's marketing actually produced",
-  ],
+    "Most of your wins come from referrals and personal connections, and you can't forecast either",
+    "Ask five people who your ideal customer is and you'll get five answers",
+    "Your website says one thing, your deck says another, and every rep says something else",
+    "You can't point to hard numbers on what's actually filling your pipeline",
+  ], // no closing periods: they read as list items next to the checkboxes
   // The verdict bar under the checks. {n} = checked count, {total} = items.length
   verdicts: {
     none: "Nothing checked yet. Most teams check three.",
@@ -232,12 +231,10 @@ export const checklist = {
 export const howItWorks = {
   kicker: "The line",
   heading: "A marketing function in about four months.",
-  intro: "Three steps, in the right order, starting with wins.", // shown until the dated line below renders in the browser
-  // {today} and {target} are filled in the visitor's browser: today, and today plus targetMonths
-  datedIntro:
-    "Today is {today} ... wouldn't it be great to have a marketing function in place by {target}? Three steps, in the right order, starting with wins.",
+  // {today} and {target} are filled in the visitor's browser (today, and today
+  // plus targetMonths) and set apart from the sentence; nothing shows until then
+  datedIntro: "Today is {today} ... wouldn't it be great to have a marketing function in place by {target}?",
   targetMonths: 4, // matches the "about four months" heading (the steps run 12-20 weeks)
-  youKeepLabel: "You keep",
   // Phones: each step card collapses; the +/− button's accessible names
   toggleShow: "Show what {step} includes",
   toggleHide: "Hide what {step} includes",
@@ -257,9 +254,9 @@ export const phases: Phase[] = [
       "A triage of your contact database: what's usable, what isn't, what to suppress",
       "Provisional sales stages and lead qualification criteria",
       "A prioritized list of near-term segments",
-      "One campaign live, built from the proof you already have",
       "A campaign dashboard and baseline report",
     ],
+    win: "One campaign live, built from the proof you already have",
     status: "final",
   },
   {
@@ -271,12 +268,12 @@ export const phases: Phase[] = [
     outcome: "A sales process and CRM your team actually runs on.",
     yourTime: "about 8 hours, mostly with you and whoever owns the CRM.",
     youKeep: [
-      "ICP and persona definitions",
+      "Documented ICP and persona definitions",
       "A scored qualification rubric",
       "Sales stages with entry criteria",
       "A CRM you can report from",
-      "An objection and proof library",
     ],
+    win: "2-3 additional campaigns in market",
     status: "final",
   },
   {
@@ -436,12 +433,23 @@ export const about = {
   photo: "/images/sophie.jpg", // renders as the arch placeholder if the file is missing
   photoAlt: "Sophie Williams, Nice Line Marketing",
   photoPlaceholder: "Portrait goes here",
+  // `lead` renders bold at the start of its paragraph
   paragraphs: [
-    "I co-founded and ran an enterprise mentoring software company for eleven years, through acquisition. I wrote the positioning, built the decks, ran the launches and closed the deals: the whole marketing job before anyone had the title.",
-    "Then I led product marketing at the acquirer and built the function from zero. So I've done it without a marketer, and I've built the team that came after.",
-    "Why Nice Line? I live outside Durango and ski every chance I get. \"Nice line\" is what you say at the bottom when someone picked a smart way down. Picking the right line, in the right order, is most of this job too. (And a good line of copy never hurts.)",
-  ],
-  status: "draft" as CopyStatus,
+    {
+      text: "I co-founded and ran an enterprise software company for eleven years, through its acquisition in 2022. I wrote the positioning, built the decks, ran the launches, and enabled our revenue team to close deals. That was the first marketing function I built.",
+    },
+    {
+      text: "After the acquisition, I built the product marketing function at the acquirer from zero. That was the second.",
+    },
+    {
+      text: "Both times, I saw the same thing: an intentional, owned marketing function is what gets a company over the headwall and into sustainable growth.",
+    },
+    {
+      lead: "Why Nice Line?",
+      text: "Because there's nothing better than a beautiful ski line 🎿 And picking the right line, with intention and the goal in mind, is most of this job. (A good line of copy never hurts, either.)",
+    }, // the ski ends its sentence: no period after it
+  ] as { lead?: string; text: string }[],
+  status: "final" as CopyStatus,
 };
 
 /* ------------------------------------------------------------------ */
