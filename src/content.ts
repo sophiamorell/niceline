@@ -92,7 +92,7 @@ export const site = {
   tagline: "People buy what you built. I'll help you sell more of it.",
   location: "Durango, Colorado",
   email: "sophie@niceline.marketing" as string | null,
-  linkedin: null as string | null, // TODO(sophie)
+  linkedin: "https://www.linkedin.com/in/sophiamwilliams/" as string | null, // About and the footer
   bookingUrl: null as string | null, // TODO(sophie): Calendly or equivalent; used in thank-you state and results email only
   bookingLabel: "Book the free 45-minute walkthrough",
 };
@@ -300,6 +300,61 @@ export const phases: Phase[] = [
 /*  5 · What you get (the deliverables grid)                            */
 /* ------------------------------------------------------------------ */
 
+/* The built visuals in each tool's slot: small UI illustrations drawn on a
+   560 x 280 artboard. Figures are illustrative; no client names or frameworks. */
+export type Tone = "sea" | "mid" | "sun" | "pink" | "deep"; // sea glass, sea mid, sunflower, pink, sea ink
+
+export type ToolVisual =
+  | {
+      kind: "proof";
+      kicker: string;
+      rows: { label: string; share: number; value: string; tone: Tone }[];
+      footer: { before: string; bold: string; after: string };
+      quote: { mark: string; text: string; who: string };
+    }
+  | {
+      kind: "score";
+      score: string;
+      outOf: string;
+      tier: string;
+      campaign: string;
+      kicker: string;
+      rows: { label: string; share: number; value: string; tone: Tone }[]; // also drawn as the stacked bar
+      mix: { share: number; tone: Tone }[];
+    }
+  | {
+      kind: "qualify";
+      chips: string[];
+      own: string; // the pink chip
+      joiner: string;
+      tiles: { letter: string; word: string; pop?: boolean }[];
+    }
+  | {
+      kind: "intel";
+      kicker: string;
+      was: string;
+      now: string;
+      unit: string;
+      changed: string;
+      note: { before: string; bold: string };
+      card: { kicker: string; badge: string; heading: string; points: string[] };
+    }
+  | {
+      kind: "toolkit";
+      tabs: string[];
+      active: string;
+      quote: { open: string; text: string; close: string };
+      answer: { before: string; bold: string; after: string };
+      usedBy: string;
+      users: string[];
+    }
+  | {
+      kind: "budget";
+      kicker: string;
+      split: { label: string; share: number; tone: Tone }[];
+      card: { kicker: string; heading: string; items: string[] };
+    };
+
 export const whatYouGet = {
   kicker: "What you get",
   heading: "The tools you keep",
@@ -312,54 +367,150 @@ export const whatYouGet = {
     {
       numeral: "01",
       title: "Product Market Fit & Customer Proof Study",
-      slot: "Screenshot: PMF & proof study",
+      visualLabel: "Illustration: where wins come from, with a customer quote",
       step: 2 as PhaseId,
-      body: "Where your wins actually come from, how fast they close, and why you lose. Plus the customer quotes and references that prove it, cleared for use.",
+      body: "Where your wins actually come from, how fast they close, and why you lose. Plus the customer quotes and references that prove it.",
       image: "/images/deliverables/pmf-proof-study.png",
+      visual: {
+        kind: "proof",
+        kicker: "Where wins come from",
+        rows: [
+          { label: "Segment A", share: 1, value: "58%", tone: "sea" },
+          { label: "Segment B", share: 0.46, value: "27%", tone: "mid" },
+          { label: "Segment C", share: 0.26, value: "15%", tone: "mid" },
+        ],
+        footer: { before: "Closes in ", bold: "41 days", after: ", median" },
+        quote: { mark: "\u201c", text: "We cut reporting time in half.", who: "Happy customer" },
+      },
     },
     {
       numeral: "02",
       title: "Your ICP Rubric & AI Evaluator",
-      slot: "Screenshot: ICP rubric & evaluator",
+      visualLabel: "Illustration: a prospect scored 90 of 100",
       step: 2 as PhaseId,
-      body: "A weighted scoring rubric for your best-fit customer, built into a tool your team can run on any prospect in under a minute.",
+      body: "A weighted scoring rubric for your best-fit customer, built into a tool your team can run on any prospect.",
       image: "/images/deliverables/icp-rubric-evaluator.png",
+      visual: {
+        kind: "score",
+        score: "90",
+        outOf: "of 100",
+        tier: "Tier 1",
+        campaign: "Primary campaign",
+        kicker: "Where the score comes from",
+        rows: [
+          { label: "Company type", share: 1, value: "30/30", tone: "sea" },
+          { label: "Volume", share: 0.72, value: "18/25", tone: "sun" },
+          { label: "Cost to serve", share: 1, value: "20/20", tone: "pink" },
+          { label: "Complexity", share: 0.8, value: "12/15", tone: "mid" },
+          { label: "Buyer mix", share: 1, value: "10/10", tone: "deep" },
+        ],
+        mix: [
+          { share: 0.3, tone: "sea" },
+          { share: 0.18, tone: "sun" },
+          { share: 0.2, tone: "pink" },
+          { share: 0.12, tone: "mid" },
+          { share: 0.1, tone: "deep" },
+        ],
+      },
     },
     {
       numeral: "03",
       title: "Deal Qualifying Framework",
-      slot: "Screenshot: qualifying framework",
+      visualLabel: "Illustration: a qualifying framework spelling FOCUS",
       step: 2 as PhaseId,
-      body: "The questions a lead has to pass before it becomes a deal. They double as your discovery script and live as fields in your CRM.",
+      body: "The questions a lead has to pass before it becomes a deal. They double as your discovery script.",
       image: "/images/deliverables/qualifying-framework.png",
+      visual: {
+        kind: "qualify",
+        chips: ["BANT", "MEDDIC"],
+        own: "Your qualifications",
+        joiner: "+",
+        tiles: [
+          { letter: "F", word: "Fit" },
+          { letter: "O", word: "Owner" },
+          { letter: "C", word: "Cost", pop: true },
+          { letter: "U", word: "Urgency" },
+          { letter: "S", word: "Size" },
+        ],
+      },
     },
     {
       numeral: "04",
       title: "Competitive Intel Agent",
-      slot: "Screenshot: competitive intel agent",
+      visualLabel: "Illustration: a competitor price change and a battlecard",
       step: 3 as PhaseId,
-      body: "Watches your competitors' sites, pricing and messaging, flags what changed, and keeps a battlecard your reps can use on the next call.",
+      body: "Monitors your competitors' sites, pricing and messaging, flags what changed, and keeps a battlecard your reps can use on the next call.",
       image: "/images/deliverables/competitive-intel-agent.png",
+      visual: {
+        kind: "intel",
+        kicker: "Competitor A · Pricing",
+        was: "$49",
+        now: "$59",
+        unit: "/seat",
+        changed: "Changed today",
+        note: { before: "Homepage now says ", bold: '"built for enterprise"' },
+        card: {
+          kicker: "Battlecard",
+          badge: "Updated",
+          heading: "When they bring up price",
+          points: ["Ask what the extra $10 buys", "Lead with setup time"],
+        },
+      },
     },
     {
       numeral: "05",
       title: "Product Marketing Toolkit",
-      slot: "Screenshot: PMM toolkit",
+      visualLabel: "Illustration: an objection-handling page in the toolkit",
       step: 3 as PhaseId,
-      body: "Messaging, personas, objection handling and proof in one place that your team, your website and your next hire all pull from.",
+      body: "Messaging, personas, objection handling and proof in one place that your team and your website pull from.",
       image: "/images/deliverables/pmm-toolkit.png",
+      visual: {
+        kind: "toolkit",
+        tabs: ["Messaging", "Personas", "Objections", "Proof"],
+        active: "Objections",
+        quote: { open: "\u201c", text: "It's too expensive.", close: "\u201d" },
+        answer: {
+          before: "Show the cost of the current process first. Then the proof: Customer B paid it back in ",
+          bold: "5 months",
+          after: ".",
+        },
+        usedBy: "Used by",
+        users: ["Sales", "Website"],
+      },
     },
     {
       numeral: "06",
-      title: "Marketing Budget & Your First Hire",
-      slot: "Screenshot: budget & hiring plan",
+      title: "Marketing Budget & Next Steps",
+      visualLabel: "Illustration: a year-one budget split and a first-hire plan",
       step: 3 as PhaseId,
-      body: "What to spend, where, and who to hire first. Includes the job description, a 90-day plan, and a scorecard to hire against.",
+      body: "Recommended next steps, marketing budget, and access to tools. I'll even help you find your next marketing hire.",
       image: "/images/deliverables/budget-first-hire.png",
+      visual: {
+        kind: "budget",
+        kicker: "Year one budget",
+        split: [
+          { label: "Content", share: 0.4, tone: "sea" },
+          { label: "Paid", share: 0.25, tone: "sun" },
+          { label: "Events", share: 0.2, tone: "pink" },
+          { label: "Tools", share: 0.15, tone: "mid" },
+        ],
+        card: {
+          kicker: "Your first hire",
+          heading: "Marketing manager",
+          items: ["Job description", "90-day plan", "Scorecard"],
+        },
+      },
     },
-  ],
-  imageAspect: "4/3",
-  status: "draft" as CopyStatus, // titles final; bodies are draft copy; screenshots pending
+  ] as {
+    numeral: string;
+    title: string;
+    visualLabel: string; // names the illustration for screen readers
+    step: PhaseId;
+    body: string;
+    image: string; // a real screenshot, if one lands in public/, replaces the visual
+    visual: ToolVisual;
+  }[],
+  status: "draft" as CopyStatus, // titles final; bodies are draft copy
 };
 
 /* ------------------------------------------------------------------ */
@@ -383,7 +534,7 @@ export const pricing = {
   ctaLabel: "Let's talk", // opens the contact popup
   // Shown while release.showLocalsNote is true
   localsNote: {
-    before: "Early-stage company in Durango, CO? Let's ",
+    before: "Own a business in Durango, CO? Let's ",
     emphasis: "definitely", // bold, on the highlighter band
     after: " talk.",
   },
@@ -398,7 +549,6 @@ export const contact = {
   closeLabel: "Close",
   kicker: "Let's talk",
   heading: "Tell me where marketing stands.",
-  sub: "I'll reply within two business days, usually with a time to talk.", // TODO(sophie): confirm the reply time
   fields: [
     { id: "name", label: "Name", type: "text", required: true },
     { id: "email", label: "Work email", type: "email", required: true },
@@ -447,6 +597,7 @@ export const about = {
       text: "Because there's nothing better than a beautiful ski line ⛷️ And picking the right line, with intention and the goal in mind, is most of this job. (A good line of copy never hurts, either.)",
     }, // the ski ends its sentence: no period after it
   ] as { lead?: string; text: string }[],
+  linkedinLabel: "Connect on LinkedIn", // under the paragraphs, when site.linkedin is set
   status: "final" as CopyStatus,
 };
 
@@ -459,58 +610,44 @@ export const faq = {
   heading: "Maybe you're wondering ...",
   items: [
     {
-      question: "What do you need from us before Step 1?",
-      answer:
-        "A CRM export, access to whatever analytics you have, and two hours of your calendar in week one. If the data is a mess, that is itself a finding. I work with what exists.",
+      question: "What do you need from us before starting Step 1?",
+      answer: "Access to your CRM (or a CRM export), access to whatever analytics you have, and two hours of your calendar in week one.",
       status: "final",
       show: true,
     },
     {
       question: "We don't have a CRM, or ours is a spreadsheet.",
-      answer:
-        "That is common and it is fine. Step 1 works from the spreadsheet; Step 2 is where we decide whether a real CRM is worth standing up, and I stand it up if it is.",
-      status: "final",
-      show: true,
-    },
-    {
-      question: "We don't have referral wins to scale yet.",
-      answer:
-        "Then the referral motion waits. Step 3 activates whatever actually produced revenue. If that is outbound or content rather than referrals, that is what gets built.",
+      answer: "That is common, and it is fine. Step 1 works from the spreadsheet; Step 2 is where we decide whether a real CRM is worth standing up.",
       status: "final",
       show: true,
     },
     {
       question: "Will you hire our first marketer?",
-      answer:
-        "Not as a search firm. Step 3 includes a budget and a first-hire plan: the job description, the first 90 days, and a scorecard to hire against.",
+      answer: "We're not a search firm, but Step 3 does include a budget and a first-hire plan: the job description, the first 90 days, and a scorecard to hire against.",
       status: "final",
       show: true,
     },
     {
       question: "Will you talk to our customers?",
-      answer:
-        "Yes, in Step 2: four to six conversations, scheduled by me, with a written synthesis. It is the fastest way to find out whether your positioning survives contact with buyers.",
+      answer: "Yes, in Step 2. Ideally we'll speak to 4-6 customers. This is the fastest way to find out whether your positioning resonates with buyers.",
       status: "final",
       show: true,
     },
     {
       question: "What happens after Step 3?",
-      answer:
-        "Ideally nothing. The function is built, documented and running, and you own it. Some clients keep a monthly review; most do not need one.",
+      answer: "It depends. At this point the marketing function is built, documented and running. Some clients continue to work with me, and some hire their first marketer.",
       status: "final",
       show: true,
     },
     {
       question: "Who is this not for?",
-      answer:
-        "Pre-product-market-fit companies, agencies looking to white-label, and anyone who wants a strategy deck rather than a campaign in market. Say so early and we'll both save the time.",
+      answer: "Companies in very early stages that have not found product-market fit, agencies looking to white-label, and anyone who wants a strategy deck rather than a campaign in market.",
       status: "final",
       show: true,
     },
     {
       question: "We're not a software company. Does this apply?",
-      answer:
-        "Often, if you sell considered B2B purchases with a real sales conversation. Take the diagnostic. If the answer is no, the email will say no.",
+      answer: "For sure! Start with clicking \"See what to fix first\" and we'll see where I can help.",
       status: "final",
       show: true,
     },
@@ -560,14 +697,14 @@ export const proof = {
 
 export const diagnostic = {
   heading: "See what to fix first.",
-  intro: "Ten quick questions about your pipeline. Results and the three things to fix first will be emailed to you.",
+  intro: "Ten questions, results and the three things to fix first will be emailed to you.",
   startLabel: "See what to fix first",
   comesBack: {
     label: "What comes back",
     items: [
       "Your three biggest gaps, prioritized",
       "One fix per gap you can run yourself",
-      "A straight yes or no on Step 1",
+      "Recommended next step",
     ],
     note: "Your answers are used to write your results and nothing else.",
   },
