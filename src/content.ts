@@ -123,7 +123,7 @@ export const logo = {
 
 export const nav = {
   links: [
-    { label: "Steps & pricing", href: `#${anchors.howItWorks}` },
+    { label: "Steps", href: `#${anchors.howItWorks}` },
     { label: "What you get", href: `#${anchors.deliverables}` },
     { label: "About", href: `#${anchors.about}` },
   ],
@@ -148,7 +148,7 @@ export const hero = {
     "You know you'll eventually need a marketer, but not who or when",
   ],
   primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
-  secondaryCta: { label: "Steps & pricing", href: `#${anchors.howItWorks}` },
+  secondaryCta: { label: "Steps", href: `#${anchors.howItWorks}` },
   // The clickable card on the right: a picture of question 1 that opens the diagnostic popup
   card: {
     ariaLabel: "See what to fix first: start the 10-question diagnostic",
