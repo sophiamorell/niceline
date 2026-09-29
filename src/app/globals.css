@@ -1524,14 +1524,27 @@ textarea.input {
   .bundle__title {
     white-space: normal;
   }
+  .bundle__cta {
+    align-self: flex-end; /* the button sits on the right */
+  }
   /* Collapsed cards: one line with the step, badge, price and +/−, then the
      outcome. Opening a card adds the question, what you keep and your time. */
+  /* Phones: a tighter lead with smaller pills, and room above the cards for
+     the "Start here" sticker */
   .how__intro {
     font-size: 1.0625rem;
-    margin-bottom: 20px;
+    line-height: 1.85;
+    margin-bottom: 30px;
   }
+  .how__date {
+    font-size: 11.5px;
+    padding: 5px 10px;
+    vertical-align: 1px;
+  }
+  /* The same visible gap between every card: the featured card's echo is
+     12px deep, so it gets that much extra room below */
   .steps {
-    gap: 10px;
+    gap: 16px;
   }
   .stepcard {
     position: relative;
@@ -1552,6 +1565,7 @@ textarea.input {
   }
   .stepcard--featured {
     box-shadow: var(--echo);
+    margin-bottom: 12px;
   }
   .stepcard__meta {
     display: contents;
@@ -2550,7 +2564,7 @@ textarea.input {
   border-radius: 28px;
   padding: clamp(32px, 5vw, 60px) clamp(24px, 4vw, 56px);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); /* one column on phones, never wider than the panel */
   gap: clamp(28px, 4vw, 52px);
   align-items: center;
 }
@@ -2585,6 +2599,17 @@ textarea.input {
   border-radius: 20px;
   padding: 26px 28px;
   color: var(--ink);
+}
+
+/* Phones: even padding inside the panel, and a roomier white card */
+@media (max-width: 600px) {
+  .diag {
+    padding: 30px 20px;
+    border-radius: 24px;
+  }
+  .diag__card {
+    padding: 22px 20px;
+  }
 }
 
 .diag__card .label {
