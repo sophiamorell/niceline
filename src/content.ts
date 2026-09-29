@@ -286,11 +286,10 @@ export const phases: Phase[] = [
     outcome: "The right accounts reached, and numbers you can trust.",
     yourTime: "about 6 hours, plus one weekly 30-minute review.",
     youKeep: [
-      "Activated CRM data: segments and live lists your campaigns run on",
-      "Pipeline and forecast dashboards built on metrics you can trust",
+      "Activated CRM data",
+      "Pipeline and forecast dashboards",
       "Competitive Intel Agent",
       "Product Marketing Toolkit, with playbooks and documentation for everything I built",
-      "Team enablement, so whoever owns marketing next can run it",
       "Marketing Budget & Next Steps, including when to make your first hire",
     ], // the tool names match "The tools you keep"
     win: "2-3 additional campaigns in market",
