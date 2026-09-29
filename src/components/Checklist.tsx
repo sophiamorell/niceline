@@ -36,7 +36,6 @@ export function Checklist() {
     <section className="section" aria-labelledby="checklist-heading">
       <div className="checklist">
         <div className="checklist__top">
-          <p className="kicker kicker--onpine">{checklist.kicker}</p>
           <h2 id="checklist-heading" className="checklist__heading">
             {checklist.heading}
           </h2>

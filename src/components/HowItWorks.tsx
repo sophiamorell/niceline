@@ -19,23 +19,38 @@ function addMonths(date: Date, months: number): Date {
 }
 
 /**
- * The lead under the heading. The page is prebuilt, so the dates are filled
- * in the browser after it loads; until then (and without JavaScript) it
- * shows the undated intro.
+ * The lead under the heading, with its two dates set apart. The page is
+ * prebuilt, so the dates are filled in the browser after it loads; until
+ * then (and without JavaScript) the line is left out.
  */
 function DatedIntro() {
-  const text = useSyncExternalStore(noSubscribe, datedIntro, () => howItWorks.intro);
-  return <p className="intro how__intro">{text}</p>;
+  const dates = useSyncExternalStore(noSubscribe, datedIntro, () => "");
+  if (!dates) return null;
+  const [today, target] = dates.split("|");
+  const values: Record<string, string> = { today, target };
+  /* "Today is {today} ... by {target}?" → text, date, text, date, text */
+  const parts = howItWorks.datedIntro.split(/\{(\w+)\}/);
+  return (
+    <p className="intro how__intro">
+      {parts.map((part, i) =>
+        i % 2 === 1 ? (
+          <strong key={i} className="how__date">
+            {values[part] ?? part}
+          </strong>
+        ) : (
+          part
+        ),
+      )}
+    </p>
+  );
 }
 
 const noSubscribe = () => () => {};
 
+/* A string, so the snapshot is stable between renders */
 function datedIntro(): string {
   const today = new Date();
-  return fill(howItWorks.datedIntro, {
-    today: longDate.format(today),
-    target: longDate.format(addMonths(today, howItWorks.targetMonths)),
-  });
+  return `${longDate.format(today)}|${longDate.format(addMonths(today, howItWorks.targetMonths))}`;
 }
 
 /**
@@ -117,13 +132,13 @@ export function HowItWorks() {
                 {phase.outcome}
               </h3>
               <div id={detailsId} className="stepcard__details">
-                <p className="label stepcard__keep">{howItWorks.youKeepLabel}</p>
                 <ul className="stepcard__list">
                   {phase.youKeep.map((item) => (
                     <li key={item} className={mutedClass(item)}>
                       {item}
                     </li>
                   ))}
+                  {phase.win && <li className="stepcard__win">{phase.win}</li>}
                 </ul>
                 {phase.yourTime !== null && (
                   <p className="stepcard__time">{fill(howItWorks.yourTimeLabel, { time: phase.yourTime })}</p>

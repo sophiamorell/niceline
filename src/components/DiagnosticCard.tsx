@@ -31,7 +31,6 @@ export function DiagnosticCard() {
       <div className="dcard__front" aria-hidden="true">
         <div className="dcard__header">
           <span className="label">{card.progressLabel}</span>
-          <span className="label dcard__time">{card.timeLabel}</span>
         </div>
         <div className="dcard__progress">
           {Array.from({ length: 10 }, (_, i) => (
