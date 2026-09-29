@@ -73,7 +73,7 @@ export const release = {
   version: "v1" as "v0" | "v1",
   directDiagnosticRoute: false, // /diagnostic
   showWhatYouGet: true, // the deliverables grid (titles final, bodies and screenshots pending)
-  showProof: true, // testimonials (placeholders until quotes arrive)
+  showProof: false, // testimonials: off until real quotes arrive
   showPricingTerms: false, // payment terms + add-ons under the bundle row
   showLocalsNote: true, // the Durango locals footnote under the bundle row
   showExclusionsFaq: false, // until exclusions are decided
@@ -283,15 +283,16 @@ export const phases: Phase[] = [
     duration: "4-8 weeks",
     weeks: 6,
     question: "How do we reach them?",
-    outcome: "A marketing function you own, ready for your first hire.",
+    outcome: "The right accounts reached, and numbers you can trust.",
     yourTime: "about 6 hours, plus one weekly 30-minute review.",
     youKeep: [
-      "Activated segments",
-      "A referral motion you run monthly",
-      "A weekly dashboard",
-      "A handoff playbook",
-      "A 90-day plan for whoever takes it on",
+      "Activated CRM data: segments and live lists your campaigns run on",
+      "Pipeline and forecast dashboards built on metrics you can trust",
+      "Playbooks and documentation for everything we built",
+      "Team enablement, so whoever owns marketing next can run it",
+      "Recommended next steps, including when to make your first hire",
     ],
+    win: "2-3 additional campaigns in market",
     status: "final",
   },
 ];
@@ -529,6 +530,7 @@ export const pricing = {
   // the button. The total is computed from steps, and shows as emptyPrice until every step has a price.
   bundle: {
     title: "All three steps · {total}", // {total} renders in sunflower
+    campaigns: "5-7 campaigns live", // a pink pill, like the campaign boxes in the cards
     note: "About half the cost of a senior marketer for four months, with no three-month search first.",
   },
   ctaLabel: "Let's talk", // opens the contact popup
@@ -597,7 +599,7 @@ export const about = {
       text: "Because there's nothing better than a beautiful ski line ⛷️ And picking the right line, with intention and the goal in mind, is most of this job. (A good line of copy never hurts, either.)",
     }, // the ski ends its sentence: no period after it
   ] as { lead?: string; text: string }[],
-  linkedinLabel: "Connect on LinkedIn", // under the paragraphs, when site.linkedin is set
+  linkedinLabel: "Connect on LinkedIn", // under the paragraphs, when site.linkedin is set; opens in a new tab
   status: "final" as CopyStatus,
 };
 
@@ -715,7 +717,7 @@ export const diagnostic = {
     closeLabel: "Close",
     email: {
       heading: "See what to fix first.",
-      body: "Ten quick questions about your pipeline. Results and the three things to fix first will be emailed to you.",
+      body: "Ten questions, results and the three things to fix first will be emailed to you.",
       label: "Work email",
       placeholder: "you@company.com",
       invalid: "That email doesn't look right.",
@@ -908,6 +910,7 @@ export const diagnostic = {
 
 export const footer = {
   taglineLines: [site.tagline, site.location],
+  linkedinLabel: "LinkedIn", // under the email, when site.linkedin is set; opens in a new tab
   cta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
 };
 

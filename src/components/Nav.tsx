@@ -16,9 +16,8 @@ const isScrolled = () => window.scrollY > SCROLLED_AT;
 
 /**
  * Sticky header: the logo left, nav links and the sunflower CTA right.
- * The link for the section in view is marked current and sits on the
- * highlighter band. Once the page scrolls it becomes a short dark teal bar with
- * the simple white logo. It's fixed over a spacer of its full height, so the
+ * Once the page scrolls it becomes a short dark teal bar with the simple
+ * white logo, and the link for the section in view turns sunflower. It's fixed over a spacer of its full height, so the
  * page doesn't move when it shrinks. Below 900px only the logo and CTA remain.
  */
 export function Nav() {
