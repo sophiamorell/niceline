@@ -6,8 +6,8 @@ import { Logo } from "@/components/Logo";
 
 /**
  * Sticky header: the logo left, nav links and the sunflower CTA right.
- * The link for the section in view is marked current and underlined with a
- * small pink swash. Below 900px only the logo and CTA remain.
+ * The link for the section in view is marked current and sits on the
+ * highlighter band. Below 900px only the logo and CTA remain.
  */
 export function Nav() {
   const [current, setCurrent] = useState<string | null>(null);
