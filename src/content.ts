@@ -138,9 +138,9 @@ export const hero = {
   headlineHighlight: "sell more of it.", // the highlighter
   subhead: "Growth stalls when nobody owns marketing.",
   bullets: [
-    "Most wins still come from referrals and who you know",
+    "Pipeline is feast or famine, and nobody can say why",
     "Your pitch, your deck and your website say different things",
-    "You know you'll need a marketer, but not who or when",
+    "You know you'll eventually need a marketer, but not who or when",
   ],
   primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
   secondaryCta: { label: "Steps & pricing", href: `#${anchors.howItWorks}` },
