@@ -50,7 +50,6 @@ export function DiagnosticCard() {
           <span>{card.buttonLabel}</span>
           <span>→</span>
         </span>
-        <p className="dcard__caption">{card.caption}</p>
       </div>
     </div>
   );

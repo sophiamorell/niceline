@@ -1,16 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { nav } from "@/content";
 import { Logo } from "@/components/Logo";
+
+/* The header turns into the compact ink bar after this much scroll */
+const SCROLLED_AT = 24;
+
+function subscribeScroll(onChange: () => void) {
+  window.addEventListener("scroll", onChange, { passive: true });
+  return () => window.removeEventListener("scroll", onChange);
+}
+
+const isScrolled = () => window.scrollY > SCROLLED_AT;
 
 /**
  * Sticky header: the logo left, nav links and the sunflower CTA right.
  * The link for the section in view is marked current and sits on the
- * highlighter band. Below 900px only the logo and CTA remain.
+ * highlighter band. Once the page scrolls it becomes a short ink bar with
+ * the simple white logo. Below 900px only the logo and CTA remain.
  */
 export function Nav() {
   const [current, setCurrent] = useState<string | null>(null);
+  const scrolled = useSyncExternalStore(subscribeScroll, isScrolled, () => false);
 
   useEffect(() => {
     const sections = nav.links
@@ -30,7 +42,7 @@ export function Nav() {
   }, []);
 
   return (
-    <header className="nav">
+    <header className={scrolled ? "nav nav--scrolled" : "nav"}>
       <Logo />
       <nav className="nav__links">
         {nav.links.map((link) => (

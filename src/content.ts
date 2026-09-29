@@ -116,6 +116,8 @@ export const logo = {
   // without the tagline; the footer adds "with Sophie Williams".
   header: { src: "/brand/nice-line-logo-nav.svg", width: 899, height: 211 },
   footer: { src: "/brand/nice-line-logo-full.svg", width: 899, height: 244 },
+  // Flat, one colour, no echoes: the scrolled header's ink bar only
+  simple: { src: "/brand/nice-line-logo-simple-white.svg", width: 899, height: 198 },
   ariaLabel: "Nice Line Marketing, home",
 };
 
@@ -155,7 +157,6 @@ export const hero = {
     options: ["Nobody. Marketing, who?", "Someone, on the side", "We're about to hire for it"], // the three answers founders give most
     selectedIndex: 0, // drawn as selected
     buttonLabel: "See what to fix first",
-    caption: "Nine more like this.",
   },
 };
 
@@ -446,7 +447,7 @@ export const about = {
     },
     {
       lead: "Why Nice Line?",
-      text: "Because there's nothing better than a beautiful ski line 🎿 And picking the right line, with intention and the goal in mind, is most of this job. (A good line of copy never hurts, either.)",
+      text: "Because there's nothing better than a beautiful ski line ⛷️ And picking the right line, with intention and the goal in mind, is most of this job. (A good line of copy never hurts, either.)",
     }, // the ski ends its sentence: no period after it
   ] as { lead?: string; text: string }[],
   status: "final" as CopyStatus,
