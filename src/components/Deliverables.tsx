@@ -2,13 +2,15 @@ import Image from "next/image";
 import { anchors, whatYouGet } from "@/content";
 import { fill, mutedClass } from "@/lib/copy";
 import { publicFileExists } from "@/lib/public-file";
+import { ToolVisual } from "@/components/ToolVisual";
 
 /**
  * 5 · What you get (#deliverables): six deliverables in a three-column grid
  * (a swipeable gallery on phones, focusable so arrow keys scroll it),
- * each with an image slot, then the numeral beside the title, an outlined
- * pill naming the step that builds it, and the body. A slot shows its caption,
- * at a shorter 2:1, until the screenshot exists in public/ (then 4:3). Bracketed titles and bodies render muted.
+ * each with a 2:1 slot showing its built visual (a small UI illustration;
+ * a real screenshot in public/ replaces it, at 4:3), then the numeral beside
+ * the title, an outlined pill naming the step that builds it, and the body.
+ * Bracketed titles and bodies render muted.
  */
 export function Deliverables() {
   return (
@@ -27,13 +29,13 @@ export function Deliverables() {
           const hasImage = publicFileExists(item.image);
           return (
             <li key={item.numeral} className="tool">
-              <div className={hasImage ? "slot" : "slot slot--empty"}>
-                {hasImage ? (
+              {hasImage ? (
+                <div className="slot">
                   <Image src={item.image} alt={item.title} fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
-                ) : (
-                  <span>{item.slot}</span>
-                )}
-              </div>
+                </div>
+              ) : (
+                <ToolVisual visual={item.visual} label={item.visualLabel} />
+              )}
               <div className="tool__body">
                 <span className="tool__numeral" aria-hidden="true">
                   {item.numeral}

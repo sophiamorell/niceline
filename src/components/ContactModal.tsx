@@ -133,7 +133,6 @@ export function ContactModal() {
             <h3 id={headingId} className="cdialog__heading">
               {contact.heading}
             </h3>
-            <p className="cdialog__sub">{contact.sub}</p>
             <div className="cdialog__fields">
               {contact.fields.map((field, index) => {
                 const id = `${uid}-${field.id}`;

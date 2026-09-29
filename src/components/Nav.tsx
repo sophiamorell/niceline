@@ -18,7 +18,8 @@ const isScrolled = () => window.scrollY > SCROLLED_AT;
  * Sticky header: the logo left, nav links and the sunflower CTA right.
  * The link for the section in view is marked current and sits on the
  * highlighter band. Once the page scrolls it becomes a short dark teal bar with
- * the simple white logo. Below 900px only the logo and CTA remain.
+ * the simple white logo. It's fixed over a spacer of its full height, so the
+ * page doesn't move when it shrinks. Below 900px only the logo and CTA remain.
  */
 export function Nav() {
   const [current, setCurrent] = useState<string | null>(null);
@@ -42,18 +43,21 @@ export function Nav() {
   }, []);
 
   return (
-    <header className={scrolled ? "nav nav--scrolled" : "nav"}>
-      <Logo />
-      <nav className="nav__links">
-        {nav.links.map((link) => (
-          <a key={link.href} href={link.href} aria-current={current === link.href ? "location" : undefined}>
-            {link.label}
+    <>
+      <div className="nav-spacer" aria-hidden="true" />
+      <header className={scrolled ? "nav nav--scrolled" : "nav"}>
+        <Logo />
+        <nav className="nav__links">
+          {nav.links.map((link) => (
+            <a key={link.href} href={link.href} aria-current={current === link.href ? "location" : undefined}>
+              {link.label}
+            </a>
+          ))}
+          <a href={nav.cta.href} className="nav__cta">
+            {nav.cta.label}
           </a>
-        ))}
-        <a href={nav.cta.href} className="nav__cta">
-          {nav.cta.label}
-        </a>
-      </nav>
-    </header>
+        </nav>
+      </header>
+    </>
   );
 }
