@@ -4,7 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { nav } from "@/content";
 import { Logo } from "@/components/Logo";
 
-/* The header turns into the compact ink bar after this much scroll */
+/* The header turns into the compact teal bar after this much scroll */
 const SCROLLED_AT = 24;
 
 function subscribeScroll(onChange: () => void) {
@@ -17,7 +17,7 @@ const isScrolled = () => window.scrollY > SCROLLED_AT;
 /**
  * Sticky header: the logo left, nav links and the sunflower CTA right.
  * The link for the section in view is marked current and sits on the
- * highlighter band. Once the page scrolls it becomes a short ink bar with
+ * highlighter band. Once the page scrolls it becomes a short dark teal bar with
  * the simple white logo. Below 900px only the logo and CTA remain.
  */
 export function Nav() {

@@ -5,7 +5,7 @@ import { anchors, logo } from "@/content";
  * The Nice Line Marketing lockup: the stacked ski line (mist, sunflower and
  * pink, each with an ink edge) and the ink wordmark, from public/brand. The
  * header renders it with the simple white logo stacked on top, and CSS
- * cross-fades to that one on the scrolled ink bar; the footer adds "with
+ * cross-fades to that one on the scrolled teal bar; the footer adds "with
  * Sophie Williams". The link carries the accessible name, so the images are
  * decorative.
  */
