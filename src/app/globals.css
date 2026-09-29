@@ -30,7 +30,8 @@
   --sunflower-tint: #fdeec4;
   --pink: #ec6f88;
   --pink-tint: #fbe0e6;
-  --pink-light: #f8c9d4; /* text highlights */
+  --pink-light: #f8c9d4; /* the tooltip, text selection and the target date pill */
+  --highlight: var(--sunflower-tint); /* the highlighter band: light yellow */
   --rule: rgba(29, 42, 41, 0.14);
   --track: rgba(29, 42, 41, 0.12); /* empty progress segments */
 
@@ -230,10 +231,10 @@ img {
   color: var(--muted);
 }
 
-/* The highlighter: one flat pink band behind the lower part of the text.
-   At most one per section. */
+/* The highlighter: one flat, subtle light-yellow band behind the lower part
+   of the text. At most one per section. */
 .highlight {
-  background: linear-gradient(transparent 58%, var(--pink-light) 58%, var(--pink-light) 93%, transparent 93%);
+  background: linear-gradient(transparent 58%, var(--highlight) 58%, var(--highlight) 93%, transparent 93%);
   padding: 0 0.06em;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
@@ -241,7 +242,7 @@ img {
 
 /* Body-size text and the nav: a slightly taller band */
 .highlight--body {
-  background: linear-gradient(transparent 55%, var(--pink-light) 55%, var(--pink-light) 92%, transparent 92%);
+  background: linear-gradient(transparent 55%, var(--highlight) 55%, var(--highlight) 92%, transparent 92%);
   padding: 0 3px;
 }
 
@@ -340,7 +341,7 @@ img {
    plus logo. At the top the row sits on the logo's top edge and the nav
    group is nudged down so its centre lines up with "Nice Line", not with the
    whole mark (the ribbon and MARKETING sit low). After 24px of scroll it
-   becomes a short ink bar with the simple white logo, centred (.nav--scrolled). */
+   becomes a short dark teal bar with the simple white logo, centred (.nav--scrolled). */
 .nav {
   --logo-full-h: 60px;
   --logo-simple-h: 32px;
@@ -364,7 +365,7 @@ img {
 .nav--scrolled {
   align-items: center;
   padding-block: 10px;
-  background: var(--ink);
+  background: var(--primary); /* the dark teal of the checklist band */
   border-bottom-color: var(--ink);
 }
 
@@ -397,12 +398,12 @@ img {
 /* The section in view: ink text on the highlighter band */
 .nav__links a[aria-current="location"] {
   color: var(--ink);
-  background: linear-gradient(transparent 55%, var(--pink-light) 55%, var(--pink-light) 92%, transparent 92%);
+  background: linear-gradient(transparent 55%, var(--highlight) 55%, var(--highlight) 92%, transparent 92%);
   padding-inline: 3px;
   margin-inline: -3px;
 }
 
-/* On the ink bar: light links; the current one turns sunflower, no band */
+/* On the teal bar: light links; the current one turns sunflower, no band */
 .nav--scrolled .nav__links {
   margin-top: 0;
 }
@@ -1159,61 +1160,37 @@ textarea.input {
   color: var(--pink);
 }
 
-/* 4 · How it works: step cards and the bundle row (option 1a) ---------- */
+/* 4 · How it works: step cards and the ink strip ------------------------ */
 
-/* The dated lead: one line wherever it fits */
+/* The dated lead, with the dates as pills. The cards sit 28px below it. */
 .how__intro {
-  margin-bottom: 40px;
-  max-width: none;
+  font-size: 1.25rem;
+  line-height: 2; /* room for the pills between lines */
+  color: var(--ink-2);
+  margin-bottom: 28px;
 }
 
-/* The two dates in the lead: set apart from the sentence */
 .how__date {
-  font-weight: 700;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The line: same grid and gap as the step cards, so each node sits over
-   its card. The same plain mist bar as the Why now timeline, overlapping
-   each node by 2px, with the nodes above it. No echo. */
-.phaseline {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-  height: 24px;
-  margin-bottom: 14px;
-}
-
-.phaseline__seg {
-  position: relative;
-}
-
-.phaseline__bar {
-  position: absolute;
-  left: 20px;
-  top: 8px;
-  width: calc(100% + 6px);
-  height: 8px;
-  background: var(--mist);
+  display: inline-block;
+  font-family: var(--fm-label);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 7px 12px;
   border: 1.5px solid var(--ink);
   border-radius: 999px;
+  color: var(--ink);
+  vertical-align: 2px;
 }
 
-.phaseline__seg:last-child .phaseline__bar {
-  width: calc(100% - 20px);
+.how__date--today {
+  background: var(--desk);
 }
 
-.phaseline__node {
-  z-index: 1;
-  position: absolute;
-  left: 2px;
-  top: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 2.5px solid var(--ink);
+.how__date--target {
+  background: var(--pink-light);
 }
 
 .steps {
@@ -1340,21 +1317,67 @@ textarea.input {
   transform: translateY(-2px);
 }
 
-/* The win: a campaign in market, last in its list so each card ends on it.
-   Bold, with a filled sunflower marker in place of the dot. */
-.stepcard__list li.stepcard__win {
+/* The campaign outcome: last in its list, so the card ends on it. A soft pink
+   box with a pink pulse in place of the bullet. */
+.stepcard__list li.outcome {
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--pink-tint);
+}
+
+.stepcard__list li.outcome::before {
+  content: none;
+}
+
+.outcome__text {
+  font-family: var(--fm-head);
   font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.3;
   color: var(--ink);
 }
 
-.stepcard__list li.stepcard__win::before {
+.pulse {
+  position: relative;
+  flex: none;
   width: 12px;
   height: 12px;
-  margin-left: -3px;
-  margin-right: -3px;
-  background: var(--sunflower);
-  box-shadow: inset 0 0 0 1.5px var(--ink);
-  transform: translateY(0);
+  margin: 0 4px;
+}
+
+.pulse::before,
+.pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--pink);
+}
+
+/* The ring: expands and fades, over and over */
+.pulse::before {
+  animation: nl-pulse 1.6s var(--ease) infinite;
+}
+
+@keyframes nl-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse::before {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 .stepcard__time {
@@ -1380,70 +1403,41 @@ textarea.input {
   letter-spacing: -0.02em;
 }
 
-/* The bundle row (#pricing) */
+/* The ink strip (#pricing): the total, the cost note and "Let's talk" on one
+   pill-shaped row. Stacks into a block under 900px. */
 .bundle {
-  margin-top: 26px;
-  background: var(--mist);
-  border-radius: 24px;
-  padding: 30px 34px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 32px;
+  display: flex;
   align-items: center;
+  gap: 28px;
+  margin-top: 20px;
+  background: var(--ink);
+  border-radius: 999px;
+  padding: 14px 14px 14px 36px;
   scroll-margin-top: var(--nav-h);
 }
 
-.bundle__total {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
+.bundle__title {
   font-family: var(--fm-head);
   font-weight: 800;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   letter-spacing: -0.02em;
-  margin-bottom: 14px;
+  color: var(--surface);
+  white-space: nowrap;
 }
 
-.bundle__compare {
-  display: grid;
-  gap: 8px;
-  max-width: 560px;
+.bundle__price {
+  color: var(--sunflower);
 }
 
-.bundle__row {
-  display: grid;
-  grid-template-columns: 170px minmax(0, 1fr);
-  gap: 8px 14px;
-  align-items: center;
-}
-
-.bundle__label {
-  font-size: 14.5px;
-  color: var(--sea-ink);
-}
-
-.bundle__row--ours .bundle__label {
-  font-weight: 700;
-}
-
-.bundle__bar {
-  display: block;
-  height: 14px;
-  border-radius: 999px;
-  background: rgba(29, 42, 41, 0.25);
-}
-
-.bundle__row--ours .bundle__bar {
-  background: var(--primary);
-}
-
-.bundle__caption {
-  margin-top: 14px;
+.bundle__note {
+  flex: 1;
   font-size: 15px;
-  color: var(--sea-ink);
+  line-height: 1.45;
+  color: var(--on-primary);
 }
 
 .bundle__cta {
+  flex: none;
   font-family: var(--fm-head);
   font-weight: 700;
   font-size: 16px;
@@ -1485,22 +1479,23 @@ textarea.input {
 }
 
 @media (max-width: 900px) {
-  .phaseline {
-    display: none;
-  }
   .steps {
     grid-template-columns: minmax(0, 1fr);
   }
   .bundle {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: start;
-    gap: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 24px;
+    padding: 24px;
+  }
+  .bundle__title {
+    white-space: normal;
   }
   /* Collapsed cards: one line with the step, badge, price and +/−, then the
      outcome. Opening a card adds the question, what you keep and your time. */
   .how__intro {
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 1.0625rem;
     margin-bottom: 20px;
   }
   .steps {
@@ -1591,16 +1586,6 @@ textarea.input {
   .stepcard__toggle {
     width: 28px;
     height: 28px;
-  }
-}
-
-@media (max-width: 620px) {
-  .bundle {
-    padding: 26px 22px;
-  }
-  .bundle__row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 6px;
   }
 }
 

@@ -116,7 +116,7 @@ export const logo = {
   // without the tagline; the footer adds "with Sophie Williams".
   header: { src: "/brand/nice-line-logo-nav.svg", width: 899, height: 211 },
   footer: { src: "/brand/nice-line-logo-full.svg", width: 899, height: 244 },
-  // Flat, one colour, no echoes: the scrolled header's ink bar only
+  // Flat, one colour, no echoes: the scrolled header's teal bar only
   simple: { src: "/brand/nice-line-logo-simple-white.svg", width: 899, height: 198 },
   ariaLabel: "Nice Line Marketing, home",
 };
@@ -233,8 +233,8 @@ export const howItWorks = {
   kicker: "The line",
   heading: "A marketing function in about four months.",
   // {today} and {target} are filled in the visitor's browser (today, and today
-  // plus targetMonths) and set apart from the sentence; nothing shows until then
-  datedIntro: "Today is {today} ... wouldn't it be great to have a marketing function in place by {target}?",
+  // plus targetMonths) as date pills; nothing shows until then. No "?" at the end.
+  datedIntro: "Today is {today} ... wouldn't it be great to have a marketing function in place by {target}",
   targetMonths: 4, // matches the "about four months" heading (the steps run 12-20 weeks)
   // Phones: each step card collapses; the +/− button's accessible names
   toggleShow: "Show what {step} includes",
@@ -374,14 +374,11 @@ export const pricing = {
     { phase: 2, price: 14000 },
     { phase: 3, price: 14000 },
   ] as StepPrice[],
-  // The bundle row (#pricing). Its total is computed from steps, shown only when every step has a price.
+  // The ink strip under the cards (#pricing): "All three steps · $35,000", the note and
+  // the button. The total is computed from steps, and shows as emptyPrice until every step has a price.
   bundle: {
-    label: "All three steps",
-    comparison: [
-      { label: "Senior marketer, 4 months", share: 1 }, // bar width as a share of the row
-      { label: "All three steps", share: 0.5, ours: true },
-    ],
-    caption: "About half the cost, with no three-month search first.",
+    title: "All three steps · {total}", // {total} renders in sunflower
+    note: "About half the cost of a senior marketer for four months, with no three-month search first.",
   },
   ctaLabel: "Let's talk", // opens the contact popup
   // Shown while release.showLocalsNote is true

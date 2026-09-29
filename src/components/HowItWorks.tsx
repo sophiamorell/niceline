@@ -8,7 +8,8 @@ import { openContact } from "@/lib/contact-modal";
 /* Matches the CSS breakpoint where step cards collapse. */
 const COLLAPSE_QUERY = "(max-width: 900px)";
 
-const longDate = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" });
+/* "Sep 29, 2026"; the pill uppercases it */
+const shortDate = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 /** `date` plus `months`, clamped to the last day of the target month (Nov 30 + 3 is Feb 28/29). */
 function addMonths(date: Date, months: number): Date {
@@ -19,24 +20,26 @@ function addMonths(date: Date, months: number): Date {
 }
 
 /**
- * The lead under the heading, with its two dates set apart. The page is
- * prebuilt, so the dates are filled in the browser after it loads; until
- * then (and without JavaScript) the line is left out.
+ * The lead under the heading, with its two dates as pills: today in grey,
+ * the target in light pink. The pills are spans, so the sentence still reads
+ * as one line of text. The page is prebuilt, so the dates are filled in the
+ * browser after it loads; until then (and without JavaScript) the line is
+ * left out.
  */
 function DatedIntro() {
   const dates = useSyncExternalStore(noSubscribe, datedIntro, () => "");
   if (!dates) return null;
   const [today, target] = dates.split("|");
   const values: Record<string, string> = { today, target };
-  /* "Today is {today} ... by {target}?" → text, date, text, date, text */
+  /* "Today is {today} ... by {target}" → text, date, text, date, text */
   const parts = howItWorks.datedIntro.split(/\{(\w+)\}/);
   return (
-    <p className="intro how__intro">
+    <p className="how__intro">
       {parts.map((part, i) =>
         i % 2 === 1 ? (
-          <strong key={i} className="how__date">
+          <span key={i} className={`how__date how__date--${part}`}>
             {values[part] ?? part}
-          </strong>
+          </span>
         ) : (
           part
         ),
@@ -50,18 +53,18 @@ const noSubscribe = () => () => {};
 /* A string, so the snapshot is stable between renders */
 function datedIntro(): string {
   const today = new Date();
-  return `${longDate.format(today)}|${longDate.format(addMonths(today, howItWorks.targetMonths))}`;
+  return `${shortDate.format(today)}|${shortDate.format(addMonths(today, howItWorks.targetMonths))}`;
 }
 
 /**
  * 4 · How it works (#how), option 1a: steps and pricing in one section.
- * Kicker, heading and a dated lead (today, and today plus four months); the
- * line (a node over each card on one plain mist bar); three step cards with every
- * deliverable visible (Step 1 featured, with the badge; on phones each card
- * collapses to its step, outcome and price, with a +/− to open it); then the bundle row
- * (#pricing): the total, computed from the step prices and shown only when
- * all are set, a cost comparison with a senior marketer, and the "Let's
- * talk" button that opens the contact popup. The locals note and payment
+ * Kicker, heading and a dated lead (today and today plus four months, as
+ * date pills); three step cards with every deliverable visible, each Step 1
+ * and 2 list ending on its campaign in a soft pink box with a pulse (Step 1
+ * featured, with the badge; on phones each card collapses to its step,
+ * outcome and price, with a +/− to open it); then the ink strip (#pricing):
+ * the total, computed from the step prices (emptyPrice until all are set),
+ * the cost note and the "Let's talk" button that opens the contact popup. The locals note and payment
  * terms sit under it behind release flags.
  */
 export function HowItWorks() {
@@ -91,15 +94,6 @@ export function HowItWorks() {
         {howItWorks.heading}
       </h2>
       <DatedIntro />
-
-      <div className="phaseline" aria-hidden="true">
-        {phases.map((phase) => (
-          <span key={phase.id} className="phaseline__seg">
-            <span className="phaseline__bar" />
-            <i className="phaseline__node" />
-          </span>
-        ))}
-      </div>
 
       <ol className="steps">
         {phases.map((phase) => {
@@ -138,7 +132,12 @@ export function HowItWorks() {
                       {item}
                     </li>
                   ))}
-                  {phase.win && <li className="stepcard__win">{phase.win}</li>}
+                  {phase.win && (
+                    <li className="outcome">
+                      <span className="pulse" aria-hidden="true" />
+                      <span className="outcome__text">{phase.win}</span>
+                    </li>
+                  )}
                 </ul>
                 {phase.yourTime !== null && (
                   <p className="stepcard__time">{fill(howItWorks.yourTimeLabel, { time: phase.yourTime })}</p>
@@ -155,23 +154,18 @@ export function HowItWorks() {
       </ol>
 
       <div id={anchors.pricing} className="bundle">
-        <div>
-          <p className="bundle__total">
-            <span>{pricing.bundle.label}</span>
-            <span>{formatPrice(total, pricing.emptyPrice)}</span>
-          </p>
-          <div className="bundle__compare">
-            {pricing.bundle.comparison.map((row) => (
-              <div key={row.label} className={row.ours ? "bundle__row bundle__row--ours" : "bundle__row"}>
-                <span className="bundle__label">{row.label}</span>
-                <span className="bundle__track" aria-hidden="true">
-                  <span className="bundle__bar" style={{ width: `${row.share * 100}%` }} />
-                </span>
-              </div>
-            ))}
-          </div>
-          <p className="bundle__caption">{pricing.bundle.caption}</p>
-        </div>
+        <p className="bundle__title">
+          {pricing.bundle.title.split(/(\{total\})/).map((part, i) =>
+            part === "{total}" ? (
+              <span key={i} className="bundle__price">
+                {formatPrice(total, pricing.emptyPrice)}
+              </span>
+            ) : (
+              part
+            ),
+          )}
+        </p>
+        <p className="bundle__note">{pricing.bundle.note}</p>
         <button type="button" className="bundle__cta" onClick={openContact}>
           {pricing.ctaLabel}
         </button>
