@@ -3,12 +3,11 @@
    reproduces an inline style from that reference. Copy comes from content.ts
    and is never restated here.
 
-   The line motif: the logo's hand-drawn pink line is the site's one playful
-   element. Pink only ever appears as a drawn stroke (round ends, long strokes
-   finishing in a small upward flick), never as a flat fill; the 3+ verdict
-   bar and the tooltip are the exceptions. Outlines stay 2px ink. SVG lines use
-   preserveAspectRatio="none" with vector-effect: non-scaling-stroke so they
-   stretch with the layout while the stroke weight stays fixed. */
+   The echo: the logo is a flat mist ribbon with two parallel echoes behind
+   it (sunflower, then pink), each edged in ink. The echo appears only on the
+   hero card, the featured step, the final CTA, the portrait and the modals.
+   Nothing is tilted and nothing is hand-drawn; pink is the back echo and the
+   highlighter. Outlines stay 2px ink. */
 
 :root {
   /* Colors: Sea Glass, with two site overrides: the main buttons and the
@@ -35,12 +34,16 @@
   --rule: rgba(29, 42, 41, 0.14);
   --track: rgba(29, 42, 41, 0.12); /* empty progress segments */
 
-  /* The hero quiz card's stacked sheets, as a shadow */
-  --shadow-stack:
-    7px 7px 0 -2px var(--sunflower-tint), 7px 7px 0 0 var(--ink), 14px 14px 0 -2px var(--mist),
-    14px 14px 0 0 var(--ink);
+  /* Echo: a colour sheet inset by 2px over an ink sheet, twice. */
+  --echo:
+    6px 6px 0 -2px var(--sunflower), 6px 6px 0 0 var(--ink), 12px 12px 0 -2px var(--pink),
+    12px 12px 0 0 var(--ink);
+  --echo-lg:
+    8px 8px 0 -2px var(--sunflower), 8px 8px 0 0 var(--ink), 16px 16px 0 -2px var(--pink),
+    16px 16px 0 0 var(--ink);
 
   /* Type: next/font supplies the self-hosted families as variables */
+  --fm-slab: var(--font-slab), Georgia, serif;
   --fm-head: var(--font-head), system-ui, sans-serif;
   --fm-body: var(--font-body), system-ui, sans-serif;
   --fm-label: var(--font-label), system-ui, sans-serif;
@@ -51,7 +54,14 @@
   --container: 1407px; /* the handoff's 1240px, widened */
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --nav-h: 84px;
+  --nav-h: 92px;
+
+  /* Header alignment: the centre of "Nice Line" as a share of the logo's
+     height (tight-cropped SVG), and the CTA's height */
+  --wordmark-centre: 0.396; /* the cap-height middle of "Nice Line" */
+  --nav-cta-h: 49px;
+  /* Phones: up to 48px, or whatever fits beside the CTA (logo is 899:211) */
+  --logo-h-sm: min(48px, calc((100vw - 2 * var(--page-x) - 190px) * 211 / 899));
 }
 
 *,
@@ -178,19 +188,6 @@ img {
   text-transform: uppercase;
   color: var(--primary);
   margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* A short pink dash before every section label */
-.kicker::before {
-  content: "";
-  flex: none;
-  width: 22px;
-  height: 4px;
-  border-radius: 4px;
-  background: var(--pink);
 }
 
 .kicker--onpine {
@@ -233,41 +230,19 @@ img {
   color: var(--muted);
 }
 
-/* The swash: the pink line drawn behind a word or two, over the lower
-   part of the letters. One per screen. */
-.swash {
-  position: relative;
-  display: inline-block;
-  isolation: isolate;
-  white-space: nowrap;
-}
-
-.swash svg {
-  position: absolute;
-  z-index: -1;
-  left: -0.06em;
-  bottom: -0.08em; /* sits just under the baseline, touching the letters */
-  width: calc(100% + 0.18em);
-  height: 0.36em;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.swash path {
-  fill: none;
-  stroke: var(--pink);
-  stroke-width: 0.17em;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-
-/* A drawn pink underline, for a phrase inside running text */
-.underline {
-  background: no-repeat 0 100% / 100% 0.32em
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5 C 30 2.5, 70 2.5, 99 4.5' fill='none' stroke='%23ec6f88' stroke-width='2.5' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
-  padding-bottom: 0.12em;
-  box-decoration-break: clone;
+/* The highlighter: one flat pink band behind the lower part of the text.
+   At most one per section. */
+.highlight {
+  background: linear-gradient(transparent 58%, var(--pink-light) 58%, var(--pink-light) 93%, transparent 93%);
+  padding: 0 0.06em;
   -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Body-size text and the nav: a slightly taller band */
+.highlight--body {
+  background: linear-gradient(transparent 55%, var(--pink-light) 55%, var(--pink-light) 92%, transparent 92%);
+  padding: 0 3px;
 }
 
 /* A check inside a filled circle, drawn once. */
@@ -361,24 +336,31 @@ img {
 
 /* Header -------------------------------------------------------------- */
 
+/* The header row sits on the logo's top edge; the nav group is then nudged
+   down so its centre lines up with "Nice Line", not with the whole mark
+   (the ribbon and MARKETING sit low). */
 .nav {
   position: sticky;
   top: 0;
   z-index: 30;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
-  padding: 18px var(--page-x);
+  gap: 12px;
+  flex-wrap: nowrap;
+  padding: 16px var(--page-x);
   background: rgba(245, 246, 243, 0.98);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 .nav__links {
+  --logo-h: 60px;
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: clamp(16px, 2vw, 26px);
+  white-space: nowrap;
+  margin-top: calc(var(--logo-h) * var(--wordmark-centre) - var(--nav-cta-h) / 2);
   font-family: var(--fm-head);
   font-weight: 600;
   font-size: 15.4px;
@@ -398,20 +380,12 @@ img {
   white-space: nowrap;
 }
 
-/* The section in view: ink text over a small pink swash */
+/* The section in view: ink text on the highlighter band */
 .nav__links a[aria-current="location"] {
   color: var(--ink);
-}
-
-.nav__links a[aria-current="location"]::after {
-  content: "";
-  position: absolute;
-  left: -4%;
-  right: -4%;
-  bottom: -4px;
-  height: 9px;
-  background: no-repeat center / 100% 100%
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M3 6 C 30 3, 70 3, 92 5 S 98 4, 99 1.5' fill='none' stroke='%23ec6f88' stroke-width='3' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  background: linear-gradient(transparent 55%, var(--pink-light) 55%, var(--pink-light) 92%, transparent 92%);
+  padding-inline: 3px;
+  margin-inline: -3px;
 }
 
 .nav__links .nav__cta {
@@ -431,13 +405,14 @@ img {
 /* The logo: the Nice Line Marketing lockup (SVG files in public/brand). */
 .logo {
   display: block;
+  flex: none;
   line-height: 0;
   color: var(--ink);
 }
 
 .logo__img {
   display: block;
-  height: 46px;
+  height: 60px;
   width: auto;
 }
 
@@ -455,9 +430,13 @@ img {
   .nav {
     gap: 12px;
   }
-  /* Narrow screens: a slightly smaller lockup beside the button. */
+  /* Narrow screens: a smaller lockup beside the button, same alignment. */
   .logo__img {
-    height: 38px;
+    height: var(--logo-h-sm);
+  }
+  .nav__links {
+    --logo-h: var(--logo-h-sm);
+    --nav-cta-h: 45px;
   }
   .nav__links .nav__cta {
     flex: none;
@@ -521,7 +500,7 @@ img {
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transform: translateY(6px) rotate(-3deg);
+  transform: translateY(6px);
   transition:
     opacity 160ms cubic-bezier(0.2, 0.7, 0.3, 1),
     transform 160ms cubic-bezier(0.2, 0.7, 0.3, 1);
@@ -541,7 +520,7 @@ img {
 
 .tip--on {
   opacity: 1;
-  transform: translateY(0) rotate(-3deg);
+  transform: translateY(0);
 }
 
 .hero__subhead {
@@ -567,15 +546,15 @@ img {
   line-height: 1.4;
 }
 
-/* Short pink dashes, sitting on the x-height */
+/* Pink dots, on the first line (the only list markers on the page) */
 .dots li::before {
   content: "";
   flex: none;
-  width: 16px;
-  height: 4px;
-  border-radius: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
   background: var(--pink);
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 }
 
 .hero__bullets {
@@ -622,33 +601,15 @@ textarea.input {
   resize: vertical;
 }
 
-/* The stacked question card: a picture of question 1 that opens the popup */
+/* The question card: a picture of question 1 that opens the popup, with the
+   echo behind it. The padding keeps room for the echo and its hover lift. */
 .dcard {
   position: relative;
   display: block;
-  padding: 0 14px 14px 0;
+  padding: 0 16px 16px 0;
   margin-top: 6px;
   cursor: pointer;
   outline: none;
-}
-
-.dcard__back,
-.dcard__mid {
-  position: absolute;
-  border: 2px solid var(--ink);
-  border-radius: 24px;
-}
-
-.dcard__back {
-  inset: 16px 0 0 16px;
-  background: var(--mist);
-  transform: rotate(2.6deg);
-}
-
-.dcard__mid {
-  inset: 8px 6px 6px 8px;
-  background: var(--sunflower-tint);
-  transform: rotate(1.3deg);
 }
 
 .dcard__front {
@@ -656,16 +617,24 @@ textarea.input {
   background: var(--surface);
   border: 2px solid var(--ink);
   border-radius: 24px;
-  box-shadow: 6px 6px 0 var(--ink);
+  box-shadow: var(--echo);
   padding: 26px 26px 24px;
   transition:
     transform 200ms var(--ease),
     box-shadow 200ms var(--ease);
 }
 
+/* Lift: the card rises and the echo opens out. Hero card and featured step only. */
 .dcard:hover .dcard__front {
   transform: translate(-3px, -3px);
-  box-shadow: 10px 10px 0 var(--ink);
+  box-shadow: var(--echo-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dcard:hover .dcard__front {
+    transform: none;
+    box-shadow: var(--echo);
+  }
 }
 
 .dcard:focus-visible .dcard__front {
@@ -796,46 +765,37 @@ textarea.input {
   position: relative;
 }
 
-/* Desktop draws one segment per step (below); the rail is the phone version. */
-.timeline__rail {
-  display: none;
-}
-
-/* A step's segment runs from its dot to the next step's dot, across the gap. */
+/* One plain line, drawn per step from its dot to the next: an 8px mist bar
+   with a thin ink edge for what's built, a dotted line for what's next. The
+   bar overlaps each dot by 2px; the dots sit above it. No echo. */
 .step__seg {
   position: absolute;
-  left: 14px;
-  top: 4px;
-  width: calc(100% + clamp(20px, 3vw, 40px));
-  height: 20px;
-  overflow: visible;
   pointer-events: none;
 }
 
-.step__seg--last {
-  width: calc(100% - 14px);
+.step__seg--done {
+  left: 26px;
+  top: 10px;
+  width: calc(100% + clamp(20px, 3vw, 40px) - 24px);
+  height: 8px;
+  background: var(--mist);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
 }
 
-.step__seg path {
-  fill: none;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+.step__seg--future {
+  left: 34px;
+  top: 12.5px;
+  width: calc(100% + clamp(20px, 3vw, 40px) - 34px);
+  border-top: 3px dotted var(--muted-2);
 }
 
-.step__seg--done path {
-  stroke: var(--primary);
-  stroke-width: 4px;
+.step__seg--future.step__seg--last {
+  width: calc(100% - 34px);
 }
 
-.step__seg--draw path {
-  stroke: var(--pink);
-  stroke-width: 6px;
-}
-
-.step__seg--future path {
-  stroke: var(--pink);
-  stroke-width: 5px;
-  stroke-dasharray: 0.5px 12px;
+.step__seg--done.step__seg--last {
+  width: calc(100% - 26px);
 }
 
 .timeline__steps {
@@ -867,21 +827,13 @@ textarea.input {
   height: 28px;
   border-radius: 999px;
   background: var(--primary);
+  border: 2px solid var(--ink);
   display: grid;
   place-items: center;
 }
 
 .step__dot--here {
-  background: var(--surface);
-  border: 2.5px solid var(--ink);
-}
-
-.step__dot--here::after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--pink);
+  background: var(--sunflower);
 }
 
 .step__marker .badge {
@@ -927,28 +879,34 @@ textarea.input {
   max-width: 30ch;
 }
 
-/* Phones and narrow tablets: a compact vertical timeline. The rail runs
-   down the left through the dots (sea glass for the built steps, then the
-   pink line, then pink dots for what's next); each step's label, badge, title and text sit beside its
+/* Phones and narrow tablets: a compact vertical timeline. The same line runs
+   down the left through the dots (the mist bar for the built steps, dotted
+   for what's next); each step's label, badge, title and text sit beside its
    dot, so the whole section fits on one screen. */
 @media (max-width: 900px) {
   .why__heading {
     margin-bottom: 26px;
   }
-  .step__seg {
-    display: none;
+  /* Down from this dot to the next one, across the 20px gap */
+  .step__seg--done {
+    left: 10px;
+    top: 26px;
+    bottom: -22px;
+    width: 8px;
+    height: auto;
   }
-  .timeline__rail {
-    display: block;
-    position: absolute;
+  .step__seg--future,
+  .step__seg--future.step__seg--last {
     left: 12.5px;
-    top: 14px;
+    top: 34px;
     bottom: 0;
-    width: 3px;
-    border-radius: 3px;
-    background:
-      linear-gradient(180deg, var(--primary) 0%, var(--primary) 40%, var(--pink) 40%, var(--pink) 62%, transparent 62%),
-      repeating-linear-gradient(180deg, var(--pink) 0 3px, transparent 3px 12px);
+    width: 0;
+    border-top: 0;
+    border-left: 3px dotted var(--muted-2);
+  }
+  .step__seg--done.step__seg--last {
+    bottom: 0;
+    width: 8px;
   }
   .timeline__steps {
     grid-template-columns: minmax(0, 1fr);
@@ -1079,27 +1037,10 @@ textarea.input {
   transition: background-color 160ms var(--ease);
 }
 
-/* Checked: the box fills pale and a pink pen tick is drawn over it, past the edge. */
+/* Checked: the box fills pale with an ink check inside it. */
 .checklist__item[aria-pressed="true"] .checklist__box {
   background: var(--on-primary);
   border-color: var(--on-primary);
-}
-
-.checklist__tick {
-  position: absolute;
-  left: -2px;
-  top: -11px;
-  width: 32px;
-  height: 28px;
-  overflow: visible;
-}
-
-.checklist__tick path {
-  fill: none;
-  stroke: var(--pink);
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .checklist__text {
@@ -1167,8 +1108,9 @@ textarea.input {
   margin-bottom: 40px;
 }
 
-/* The phase line: same grid and gap as the step cards, so each node sits
-   over its card. The line fades sea glass, mid, mist, and ends in a pink flick. */
+/* The line: same grid and gap as the step cards, so each node sits over
+   its card. The same plain mist bar as the Why now timeline, overlapping
+   each node by 2px, with the nodes above it. No echo. */
 .phaseline {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1181,41 +1123,23 @@ textarea.input {
   position: relative;
 }
 
-.phaseline__seg svg {
+.phaseline__bar {
   position: absolute;
-  left: 12px;
-  top: 2px;
-  width: calc(100% + 22px);
-  height: 20px;
-  overflow: visible;
+  left: 20px;
+  top: 8px;
+  width: calc(100% + 6px);
+  height: 8px;
+  background: var(--mist);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
 }
 
-.phaseline__seg:last-child svg {
-  width: calc(100% - 12px);
-}
-
-.phaseline__seg path {
-  fill: none;
-  stroke: var(--primary);
-  stroke-width: 7px;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.phaseline__seg:nth-child(2) path {
-  stroke: var(--sea-mid);
-}
-
-.phaseline__seg:nth-child(3) path {
-  stroke: var(--mist);
-}
-
-.phaseline__seg path.phaseline__flick {
-  stroke: var(--pink);
-  stroke-width: 5px;
+.phaseline__seg:last-child .phaseline__bar {
+  width: calc(100% - 20px);
 }
 
 .phaseline__node {
+  z-index: 1;
   position: absolute;
   left: 2px;
   top: 2px;
@@ -1245,9 +1169,25 @@ textarea.input {
   background: var(--ground);
 }
 
+/* Step 1: the echo, with the same lift as the hero card on hover */
 .stepcard--featured {
   background: var(--surface);
-  box-shadow: var(--shadow-stack);
+  box-shadow: var(--echo);
+  transition:
+    transform 200ms var(--ease),
+    box-shadow 200ms var(--ease);
+}
+
+.stepcard--featured:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--echo-lg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepcard--featured:hover {
+    transform: none;
+    box-shadow: var(--echo);
+  }
 }
 
 .stepcard__meta {
@@ -1315,26 +1255,13 @@ textarea.input {
   margin: 0 0 20px;
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: 8px; /* no markers: spacing alone separates the rows */
 }
 
 .stepcard__list li {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
   font-size: 15px;
   line-height: 1.4;
   color: var(--ink-2);
-}
-
-.stepcard__list li::before {
-  content: "";
-  flex: none;
-  width: 13px;
-  height: 3px;
-  border-radius: 3px;
-  background: var(--primary);
-  transform: translateY(-4px);
 }
 
 .stepcard__time {
@@ -1449,7 +1376,7 @@ textarea.input {
   max-width: 72ch;
 }
 
-/* The Durango note: bigger, ink, with "definitely" underlined in pink. */
+/* The Durango note: bigger, ink, with "definitely" on the highlighter. */
 .how__locals {
   margin-top: 30px;
   font-family: var(--fm-head);
@@ -1503,7 +1430,7 @@ textarea.input {
     cursor: auto;
   }
   .stepcard--featured {
-    box-shadow: 4px 4px 0 var(--ink);
+    box-shadow: var(--echo);
   }
   .stepcard__meta {
     display: contents;
@@ -1627,23 +1554,9 @@ textarea.input {
 }
 
 .tool__numeral {
-  position: relative;
-  font-family: var(--fm-head);
-  font-weight: 800;
+  font-family: var(--fm-slab);
   font-size: 1.125rem;
-  letter-spacing: -0.01em;
   color: var(--primary);
-}
-
-.tool__numeral::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -5px;
-  height: 3px;
-  border-radius: 3px;
-  background: var(--pink);
 }
 
 .tool h3 {
@@ -1711,6 +1624,7 @@ textarea.input {
   color: var(--sea-ink);
   overflow: hidden;
   isolation: isolate; /* keeps the blend modes inside the frame */
+  box-shadow: var(--echo); /* follows the arch */
 }
 
 /* The photo treatment (portrait handoff, option 2b): the photo slightly
@@ -1743,29 +1657,6 @@ textarea.input {
   opacity: 0.6;
 }
 
-/* The pink line traced around the right of the arch, trailing off left */
-.portrait-wrap {
-  position: relative;
-}
-
-.portrait-wrap__line {
-  position: absolute;
-  left: -5%;
-  top: -4%;
-  width: 110%;
-  height: 108%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.portrait-wrap__line path {
-  fill: none;
-  stroke: var(--pink);
-  stroke-width: 5px;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-
 .about__heading {
   margin-bottom: 22px;
 }
@@ -1785,7 +1676,7 @@ textarea.input {
   .about {
     grid-template-columns: minmax(0, 1fr);
   }
-  .portrait-wrap {
+  .portrait {
     width: 100%;
     max-width: 300px;
     justify-self: center;
@@ -1891,12 +1782,11 @@ textarea.input {
 }
 
 .quote__mark {
-  font-family: var(--fm-head);
-  font-weight: 800;
-  font-size: 3.6rem;
-  line-height: 0.8;
+  font-family: var(--fm-slab);
+  font-size: 3rem;
+  line-height: 0.6;
   color: var(--pink);
-  height: 26px;
+  height: 22px;
 }
 
 .quote blockquote {
@@ -1973,13 +1863,13 @@ textarea.input {
 
 /* 10 · The diagnostic ------------------------------------------------- */
 
-/* Bordered and stacked: a panel you can act on. The margin keeps the stack in view. */
+/* Bordered and echoed: a panel you can act on. The margin keeps the echo in view. */
 .diag {
   background: var(--mist);
   color: var(--ink);
   border: 2px solid var(--ink);
-  box-shadow: var(--shadow-stack);
-  margin-right: 14px;
+  box-shadow: var(--echo);
+  margin-right: 12px;
   border-radius: 28px;
   padding: clamp(32px, 5vw, 60px) clamp(24px, 4vw, 56px);
   display: grid;
@@ -2148,7 +2038,7 @@ textarea.input {
   background: var(--surface);
   border: 2px solid var(--ink);
   border-radius: 24px;
-  box-shadow: 8px 8px 0 var(--ink);
+  box-shadow: var(--echo-lg);
   padding: 30px 30px 28px;
   color: var(--ink);
   container-type: inline-size;
@@ -2302,7 +2192,6 @@ textarea.input {
     max-width: 780px;
     padding: 45px 45px 42px;
     border-radius: 32px;
-    box-shadow: 12px 12px 0 var(--ink);
   }
   .modal__dialog--diag .modal__close {
     top: 22px;
@@ -2390,33 +2279,15 @@ textarea.input {
 
 /* Footer -------------------------------------------------------------- */
 
+/* Opens on a 2px ink rule across the column, the same rule that opens the FAQ */
 .footer {
-  position: relative;
-  padding: clamp(56px, 7vw, 80px) var(--page-x) clamp(40px, 5vw, 56px);
-  margin-top: clamp(48px, 6vw, 72px);
+  padding: clamp(40px, 5vw, 56px) 0;
+  margin: clamp(48px, 6vw, 72px) var(--page-x) 0;
+  border-top: 2px solid var(--ink);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 28px;
   align-items: start;
-}
-
-/* The footer's one big swash, full width along the top */
-.footer__line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 24px;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.footer__line path {
-  fill: none;
-  stroke: var(--pink);
-  stroke-width: 4px;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
 }
 
 /* Nudged down so the links and CTA line up with the logo */
@@ -2493,7 +2364,7 @@ textarea.input {
   background: var(--surface);
   border: 2px solid var(--ink);
   border-radius: 24px;
-  box-shadow: 8px 8px 0 var(--ink);
+  box-shadow: var(--echo-lg);
   padding: 32px 32px 28px;
   color: var(--ink);
 }

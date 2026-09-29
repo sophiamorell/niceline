@@ -5,8 +5,8 @@ import { hero } from "@/content";
 import { openDiagnostic } from "@/lib/diagnostic-modal";
 
 /**
- * The hero's right column: a stack of three cards whose front one is a
- * picture of question 1. The whole stack is one button that opens the
+ * The hero's right column: a card, echoed like the logo, that is a picture
+ * of question 1. The whole card is one button that opens the
  * diagnostic popup; nothing inside it takes input or focus.
  */
 export function DiagnosticCard() {
@@ -28,8 +28,6 @@ export function DiagnosticCard() {
       onClick={openDiagnostic}
       onKeyDown={onKeyDown}
     >
-      <span className="dcard__back" aria-hidden="true" />
-      <span className="dcard__mid" aria-hidden="true" />
       <div className="dcard__front" aria-hidden="true">
         <div className="dcard__header">
           <span className="label">{card.progressLabel}</span>

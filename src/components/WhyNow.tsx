@@ -8,25 +8,15 @@ function Check() {
   );
 }
 
-/* One drawn segment per step, from its dot to the next: a straight
-   sea-glass rule for what's built, the pink line drawing in on the step
-   before "you are here", then pink dots ending in a flick. */
-const SEGMENT = {
-  done: "M0 10 L100 10",
-  draw: "M0 10 C 25 10, 38 3, 58 6 S 86 13, 100 10",
-  future: "M0 10 C 40 8, 70 12, 94 8 S 99.5 3, 100 1",
-};
-
 /**
  * 2 · Why marketing, why now: the timeline. Product and Sales are built
- * (sea-glass check dots), Marketing is next (ink-ringed dot with a pink
- * centre, "You are here" badge). On phones the segments give way to a
- * vertical rail.
+ * (sea-glass check dots), Marketing is next (sunflower dot, "You are here"
+ * badge). One plain line runs from dot to dot: a mist bar for what's built,
+ * dotted for what's next. On phones it turns vertical.
  */
 export function WhyNow() {
   const current = whyNow.steps.findIndex((step) => step.current);
-  const kind = (i: number): keyof typeof SEGMENT =>
-    current < 0 || i < current - 1 ? "done" : i === current - 1 ? "draw" : "future";
+  const kind = (i: number) => (current < 0 || i < current ? "done" : "future");
   const last = whyNow.steps.length - 1;
 
   return (
@@ -38,18 +28,13 @@ export function WhyNow() {
       </h2>
 
       <div className="timeline">
-        <div className="timeline__rail" aria-hidden="true" />
         <ol className="timeline__steps">
           {whyNow.steps.map((step, i) => (
             <li key={step.numeral} className="step">
-              <svg
+              <span
                 className={`step__seg step__seg--${kind(i)}${i === last ? " step__seg--last" : ""}`}
-                viewBox="0 0 100 20"
-                preserveAspectRatio="none"
                 aria-hidden="true"
-              >
-                <path d={SEGMENT[kind(i)]} />
-              </svg>
+              />
               <span className="step__marker">
                 <span className={step.current ? "step__dot step__dot--here" : "step__dot"} aria-hidden="true">
                   {!step.current && <Check />}
@@ -64,7 +49,7 @@ export function WhyNow() {
                 <b>{step.lead}</b>
                 <br />
                 {step.body}
-                {step.bodyHighlight && <span className="underline">{step.bodyHighlight}</span>}
+                {step.bodyHighlight && <span className="highlight highlight--body">{step.bodyHighlight}</span>}
                 {step.bodyAfter}
               </p>
             </li>

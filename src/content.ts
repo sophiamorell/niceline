@@ -113,8 +113,8 @@ export const anchors = {
 export const logo = {
   // Stacked ski line and wordmark (public/brand). The header uses the lockup
   // without the tagline; the footer adds "with Sophie Williams".
-  header: { src: "/brand/nice-line-logo-nav.svg", width: 912, height: 216 },
-  footer: { src: "/brand/nice-line-logo-full.svg", width: 912, height: 256 },
+  header: { src: "/brand/nice-line-logo-nav.svg", width: 899, height: 211 },
+  footer: { src: "/brand/nice-line-logo-full.svg", width: 899, height: 244 },
   ariaLabel: "Nice Line Marketing, home",
 };
 
@@ -134,9 +134,9 @@ export const nav = {
 export const hero = {
   kicker: "Fractional marketing leadership for B2B companies", // small line above the opener; the name no longer says who this is for
   opener: "You built something people buy.", // the 40px regular line; hover shows the tooltip
-  tooltip: "Nice line.", // what you say at the bottom of a good run
+  tooltip: "Nice", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
-  headlineHighlight: "sell more", // drawn over with the pink swash
+  headlineHighlight: "sell more", // on the highlighter band
   headlineAfter: " of it.",
   subhead: "Growth stalls when nobody owns marketing.",
   bullets: [
@@ -190,7 +190,7 @@ export const whyNow = {
       title: "Marketing",
       lead: "Marketing, who?",
       body: "Without marketing, you aren't building pipeline and ",
-      bodyHighlight: "growth is capped", // the drawn pink underline
+      bodyHighlight: "growth is capped", // on the highlighter band
       bodyAfter: ".",
       current: true,
     },
@@ -389,7 +389,7 @@ export const pricing = {
   // Shown while release.showLocalsNote is true
   localsNote: {
     before: "Early-stage company in Durango, CO? Let's ",
-    emphasis: "definitely", // bold, with the drawn pink underline
+    emphasis: "definitely", // bold, on the highlighter band
     after: " talk.",
   },
   // Shown while release.showPricingTerms is true
