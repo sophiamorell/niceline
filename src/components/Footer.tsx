@@ -1,19 +1,11 @@
 import { footer, nav, site } from "@/content";
 import { Logo } from "@/components/Logo";
-
-function MailIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m3 7 9 6 9-6" />
-    </svg>
-  );
-}
+import { LinkedInIcon, MailIcon } from "@/components/Icons";
 
 /**
- * Footer: a 2px ink rule along the top, then the logo, the email (when
- * set) and the tagline, the nav list (plus LinkedIn when set),
- * and the CTA.
+ * Footer: a 2px ink rule along the top, then the logo, the email and
+ * LinkedIn (each when set; LinkedIn opens in a new tab) and the tagline,
+ * the nav list, and the CTA.
  */
 export function Footer() {
   return (
@@ -26,6 +18,12 @@ export function Footer() {
           <a href={`mailto:${site.email}`} className="footer__email">
             <MailIcon />
             {site.email}
+          </a>
+        )}
+        {site.linkedin !== null && (
+          <a href={site.linkedin} className="footer__email" target="_blank" rel="me noopener noreferrer">
+            <LinkedInIcon />
+            {footer.linkedinLabel}
           </a>
         )}
         <p className="footer__tagline">
@@ -43,14 +41,6 @@ export function Footer() {
             <a href={link.href}>{link.label}</a>
           </li>
         ))}
-        {site.linkedin !== null && (
-          <li>
-            <a href={site.linkedin} rel="me">
-              {/* content.ts has no label for this link; the network's name is used. */}
-              LinkedIn
-            </a>
-          </li>
-        )}
       </ul>
       <div className="footer__cta-col">
         <a href={footer.cta.href} className="button button--primary footer__cta">

@@ -64,7 +64,8 @@ function datedIntro(): string {
  * featured, with the badge; on phones each card collapses to its step,
  * outcome and price, with a +/− to open it); then the teal strip (#pricing):
  * the total, computed from the step prices (emptyPrice until all are set),
- * the cost note and the "Let's talk" button that opens the contact popup. The locals note and payment
+ * a pink campaign-count pill, the cost note and the "Let's talk" button that
+ * opens the contact popup. The locals note and payment
  * terms sit under it behind release flags.
  */
 export function HowItWorks() {
@@ -165,6 +166,10 @@ export function HowItWorks() {
             ),
           )}
         </p>
+        <span className="bundle__campaigns">
+          <span className="pulse pulse--sm" aria-hidden="true" />
+          {pricing.bundle.campaigns}
+        </span>
         <p className="bundle__note">{pricing.bundle.note}</p>
         <button type="button" className="bundle__cta" onClick={openContact}>
           {pricing.ctaLabel}
