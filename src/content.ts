@@ -111,9 +111,10 @@ export const anchors = {
 /* ------------------------------------------------------------------ */
 
 export const logo = {
-  lead: "Nice Line",
-  highlight: "Marketing",
-  tagline: "with Sophie Williams", // under the lockup in the footer
+  // Stacked ski line and wordmark (public/brand). The header uses the lockup
+  // without the tagline; the footer adds "with Sophie Williams".
+  header: { src: "/brand/nice-line-logo-nav.svg", width: 912, height: 216 },
+  footer: { src: "/brand/nice-line-logo-full.svg", width: 912, height: 256 },
   ariaLabel: "Nice Line Marketing, home",
 };
 

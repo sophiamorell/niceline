@@ -428,21 +428,20 @@ img {
   color: var(--ink);
 }
 
-/* The logo: the Nice Line Marketing lockup (SVG, text in FM Head). */
+/* The logo: the Nice Line Marketing lockup (SVG files in public/brand). */
 .logo {
   display: block;
   line-height: 0;
   color: var(--ink);
 }
 
-.logo__svg {
+.logo__img {
   display: block;
-  height: 48px;
+  height: 46px;
   width: auto;
-  font-family: var(--fm-head);
 }
 
-.logo--footer .logo__svg {
+.logo--footer .logo__img {
   height: 64px;
 }
 
@@ -457,8 +456,8 @@ img {
     gap: 12px;
   }
   /* Narrow screens: a slightly smaller lockup beside the button. */
-  .logo__svg {
-    height: 34px;
+  .logo__img {
+    height: 38px;
   }
   .nav__links .nav__cta {
     flex: none;
