@@ -75,7 +75,8 @@ export const release = {
   showWhatYouGet: true, // the deliverables grid (titles final, bodies and screenshots pending)
   showProof: false, // testimonials: off until real quotes arrive
   showPricingTerms: false, // payment terms + add-ons under the bundle row
-  showLocalsNote: true, // the Durango locals footnote under the bundle row
+  showLocalsNote: false, // the Durango locals footnote under the bundle row
+  showPrices: false, // step prices and the total; off for now (the prices stay in pricing.steps)
   showExclusionsFaq: false, // until exclusions are decided
 };
 
@@ -112,13 +113,12 @@ export const anchors = {
 /* ------------------------------------------------------------------ */
 
 export const logo = {
-  // Stacked ski line and wordmark (public/brand). The header uses the lockup
-  // without the tagline; the footer adds "with Sophie Williams".
+  // Stacked ski line and wordmark (public/brand), in the header and the footer
   header: { src: "/brand/nice-line-logo-nav.svg", width: 899, height: 211 },
-  footer: { src: "/brand/nice-line-logo-full.svg", width: 899, height: 244 },
   // Flat, one colour, no echoes: the scrolled header's teal bar only
   simple: { src: "/brand/nice-line-logo-simple-white.svg", width: 899, height: 198 },
   ariaLabel: "Nice Line Marketing, home",
+  alt: "Nice Line Marketing",
 };
 
 export const nav = {
@@ -269,11 +269,11 @@ export const phases: Phase[] = [
     outcome: "A sales process and CRM your team actually runs on.",
     yourTime: "about 8 hours, mostly with you and whoever owns the CRM.",
     youKeep: [
-      "Documented ICP and persona definitions",
-      "A scored qualification rubric",
-      "Sales stages with entry criteria",
+      "Product Market Fit & Customer Proof Study, built from 4-6 customer interviews",
+      "Your ICP Rubric & AI Evaluator",
+      "Deal Qualifying Framework, with sales stages and entry criteria",
       "A CRM you can report from",
-    ],
+    ], // the tool names match "The tools you keep"
     win: "2-3 additional campaigns in market",
     status: "final",
   },
@@ -288,10 +288,11 @@ export const phases: Phase[] = [
     youKeep: [
       "Activated CRM data: segments and live lists your campaigns run on",
       "Pipeline and forecast dashboards built on metrics you can trust",
-      "Playbooks and documentation for everything we built",
+      "Competitive Intel Agent",
+      "Product Marketing Toolkit, with playbooks and documentation for everything I built",
       "Team enablement, so whoever owns marketing next can run it",
-      "Recommended next steps, including when to make your first hire",
-    ],
+      "Marketing Budget & Next Steps, including when to make your first hire",
+    ], // the tool names match "The tools you keep"
     win: "2-3 additional campaigns in market",
     status: "final",
   },
@@ -361,7 +362,7 @@ export const whatYouGet = {
   heading: "The tools you keep",
   introLines: [
     "You get quick wins in Step 1.",
-    "Steps 2 and 3 ship the tools, built on your data, and they stay with you when we're done.",
+    "Steps 2 and 3 ship the tools, built on your data, and they stay with you when I'm done.",
   ], // each on its own line
   stepLabel: "Built in Step {n}",
   items: [
@@ -529,7 +530,8 @@ export const pricing = {
   // The ink strip under the cards (#pricing): "All three steps · $35,000", the note and
   // the button. The total is computed from steps, and shows as emptyPrice until every step has a price.
   bundle: {
-    title: "All three steps · {total}", // {total} renders in sunflower
+    label: "All three steps", // the strip's title while release.showPrices is off
+    title: "All three steps · {total}", // with prices on; {total} renders in sunflower
     campaigns: "5-7 campaigns live", // a pink pill, like the campaign boxes in the cards
     note: "About half the cost of a senior marketer for four months, with no three-month search first.",
   },
@@ -596,8 +598,8 @@ export const about = {
     },
     {
       lead: "Why Nice Line?",
-      text: "Because there's nothing better than a beautiful ski line ⛷️ And picking the right line, with intention and the goal in mind, is most of this job. (A good line of copy never hurts, either.)",
-    }, // the ski ends its sentence: no period after it
+      text: "Because there's nothing better than a beautiful ski line. And picking the right line, with intention and the goal in mind, is most of this job. (A good line of copy never hurts, either.)",
+    },
   ] as { lead?: string; text: string }[],
   linkedinLabel: "Connect on LinkedIn", // under the paragraphs, when site.linkedin is set; opens in a new tab
   status: "final" as CopyStatus,
@@ -619,19 +621,19 @@ export const faq = {
     },
     {
       question: "We don't have a CRM, or ours is a spreadsheet.",
-      answer: "That is common, and it is fine. Step 1 works from the spreadsheet; Step 2 is where we decide whether a real CRM is worth standing up.",
+      answer: "That is common, and it is fine. Step 1 works from the spreadsheet; Step 2 is where I decide whether a real CRM is worth standing up.",
       status: "final",
       show: true,
     },
     {
       question: "Will you hire our first marketer?",
-      answer: "We're not a search firm, but Step 3 does include a budget and a first-hire plan: the job description, the first 90 days, and a scorecard to hire against.",
+      answer: "I'm not a search firm, but Step 3's Marketing Budget & Next Steps includes a first-hire plan: the job description, the first 90 days, and a scorecard to hire against.",
       status: "final",
       show: true,
     },
     {
       question: "Will you talk to our customers?",
-      answer: "Yes, in Step 2. Ideally we'll speak to 4-6 customers. This is the fastest way to find out whether your positioning resonates with buyers.",
+      answer: "Yes, in Step 2. I'll speak to 4-6 customers for the Product Market Fit & Customer Proof Study. This is the fastest way to find out whether your positioning resonates with buyers.",
       status: "final",
       show: true,
     },
@@ -649,7 +651,7 @@ export const faq = {
     },
     {
       question: "We're not a software company. Does this apply?",
-      answer: "For sure! Start with clicking \"See what to fix first\" and we'll see where I can help.",
+      answer: "For sure! Start with clicking \"See what to fix first\" and I'll see where I can help.",
       status: "final",
       show: true,
     },

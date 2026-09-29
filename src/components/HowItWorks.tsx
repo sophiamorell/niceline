@@ -59,12 +59,13 @@ function datedIntro(): string {
 /**
  * 4 · How it works (#how), option 1a: steps and pricing in one section.
  * Kicker, heading and a dated lead (today and today plus four months, as
- * date pills); three step cards with every deliverable visible, each Step 1
- * and 2 list ending on its campaign in a soft pink box with a pulse (Step 1
+ * date pills); three step cards with every deliverable visible, each card
+ * ending on its campaign in a soft pink box with a pulse, just above "Your
+ * time" (Step 1
  * featured, with the badge; on phones each card collapses to its step,
  * outcome and price, with a +/− to open it); then the teal strip (#pricing):
- * the total, computed from the step prices (emptyPrice until all are set),
- * a pink campaign-count pill, the cost note and the "Let's talk" button that
+ * the total, computed from the step prices (emptyPrice until all are set;
+ * prices only show while release.showPrices is on), a pink campaign-count pill, the cost note and the "Let's talk" button that
  * opens the contact popup. The locals note and payment
  * terms sit under it behind release flags.
  */
@@ -133,18 +134,20 @@ export function HowItWorks() {
                       {item}
                     </li>
                   ))}
-                  {phase.win && (
-                    <li className="outcome">
-                      <span className="pulse" aria-hidden="true" />
-                      <span className="outcome__text">{phase.win}</span>
-                    </li>
-                  )}
                 </ul>
+                {/* The campaign sits at the bottom, just above "Your time", so it
+                    lines up across the cards (1, then 2-3, then 2-3) */}
+                {phase.win && (
+                  <p className="outcome">
+                    <span className="pulse" aria-hidden="true" />
+                    <span className="outcome__text">{phase.win}</span>
+                  </p>
+                )}
                 {phase.yourTime !== null && (
                   <p className="stepcard__time">{fill(howItWorks.yourTimeLabel, { time: phase.yourTime })}</p>
                 )}
               </div>
-              {price && (
+              {release.showPrices && price && (
                 <div className="stepcard__price">
                   <span className="stepcard__amount">{formatPrice(price.price, pricing.emptyPrice)}</span>
                 </div>
@@ -156,15 +159,17 @@ export function HowItWorks() {
 
       <div id={anchors.pricing} className="bundle">
         <p className="bundle__title">
-          {pricing.bundle.title.split(/(\{total\})/).map((part, i) =>
-            part === "{total}" ? (
-              <span key={i} className="bundle__price">
-                {formatPrice(total, pricing.emptyPrice)}
-              </span>
-            ) : (
-              part
-            ),
-          )}
+          {release.showPrices
+            ? pricing.bundle.title.split(/(\{total\})/).map((part, i) =>
+                part === "{total}" ? (
+                  <span key={i} className="bundle__price">
+                    {formatPrice(total, pricing.emptyPrice)}
+                  </span>
+                ) : (
+                  part
+                ),
+              )
+            : pricing.bundle.label}
         </p>
         <span className="bundle__campaigns">
           <span className="pulse pulse--sm" aria-hidden="true" />
