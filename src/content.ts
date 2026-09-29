@@ -139,9 +139,9 @@ export const hero = {
   headlineAfter: " of it.",
   subhead: "Growth stalls when nobody owns marketing.",
   bullets: [
-    "Most wins still come from referrals and who you know",
-    "Your pitch, your deck and your website say different things",
-    "You know you'll need a marketer, but not who or when",
+    "Pipeline shows up when it feels like it, so the forecast is mostly hope",
+    "Nobody owns the story, so everyone tells it differently",
+    "You know you'll eventually need a marketer, but not who or when",
   ],
   primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
   secondaryCta: { label: "Steps & pricing", href: `#${anchors.howItWorks}` },
