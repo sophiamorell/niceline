@@ -1336,19 +1336,28 @@ textarea.input {
   transform: translateY(-2px);
 }
 
-/* The campaign outcome: last in its list, so the card ends on it. A soft pink
-   box with a pink pulse in place of the bullet. */
-.stepcard__list li.outcome {
+/* The campaign outcome: pinned just above "Your time", so it sits at the
+   same height in every card and the counts read across the row. A soft
+   pink box with a pink pulse. */
+.outcome {
+  display: flex;
   align-items: center;
   gap: 14px;
-  margin-top: 4px;
+  margin: 0 0 20px;
   padding: 14px 16px;
   border-radius: 16px;
   background: var(--pink-tint);
 }
 
-.stepcard__list li.outcome::before {
-  content: none;
+/* Side by side, every box is three lines tall and "Your time" two, so the
+   boxes line up top and bottom at every width */
+@media (min-width: 901px) {
+  .outcome {
+    min-height: calc(3 * 1.3 * 1.02rem + 28px);
+  }
+  .stepcard__time {
+    min-height: calc(2 * 1.45 * 14px);
+  }
 }
 
 .outcome__text {
@@ -1410,6 +1419,11 @@ textarea.input {
   line-height: 1.45;
   color: var(--muted);
   margin-bottom: 20px;
+}
+
+/* No price row under it (prices off): the card ends on "Your time" */
+.stepcard__details:last-child .stepcard__time {
+  margin-bottom: 0;
 }
 
 .stepcard__price {
