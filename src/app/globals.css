@@ -54,7 +54,7 @@
   --container: 1407px; /* the handoff's 1240px, widened */
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --nav-h: 92px;
+  --nav-h: 76px; /* the scrolled bar, which is what's showing after a jump */
 
   /* Header alignment: the centre of "Nice Line" as a share of the logo's
      height (tight-cropped SVG), and the CTA's height */
@@ -73,6 +73,10 @@
 html {
   color-scheme: light;
   scroll-behavior: smooth;
+  /* The header changes height when it turns into the scrolled bar. With
+     scroll anchoring the browser would move the page to compensate, which
+     crosses the scroll threshold again and flips the header back and forth. */
+  overflow-anchor: none;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -332,10 +336,14 @@ img {
 
 /* Header -------------------------------------------------------------- */
 
-/* The header row sits on the logo's top edge; the nav group is then nudged
-   down so its centre lines up with "Nice Line", not with the whole mark
-   (the ribbon and MARKETING sit low). */
+/* The header wraps the whole mark on a solid fill; its height is padding
+   plus logo. At the top the row sits on the logo's top edge and the nav
+   group is nudged down so its centre lines up with "Nice Line", not with the
+   whole mark (the ribbon and MARKETING sit low). After 24px of scroll it
+   becomes a short ink bar with the simple white logo, centred (.nav--scrolled). */
 .nav {
+  --logo-full-h: 60px;
+  --logo-simple-h: 32px;
   position: sticky;
   top: 0;
   z-index: 30;
@@ -344,19 +352,29 @@ img {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: nowrap;
-  padding: 16px var(--page-x);
-  background: rgba(245, 246, 243, 0.98);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  padding: 20px var(--page-x);
+  background: var(--ground);
+  border-bottom: 2px solid transparent; /* so the row doesn't jump when the border appears */
+  transition:
+    background-color 160ms var(--ease),
+    border-color 160ms var(--ease),
+    padding 200ms var(--ease);
+}
+
+.nav--scrolled {
+  align-items: center;
+  padding-block: 10px;
+  background: var(--ink);
+  border-bottom-color: var(--ink);
 }
 
 .nav__links {
-  --logo-h: 60px;
   display: flex;
   align-items: center;
   gap: clamp(16px, 2vw, 26px);
   white-space: nowrap;
-  margin-top: calc(var(--logo-h) * var(--wordmark-centre) - var(--nav-cta-h) / 2);
+  margin-top: calc(var(--logo-full-h) * var(--wordmark-centre) - var(--nav-cta-h) / 2);
+  transition: margin-top 200ms var(--ease);
   font-family: var(--fm-head);
   font-weight: 600;
   font-size: 15.4px;
@@ -384,6 +402,24 @@ img {
   margin-inline: -3px;
 }
 
+/* On the ink bar: light links; the current one turns sunflower, no band */
+.nav--scrolled .nav__links {
+  margin-top: 0;
+}
+
+.nav--scrolled .nav__links a:not(.nav__cta) {
+  color: var(--on-primary);
+}
+
+.nav--scrolled .nav__links a:not(.nav__cta):hover {
+  color: var(--mist);
+}
+
+.nav--scrolled .nav__links a[aria-current="location"] {
+  color: var(--sunflower);
+  background: none;
+}
+
 .nav__links .nav__cta {
   background: var(--sunflower);
   color: var(--ink);
@@ -408,12 +444,49 @@ img {
 
 .logo__img {
   display: block;
-  height: 60px;
   width: auto;
 }
 
 .logo--footer .logo__img {
   height: 64px;
+}
+
+/* Header: the full echo logo and the simple white one, stacked; the box
+   takes the size of whichever is showing and they cross-fade. */
+.logo--header {
+  position: relative;
+  height: var(--logo-full-h);
+  width: calc(var(--logo-full-h) * 899 / 211);
+}
+
+.logo--header .logo__img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 120ms var(--ease);
+}
+
+.logo__img--full {
+  height: var(--logo-full-h);
+}
+
+.logo__img--simple {
+  height: var(--logo-simple-h);
+  opacity: 0;
+}
+
+.nav--scrolled .logo--header {
+  height: var(--logo-simple-h);
+  width: calc(var(--logo-simple-h) * 899 / 198);
+  overflow: hidden; /* the full logo fades out inside the bar */
+}
+
+.nav--scrolled .logo__img--full {
+  opacity: 0;
+}
+
+.nav--scrolled .logo__img--simple {
+  opacity: 1;
 }
 
 @media (max-width: 900px) {
@@ -427,11 +500,9 @@ img {
     gap: 12px;
   }
   /* Narrow screens: a smaller lockup beside the button, same alignment. */
-  .logo__img {
-    height: var(--logo-h-sm);
-  }
-  .nav__links {
-    --logo-h: var(--logo-h-sm);
+  .nav {
+    --logo-full-h: var(--logo-h-sm);
+    --logo-simple-h: 28px;
     --nav-cta-h: 45px;
   }
   .nav__links .nav__cta {
@@ -709,12 +780,6 @@ textarea.input {
   white-space: nowrap;
 }
 
-.dcard__caption {
-  margin-top: 12px;
-  text-align: center;
-  font-size: 13.5px;
-  color: var(--muted);
-}
 
 @media (max-width: 900px) {
   .hero {
@@ -1096,8 +1161,10 @@ textarea.input {
 
 /* 4 · How it works: step cards and the bundle row (option 1a) ---------- */
 
+/* The dated lead: one line wherever it fits */
 .how__intro {
   margin-bottom: 40px;
+  max-width: none;
 }
 
 /* The two dates in the lead: set apart from the sentence */
