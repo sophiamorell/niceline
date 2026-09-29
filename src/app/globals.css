@@ -2420,8 +2420,7 @@ textarea.input {
   line-height: 1.6;
   color: var(--ink-2);
   margin: 0 0 24px;
-  max-width: 68ch;
-  padding: 0 4px;
+  padding: 0 4px; /* full width of the list */
 }
 
 .faq__answer[hidden] {

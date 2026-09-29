@@ -610,58 +610,44 @@ export const faq = {
   heading: "Maybe you're wondering ...",
   items: [
     {
-      question: "What do you need from us before Step 1?",
-      answer:
-        "A CRM export, access to whatever analytics you have, and two hours of your calendar in week one. If the data is a mess, that is itself a finding. I work with what exists.",
+      question: "What do you need from us before starting Step 1?",
+      answer: "Access to your CRM (or a CRM export), access to whatever analytics you have, and two hours of your calendar in week one.",
       status: "final",
       show: true,
     },
     {
       question: "We don't have a CRM, or ours is a spreadsheet.",
-      answer:
-        "That is common and it is fine. Step 1 works from the spreadsheet; Step 2 is where we decide whether a real CRM is worth standing up, and I stand it up if it is.",
-      status: "final",
-      show: true,
-    },
-    {
-      question: "We don't have referral wins to scale yet.",
-      answer:
-        "Then the referral motion waits. Step 3 activates whatever actually produced revenue. If that is outbound or content rather than referrals, that is what gets built.",
+      answer: "That is common, and it is fine. Step 1 works from the spreadsheet; Step 2 is where we decide whether a real CRM is worth standing up.",
       status: "final",
       show: true,
     },
     {
       question: "Will you hire our first marketer?",
-      answer:
-        "Not as a search firm. Step 3 includes a budget and a first-hire plan: the job description, the first 90 days, and a scorecard to hire against.",
+      answer: "We're not a search firm, but Step 3 does include a budget and a first-hire plan: the job description, the first 90 days, and a scorecard to hire against.",
       status: "final",
       show: true,
     },
     {
       question: "Will you talk to our customers?",
-      answer:
-        "Yes, in Step 2: four to six conversations, scheduled by me, with a written synthesis. It is the fastest way to find out whether your positioning survives contact with buyers.",
+      answer: "Yes, in Step 2. Ideally we'll speak to 4-6 customers. This is the fastest way to find out whether your positioning resonates with buyers.",
       status: "final",
       show: true,
     },
     {
       question: "What happens after Step 3?",
-      answer:
-        "Ideally nothing. The function is built, documented and running, and you own it. Some clients keep a monthly review; most do not need one.",
+      answer: "It depends. At this point the marketing function is built, documented and running. Some clients continue to work with me, and some hire their first marketer.",
       status: "final",
       show: true,
     },
     {
       question: "Who is this not for?",
-      answer:
-        "Pre-product-market-fit companies, agencies looking to white-label, and anyone who wants a strategy deck rather than a campaign in market. Say so early and we'll both save the time.",
+      answer: "Companies in very early stages that have not found product-market fit, agencies looking to white-label, and anyone who wants a strategy deck rather than a campaign in market.",
       status: "final",
       show: true,
     },
     {
       question: "We're not a software company. Does this apply?",
-      answer:
-        "Often, if you sell considered B2B purchases with a real sales conversation. Take the diagnostic. If the answer is no, the email will say no.",
+      answer: "For sure! Start with clicking \"See what to fix first\" and we'll see where I can help.",
       status: "final",
       show: true,
     },
