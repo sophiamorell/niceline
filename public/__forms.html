@@ -40,5 +40,19 @@
       <input type="hidden" name="form-name" value="diagnostic-start" />
       <input name="email" type="email" />
     </form>
+    <!-- Line Check's email gate (src/components/line-check/LineCheck.tsx,
+         sendToSophie): contact details, the profile and rubric as text, every
+         customer as text, and the raw JSON in "data". -->
+    <form name="line-check" data-netlify="true" netlify hidden>
+      <input type="hidden" name="form-name" value="line-check" />
+      <input name="firstName" type="text" />
+      <input name="company" type="text" />
+      <input name="email" type="email" />
+      <input name="optIn" type="text" />
+      <textarea name="profile"></textarea>
+      <textarea name="rubric"></textarea>
+      <textarea name="customers"></textarea>
+      <textarea name="data"></textarea>
+    </form>
   </body>
 </html>

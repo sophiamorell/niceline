@@ -46,6 +46,24 @@ One-time setup in the Netlify dashboard:
 Submissions are also listed under Forms in Netlify. No environment variables
 are needed.
 
+## Line Check (/line-check)
+
+A free lead-magnet tool: a founder describes their best and worst customers
+(talking or typing) and gets a draft ideal customer profile, then, after an
+email gate, a scoring rubric with a live scorer. It's a prototype for testing
+with a few founders, so it isn't linked from the nav and is set to noindex.
+
+- Copy lives in `src/content-line-check.ts`. Set `bookingUrl` there to show
+  the "Book a 30-minute walkthrough" button.
+- AI calls go through `/api/line-check/extract` and `/api/line-check/synthesize`
+  (Next.js route handlers, which Netlify runs as functions). In Netlify, set
+  **`ANTHROPIC_API_KEY`** (scope: Functions). Optional: `ICP_MODEL` to change
+  the model (default `claude-sonnet-5-5`).
+- Gate submissions arrive as the `line-check` Netlify form. Add an email
+  notification for it the same way as the diagnostic.
+- Locally, the gate logs to the console instead of posting (Netlify Forms only
+  exists on a deploy); the AI routes need `ANTHROPIC_API_KEY` in `.env.local`.
+
 ## Layout
 
 ```
