@@ -51,6 +51,7 @@ const CategorySchema = z.enum(CATEGORIES.map((c) => c.key) as [CategoryKey, ...C
 
 export const SynthesisSchema = z.object({
   profile: z.string(),
+  highlights: z.array(z.string()),
   shared: z.array(z.string()),
   avoid: z.array(z.string()),
   confidence: z.enum(["low", "medium"]),

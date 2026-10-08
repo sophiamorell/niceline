@@ -6,6 +6,7 @@ import {
   CATEGORIES,
   getField,
   withField,
+  type CategoryKey,
   type CustomerProfile,
   type CustomerType,
   type FieldPath,
@@ -24,29 +25,45 @@ export function ProfileCards({
   return (
     <div className="lc-cards">
       {CATEGORIES.map((category) => (
-        <section key={category.key} className={`lc-card lc-card--${tone}`}>
-          <h3 className="lc-card__title">{lineCheck.categories[category.key]}</h3>
-          <dl className="lc-card__fields">
-            {category.fields.map((f) => {
-              const path = `${category.key}.${f}` as FieldPath;
-              const label = lineCheck.fields[f];
-              return (
-                <div key={f} className="lc-card__row">
-                  <dt>{label}</dt>
-                  <dd>
-                    <Chip
-                      field={getField(profile, path)}
-                      label={label}
-                      tone={tone}
-                      onChange={(next) => onChange(withField(profile, path, next))}
-                    />
-                  </dd>
-                </div>
-              );
-            })}
-          </dl>
-        </section>
+        <CategoryCard key={category.key} category={category.key} profile={profile} tone={tone} onChange={onChange} />
       ))}
     </div>
+  );
+}
+
+/** One category: its label and a wrap of chips. */
+export function CategoryCard({
+  category,
+  profile,
+  tone,
+  onChange,
+  title = lineCheck.categories[category],
+}: {
+  category: CategoryKey;
+  profile: CustomerProfile;
+  tone: CustomerType;
+  onChange: (next: CustomerProfile) => void;
+  title?: string;
+}) {
+  const fields = CATEGORIES.find((c) => c.key === category)?.fields ?? [];
+  return (
+    <section className="lc-card">
+      <h3 className="lc-card__title">{title}</h3>
+      <div className="lc-card__chips">
+        {fields.map((f) => {
+          const path = `${category}.${f}` as FieldPath;
+          return (
+            <Chip
+              key={f}
+              field={getField(profile, path)}
+              label={lineCheck.fields[f]}
+              role={category === "buyer" ? lineCheck.review.roles[f] : undefined}
+              tone={tone}
+              onChange={(next) => onChange(withField(profile, path, next))}
+            />
+          );
+        })}
+      </div>
+    </section>
   );
 }

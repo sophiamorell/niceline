@@ -6,7 +6,6 @@ import { fill } from "@/lib/copy";
 import { rubricUrl } from "@/lib/line-check/rubric-link";
 import { track } from "@/lib/track";
 import type { Rubric } from "@/lib/line-check/types";
-import { DownloadIcon, LinkIcon } from "@/components/line-check/icons";
 
 const { rubric: copy, events } = lineCheck;
 
@@ -15,12 +14,12 @@ export function tierFor(score: number) {
 }
 
 /**
- * The rubric as a table, then the live scorer built from it: one select per
- * criterion, the score and tier updating as each is picked. "Copy link" puts
- * the rubric (not the customer data) in the URL hash; "Download as PDF" is
- * the browser's print dialog with a print stylesheet.
+ * The rubric as five criterion cards (handoff 6a), then Copy link and
+ * Download PDF. "Copy link" puts the rubric (never the customer data) in the
+ * URL hash; "Download PDF" is the browser's print dialog with a print
+ * stylesheet.
  */
-export function RubricView({ rubric, shared = false }: { rubric: Rubric; shared?: boolean }) {
+export function RubricCards({ rubric, actions = true }: { rubric: Rubric; actions?: boolean }) {
   const [copied, setCopied] = useState<"idle" | "ok" | "failed">("idle");
 
   const copyLink = async () => {
@@ -41,73 +40,53 @@ export function RubricView({ rubric, shared = false }: { rubric: Rubric; shared?
 
   return (
     <>
-      <div className="lc-rubric">
-        <table className="lc-rubric__table">
-          <thead>
-            <tr>
-              <th scope="col">{copy.criterion}</th>
-              <th scope="col" className="lc-rubric__weight">
-                {copy.weight}
-              </th>
-              <th scope="col">{copy.levels}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rubric.criteria.map((c) => (
-              <tr key={c.name}>
-                <td data-label={copy.criterion}>
-                  <strong className="lc-rubric__name">{c.name}</strong>
-                  {c.why && <span className="lc-rubric__why">{c.why}</span>}
-                </td>
-                <td data-label={copy.weight} className="lc-rubric__weight">
-                  {c.weight}
-                </td>
-                <td data-label={copy.levels}>
-                  <ul className="lc-rubric__levels">
-                    {c.levels.map((l) => (
-                      <li key={l.label}>
-                        <span>{l.label}</span>
-                        <span className="lc-rubric__points">
-                          {l.points} {copy.pointsSuffix}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ol className="lc-criteria">
+        {rubric.criteria.map((c) => (
+          <li key={c.name} className="lc-criterion">
+            <div className="lc-criterion__head">
+              <h2 className="lc-criterion__name">{c.name}</h2>
+              <span className="lc-criterion__weight">{c.weight}</span>
+            </div>
+            {c.why && <p className="lc-criterion__why">{c.why}</p>}
+            <ul className="lc-criterion__levels">
+              {c.levels.map((l) => (
+                <li key={l.label}>
+                  <span>{l.label}</span>
+                  <span className="lc-criterion__points">{l.points}</span>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ol>
 
-      {!shared && (
-        <div className="lc-actions lc-noprint">
-          <button type="button" className="button button--outline button--small lc-icon-button" onClick={copyLink}>
-            <LinkIcon />
-            {copy.copyLink}
-          </button>
-          <button
-            type="button"
-            className="button button--outline button--small lc-icon-button"
-            onClick={() => window.print()}
-          >
-            <DownloadIcon />
-            {copy.download}
-          </button>
-          <p className="lc-fine" role="status" aria-live="polite">
+      {actions && (
+        <>
+          <div className="lc-pair lc-noprint">
+            <button type="button" className="lc-btn lc-btn--outline" onClick={copyLink}>
+              {copy.copyLink}
+            </button>
+            <button type="button" className="lc-btn lc-btn--outline" onClick={() => window.print()}>
+              {copy.download}
+            </button>
+          </div>
+          <p className="lc-fine lc-center lc-noprint" role="status" aria-live="polite">
             {copied === "ok" ? copy.copied : copied === "failed" ? copy.copyFailed : ""}
           </p>
-        </div>
+        </>
       )}
-
-      <Scorer rubric={rubric} />
     </>
   );
 }
 
-function Scorer({ rubric }: { rubric: Rubric }) {
+/**
+ * The live scorer (handoff 6b): a prospect name, the tier card, and one
+ * select per criterion. The score and tier update on every change.
+ */
+export function Scorer({ rubric }: { rubric: Rubric }) {
   const uid = useId();
   const [picks, setPicks] = useState<Record<number, number>>({});
+  const [prospect, setProspect] = useState("");
   const tracked = useRef(false);
 
   const answered = Object.keys(picks).length;
@@ -116,51 +95,57 @@ function Scorer({ rubric }: { rubric: Rubric }) {
 
   return (
     <section className="lc-scorer lc-noprint" aria-labelledby={`${uid}-h`}>
-      <h3 id={`${uid}-h`} className="lc-h3">
+      <p className="lc-kicker">{copy.scorerKicker}</p>
+      <h2 id={`${uid}-h`} className="lc-display lc-display--md">
         {copy.scorerHeadline}
-      </h3>
-      <p className="lc-body">{copy.scorerBody}</p>
-      <div className="lc-scorer__grid">
-        <div className="lc-scorer__fields">
-          {rubric.criteria.map((c, i) => (
-            <label key={c.name} htmlFor={`${uid}-${i}`} className="field">
-              <span className="field__label">{c.name}</span>
-              <select
-                id={`${uid}-${i}`}
-                className="input lc-select"
-                value={picks[i] ?? ""}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setPicks((prev) => {
-                    const next = { ...prev };
-                    if (v === "") delete next[i];
-                    else next[i] = Number(v);
-                    return next;
-                  });
-                  if (!tracked.current) {
-                    tracked.current = true;
-                    track(events.scorerUsed);
-                  }
-                }}
-              >
-                <option value="">{copy.pick}</option>
-                {c.levels.map((l, j) => (
-                  <option key={l.label} value={j}>
-                    {l.label} ({l.points})
-                  </option>
-                ))}
-              </select>
-            </label>
-          ))}
-        </div>
-        <div className={`lc-score lc-score--${tier.tier}`} aria-live="polite">
-          <span className="label">{copy.score}</span>
-          <span className="lc-score__num">{score}</span>
-          <span className="lc-score__tier">
-            <b>{tier.tier}</b> {tier.label}
-          </span>
-          <span className="lc-fine">{fill(copy.answered, { n: answered, total: rubric.criteria.length })}</span>
-        </div>
+      </h2>
+      <input
+        className="lc-input"
+        aria-label={copy.prospectLabel}
+        placeholder={copy.prospectPlaceholder}
+        value={prospect}
+        onChange={(e) => setProspect(e.target.value)}
+      />
+
+      <div className={answered === 0 ? "lc-tier lc-tier--none" : `lc-tier lc-tier--${tier.tier}`} aria-live="polite">
+        <span className="lc-tier__letter">{answered === 0 ? copy.emptyLetter : tier.tier}</span>
+        <span className="lc-tier__text">
+          <span className="lc-tier__label">{answered === 0 ? copy.emptyTier : tier.label}</span>
+          <span className="lc-tier__score">{fill(copy.scoreOf, { score })}</span>
+        </span>
+      </div>
+
+      <div className="lc-scorer__fields">
+        {rubric.criteria.map((c, i) => (
+          <label key={c.name} htmlFor={`${uid}-${i}`} className="lc-field">
+            <span className="lc-field__label">{c.name}</span>
+            <select
+              id={`${uid}-${i}`}
+              className="lc-input lc-select"
+              value={picks[i] ?? ""}
+              onChange={(e) => {
+                const v = e.target.value;
+                setPicks((prev) => {
+                  const next = { ...prev };
+                  if (v === "") delete next[i];
+                  else next[i] = Number(v);
+                  return next;
+                });
+                if (!tracked.current) {
+                  tracked.current = true;
+                  track(events.scorerUsed);
+                }
+              }}
+            >
+              <option value="">{copy.pick}</option>
+              {c.levels.map((l, j) => (
+                <option key={l.label} value={j}>
+                  {fill(copy.option, { label: l.label, points: l.points })}
+                </option>
+              ))}
+            </select>
+          </label>
+        ))}
       </div>
     </section>
   );

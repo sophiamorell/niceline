@@ -51,7 +51,10 @@ const noopSubscribe = () => () => {};
 export interface Dictation {
   start: () => void;
   stop: () => void;
-  transcript: string;
+  transcript: string; // finalText + interim
+  finalText: string; // words the recognizer has settled on
+  interim: string; // words still being heard (shown muted)
+  startedAt: number | null; // when listening began, for the timer
   isListening: boolean;
   isSupported: boolean;
   stopReason: StopReason;
@@ -63,6 +66,7 @@ export function useDictation(): Dictation {
   const [finalText, setFinalText] = useState("");
   const [interim, setInterim] = useState("");
   const [stopReason, setStopReason] = useState<StopReason>(null);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
 
   const recRef = useRef<Recognition | null>(null);
   const wantRef = useRef(false); // true while the user hasn't pressed Stop
@@ -133,6 +137,7 @@ export function useDictation(): Dictation {
     try {
       rec.start();
       setListening(true);
+      setStartedAt(Date.now());
       timerRef.current = window.setTimeout(() => finish("timeLimit"), MAX_MS);
     } catch {
       wantRef.current = false;
@@ -155,7 +160,17 @@ export function useDictation(): Dictation {
     [],
   );
 
-  return { start, stop, transcript: join(finalText, interim), isListening, isSupported, stopReason };
+  return {
+    start,
+    stop,
+    transcript: join(finalText, interim),
+    finalText,
+    interim,
+    startedAt: isListening ? startedAt : null,
+    isListening,
+    isSupported,
+    stopReason,
+  };
 }
 
 function join(a: string, b: string): string {

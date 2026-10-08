@@ -115,6 +115,7 @@ export interface Rubric {
 
 export interface Synthesis {
   profile: string;
+  highlights?: string[]; // 1 to 2 exact phrases from profile, marked on screen
   shared: string[];
   avoid: string[];
   confidence: "low" | "medium";

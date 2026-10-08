@@ -58,6 +58,10 @@ export async function POST(req: Request): Promise<Response> {
     return json({
       synthesis: {
         profile: synthesis.profile,
+        highlights: synthesis.highlights
+          .map((h) => h.trim())
+          .filter((h) => h.length > 1 && synthesis.profile.includes(h))
+          .slice(0, 2),
         shared: synthesis.shared.slice(0, 5),
         avoid: painful.length === 0 ? [] : synthesis.avoid.slice(0, 3),
         confidence,

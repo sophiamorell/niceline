@@ -1,6 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useId, useReducer, useRef, useState, type FormEvent, type ReactNode } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useReducer,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { logo, site } from "@/content";
@@ -38,31 +48,34 @@ import {
   type Synthesis,
   type SynthesizeResponse,
 } from "@/lib/line-check/types";
-import { DictationField } from "@/components/line-check/DictationField";
+import { LiveTranscript, MicHero, MicInline, useDictationInto } from "@/components/line-check/DictationField";
 import { ProfileCards } from "@/components/line-check/ProfileCards";
 import { Grid } from "@/components/line-check/Grid";
-import { RubricView } from "@/components/line-check/RubricView";
-import { ArrowLeftIcon, ArrowRightIcon, PlusIcon, RotateIcon, SpinnerIcon } from "@/components/line-check/icons";
+import { RubricCards, Scorer } from "@/components/line-check/RubricView";
+import { CheckIcon, SpinnerIcon } from "@/components/line-check/icons";
 
 /**
- * Line Check (build brief: "Line Check: prototype build brief", v1).
+ * Line Check (behavior: "Line Check: prototype build brief"; visuals: the
+ * Claude Design handoff "Line Check Storyboard", frames 0a to 6b).
  *
  *   0 Intro
- *   1 Best customers (2 to 3, each: nickname, tell, follow-ups, review)
- *   2 Painful customers (optional, 0 to 2, same pattern)
+ *   1 Best customers (2 to 3: nickname, tell, follow-ups, review, so far)
+ *   2 Painful customers (optional, 0 to 2: intro with nickname, tell, review)
  *   3 Side-by-side check
- *   4 Draft ICP (ungated)
+ *   4 Finding the pattern, then the draft ICP (ungated)
  *   5 Email gate
  *   6 Rubric and live scorer (gated)
  *
- * One question per screen, Back on every screen after the intro. State is
- * held client-side (src/lib/line-check/state.ts) until the email gate, which
- * posts everything to Sophie through Netlify Forms. A URL with a rubric in
- * its hash (#r=...) opens straight to that rubric's scorer.
+ * Each screen is a column: top bar (Back, six progress segments, "n/6"),
+ * content, then the main button pinned to the bottom. State is held
+ * client-side (src/lib/line-check/state.ts) until the email gate, which posts
+ * everything to Sophie through Netlify Forms. A URL with a rubric in its
+ * hash (#r=...) opens straight to that rubric's scorer.
  */
 
 const { events } = lineCheck;
 const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+const TOTAL = lineCheck.progress.stages.length;
 
 type Dispatch = (action: Action) => void;
 
@@ -122,6 +135,7 @@ export function LineCheck() {
     window.addEventListener("pagehide", onHide);
     return () => window.removeEventListener("pagehide", onHide);
   }, [sharedRubric]);
+
   const startOver = () => {
     if (!window.confirm(lineCheck.header.startOverConfirm)) return;
     clearState();
@@ -135,59 +149,70 @@ export function LineCheck() {
     if (saved) dispatch({ type: "hydrate", state: saved });
   };
 
-  let screen: ReactNode;
-  if (!ready) screen = null;
-  else if (sharedRubric) screen = <SharedRubricScreen rubric={sharedRubric} onMakeOwn={leaveShared} />;
-  else screen = <Screen state={state} step={step} dispatch={dispatch} />;
-
-  const stage = ready && !sharedRubric ? stageOf(step, state) : 0;
-  const total = lineCheck.progress.stages.length;
+  let screen: ReactNode = null;
+  let stage = 0;
+  let showTopBar = false;
+  if (ready && sharedRubric) {
+    screen = <SharedRubricScreen rubric={sharedRubric} onMakeOwn={leaveShared} />;
+  } else if (ready) {
+    stage = stageOf(step, state);
+    const drafting =
+      step.screen === "draft" && state.synthesisKey !== synthesisKeyFor(finishedCustomers(state));
+    showTopBar = stage > 0 && !drafting;
+    screen = <Screen state={state} step={step} dispatch={dispatch} onStartOver={startOver} />;
+  }
 
   return (
-    <div className="lc">
-      <header className="lc-header">
-        <Link href="/" className="lc-header__logo" aria-label={lineCheck.header.homeLabel}>
-          <Image src={logo.header.src} width={logo.header.width} height={logo.header.height} alt={logo.alt} priority />
-        </Link>
-        {ready && !sharedRubric && step.screen !== "intro" && (
-          <button type="button" className="lc-link lc-noprint" onClick={startOver}>
-            <RotateIcon />
-            {lineCheck.header.startOver}
-          </button>
-        )}
-      </header>
-
-      {stage > 0 && (
-        <div className="lc-progress lc-noprint">
-          <p className="lc-progress__label">
-            {fill(lineCheck.progress.label, { current: stage, total })}
-            <span aria-hidden="true"> · </span>
-            {lineCheck.progress.stages[stage - 1]}
-          </p>
-          <div className="lc-progress__bar" aria-hidden="true">
-            {lineCheck.progress.stages.map((label, i) => (
-              <span key={label} className={i < stage ? "lc-progress__seg lc-progress__seg--on" : "lc-progress__seg"} />
-            ))}
-          </div>
-          {state.history.length > 1 && (
-            <button type="button" className="lc-back" onClick={() => dispatch({ type: "back" })}>
-              <ArrowLeftIcon />
-              {lineCheck.back}
+    <div className="lc-root" data-theme="groovy">
+      <div className="lc">
+        {showTopBar ? (
+          <div className="lc-top lc-noprint">
+            <button
+              type="button"
+              className="lc-iconbtn"
+              aria-label={lineCheck.back}
+              disabled={state.history.length < 2}
+              onClick={() => dispatch({ type: "back" })}
+            >
+              <span aria-hidden="true">←</span>
             </button>
-          )}
-        </div>
-      )}
+            <div
+              className="lc-segments"
+              role="img"
+              aria-label={fill(lineCheck.progress.label, {
+                current: stage,
+                total: TOTAL,
+                stage: lineCheck.progress.stages[stage - 1],
+              })}
+            >
+              {lineCheck.progress.stages.map((label, i) => (
+                <span key={label} className={i < stage ? "lc-seg lc-seg--on" : "lc-seg"} />
+              ))}
+            </div>
+            <span className="lc-counter" aria-hidden="true">
+              {fill(lineCheck.progress.counter, { current: stage, total: TOTAL })}
+            </span>
+          </div>
+        ) : (
+          ready &&
+          (sharedRubric || step.screen === "intro") && (
+            <header className="lc-logo">
+              <Link href="/" aria-label={lineCheck.header.homeLabel}>
+                <Image src={logo.header.src} width={logo.header.width} height={logo.header.height} alt={logo.alt} priority />
+              </Link>
+            </header>
+          )
+        )}
 
-      <main id="main" className="lc-main">
-        <div className="lc-screen" key={sharedRubric ? "shared" : stepKey}>
+        <main id="main" className="lc-screen" key={sharedRubric ? "shared" : stepKey}>
           {screen}
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
 
-/** Progress stage 1 to 6, or 0 for the intro (no progress bar). */
+/** Progress stage 1 to 6, or 0 for the intro (no top bar). */
 function stageOf(step: Step, state: State): number {
   switch (step.screen) {
     case "intro":
@@ -197,6 +222,8 @@ function stageOf(step: Step, state: State): number {
     case "followUp":
     case "review":
       return state.customers.find((c) => c.id === step.id)?.type === "painful" ? 2 : 1;
+    case "bestList":
+      return 1;
     case "painIntro":
       return 2;
     case "grid":
@@ -210,26 +237,35 @@ function stageOf(step: Step, state: State): number {
   }
 }
 
-function Screen({ state, step, dispatch }: { state: State; step: Step; dispatch: Dispatch }) {
+function Screen({
+  state,
+  step,
+  dispatch,
+  onStartOver,
+}: {
+  state: State;
+  step: Step;
+  dispatch: Dispatch;
+  onStartOver: () => void;
+}) {
   const customer = "id" in step ? state.customers.find((c) => c.id === step.id) : undefined;
+  const lost = <Lost dispatch={dispatch} />;
 
   switch (step.screen) {
     case "intro":
       return <IntroScreen dispatch={dispatch} />;
     case "nickname":
-      return customer ? <NicknameScreen state={state} customer={customer} dispatch={dispatch} /> : <Lost dispatch={dispatch} />;
+      return customer ? <NicknameScreen state={state} customer={customer} dispatch={dispatch} /> : lost;
     case "tell":
-      return customer ? <TellScreen state={state} customer={customer} dispatch={dispatch} /> : <Lost dispatch={dispatch} />;
+      return customer ? <TellScreen state={state} customer={customer} dispatch={dispatch} /> : lost;
     case "followUp":
-      return customer ? (
-        <FollowUpScreen customer={customer} index={step.index} dispatch={dispatch} />
-      ) : (
-        <Lost dispatch={dispatch} />
-      );
+      return customer ? <FollowUpScreen customer={customer} index={step.index} dispatch={dispatch} /> : lost;
     case "review":
-      return customer ? <ReviewScreen state={state} customer={customer} dispatch={dispatch} /> : <Lost dispatch={dispatch} />;
+      return customer ? <ReviewScreen state={state} customer={customer} dispatch={dispatch} /> : lost;
+    case "bestList":
+      return <BestListScreen state={state} dispatch={dispatch} />;
     case "painIntro":
-      return <PainIntroScreen dispatch={dispatch} />;
+      return <PainIntroScreen state={state} dispatch={dispatch} />;
     case "grid":
       return <GridScreen state={state} dispatch={dispatch} />;
     case "draft":
@@ -237,7 +273,7 @@ function Screen({ state, step, dispatch }: { state: State; step: Step; dispatch:
     case "gate":
       return <GateScreen state={state} dispatch={dispatch} />;
     case "rubric":
-      return <RubricScreen state={state} />;
+      return <RubricScreen state={state} onStartOver={onStartOver} />;
   }
 }
 
@@ -247,7 +283,7 @@ function Lost({ dispatch }: { dispatch: Dispatch }) {
   return null;
 }
 
-/* Helpers ------------------------------------------------------------------ */
+/* Shared pieces ------------------------------------------------------------ */
 
 async function post<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(path, {
@@ -260,10 +296,6 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return data;
 }
 
-function startCustomer(dispatch: Dispatch, customerType: CustomerType) {
-  dispatch({ type: "newCustomer", customerType, id: newId() });
-}
-
 function goReview(dispatch: Dispatch, id: string) {
   dispatch({ type: "markDone", id });
   dispatch({ type: "go", step: { screen: "review", id } });
@@ -273,39 +305,83 @@ function countDone(state: State, type: CustomerType, except?: string) {
   return state.customers.filter((c) => c.done && c.type === type && c.id !== except).length;
 }
 
-function Heading({ children }: { children: ReactNode }) {
+/** Screen headline in Alfa Slab: xl 34px (intro), lg 30px, md 28px, sm 26px. */
+function Heading({ children, size = "lg" }: { children: ReactNode; size?: "xl" | "lg" | "md" | "sm" }) {
   return (
-    <h1 className="lc-h1" tabIndex={-1}>
+    <h1 className={`lc-display lc-display--${size}`} tabIndex={-1}>
       {children}
     </h1>
   );
 }
 
-/* 0 · Intro ---------------------------------------------------------------- */
+function Kicker({ children, tone }: { children: ReactNode; tone?: "rust" }) {
+  return <p className={tone ? `lc-kicker lc-kicker--${tone}` : "lc-kicker"}>{children}</p>;
+}
+
+/** The main button: full width, label left, arrow right. */
+function Primary({
+  children,
+  onClick,
+  type = "button",
+  disabled,
+  busy,
+  tone,
+}: {
+  children: ReactNode;
+  onClick?: () => void;
+  type?: "button" | "submit";
+  disabled?: boolean;
+  busy?: boolean;
+  tone?: "rust";
+}) {
+  return (
+    <button
+      type={type}
+      className={tone ? `lc-btn lc-btn--block lc-btn--${tone}` : "lc-btn lc-btn--block"}
+      onClick={onClick}
+      disabled={disabled || busy}
+    >
+      <span className="lc-btn__label">
+        {busy && <SpinnerIcon />}
+        {children}
+      </span>
+      {!busy && <span aria-hidden="true">→</span>}
+    </button>
+  );
+}
+
+function Ghost({ children, onClick, disabled }: { children: ReactNode; onClick: () => void; disabled?: boolean }) {
+  return (
+    <button type="button" className="lc-btn lc-btn--ghost" onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
+  );
+}
+
+/* 0a · Intro ---------------------------------------------------------------- */
 
 function IntroScreen({ dispatch }: { dispatch: Dispatch }) {
   const { intro } = lineCheck;
   return (
-    <div className="lc-intro">
-      <p className="kicker">{intro.kicker}</p>
-      <Heading>{intro.headline}</Heading>
-      <p className="lc-lead">{intro.body}</p>
-      <p className="lc-body">{intro.note}</p>
-      <div className="lc-actions">
-        <button
-          type="button"
-          className="button button--yellow lc-icon-button"
+    <>
+      <div className="lc-content lc-content--intro">
+        <Kicker>{intro.kicker}</Kicker>
+        <Heading size="xl">{intro.headline}</Heading>
+        <p className="lc-body">{intro.body}</p>
+        <p className="lc-body">{intro.note}</p>
+      </div>
+      <div className="lc-foot">
+        <Primary
           onClick={() => {
             track(events.start);
-            startCustomer(dispatch, "best");
+            dispatch({ type: "newCustomer", customerType: "best", id: newId() });
           }}
         >
           {intro.button}
-          <ArrowRightIcon />
-        </button>
+        </Primary>
+        <p className="lc-fine">{lineCheck.privacy}</p>
       </div>
-      <p className="lc-fine lc-intro__privacy">{lineCheck.privacy}</p>
-    </div>
+    </>
   );
 }
 
@@ -330,66 +406,76 @@ function NicknameScreen({ state, customer, dispatch }: { state: State; customer:
   };
 
   return (
-    <form onSubmit={submit} noValidate>
-      <p className="kicker">
-        {fill(customer.type === "best" ? copy.bestKicker : copy.painfulKicker, { n: position })}
-      </p>
-      <Heading>
-        <label htmlFor={`${uid}-nick`}>{copy.label}</label>
-      </Heading>
-      <input
-        id={`${uid}-nick`}
-        className="input lc-input-lg"
-        autoComplete="off"
-        maxLength={120}
-        placeholder={copy.placeholder}
-        value={value}
-        aria-invalid={error}
-        aria-describedby={error ? `${uid}-err` : undefined}
-        onChange={(e) => {
-          setValue(e.target.value);
-          setError(false);
-        }}
-      />
-      {error && (
-        <p id={`${uid}-err`} className="lc-error" role="alert">
-          {copy.required}
-        </p>
-      )}
-      <div className="lc-actions">
-        <button type="submit" className="button button--yellow lc-icon-button">
-          {lineCheck.next}
-          <ArrowRightIcon />
-        </button>
+    <form onSubmit={submit} noValidate className="lc-form">
+      <div className="lc-content lc-content--roomy">
+        <Kicker tone={customer.type === "painful" ? "rust" : undefined}>
+          {fill(customer.type === "best" ? copy.bestKicker : copy.painfulKicker, { n: position })}
+        </Kicker>
+        <Heading>
+          <label htmlFor={`${uid}-nick`}>{copy.label}</label>
+        </Heading>
+        <p className="lc-body">{copy.body}</p>
+        <input
+          id={`${uid}-nick`}
+          className="lc-input"
+          autoComplete="off"
+          maxLength={120}
+          placeholder={copy.placeholder}
+          value={value}
+          aria-invalid={error}
+          aria-describedby={error ? `${uid}-err` : undefined}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setError(false);
+          }}
+        />
+        {error && (
+          <p id={`${uid}-err`} className="lc-error" role="alert">
+            {copy.required}
+          </p>
+        )}
+      </div>
+      <div className="lc-foot">
+        <Primary type="submit">{lineCheck.next}</Primary>
       </div>
     </form>
   );
 }
 
-/* 1b · Tell me about them ------------------------------------------------------ */
+/* 1b, 1c · Tell me about them (idle, listening) --------------------------------- */
 
 function TellScreen({ state, customer, dispatch }: { state: State; customer: DraftCustomer; dispatch: Dispatch }) {
   const { tell } = lineCheck;
   const uid = useId();
-  const [status, setStatus] = useState<"idle" | "reading" | "error" | "short">("idle");
+  const [status, setStatus] = useState<"idle" | "reading" | "error">("idle");
   const [usedMic, setUsedMic] = useState(false);
+  const textRef = useRef<HTMLTextAreaElement>(null);
   const isBest = customer.type === "best";
   const isFirst = state.customers[0]?.id === customer.id;
 
+  const setTranscript = useCallback(
+    (transcript: string) => dispatch({ type: "setTranscript", id: customer.id, transcript }),
+    [dispatch, customer.id],
+  );
+  const into = useDictationInto(customer.transcript, setTranscript, () => setUsedMic(true));
+  const listening = into.d.isListening;
+
+  useEffect(() => {
+    if (into.d.stopReason === "denied") textRef.current?.focus();
+  }, [into.d.stopReason]);
+
+  const hasText = customer.transcript.trim().length > 0;
+
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    const transcript = customer.transcript.trim();
-    if (transcript.length < 15) {
-      setStatus("short");
-      return;
-    }
+    if (!hasText || listening) return;
     track(usedMic ? events.dictationUsed : events.typed, { where: "customer" });
     setStatus("reading");
     try {
       const out = await post<ExtractResponse>("/api/line-check/extract", {
         nickname: customer.nickname,
         type: customer.type,
-        transcript,
+        transcript: customer.transcript.trim(),
       });
       dispatch({ type: "extracted", id: customer.id, profile: out.profile, followUps: out.followUps });
       if (!customer.done) track(events.customerAdded, { type: customer.type });
@@ -401,55 +487,67 @@ function TellScreen({ state, customer, dispatch }: { state: State; customer: Dra
   };
 
   return (
-    <form onSubmit={submit} noValidate>
-      <Heading>{fill(isBest ? tell.bestPrompt : tell.painfulPrompt, { nickname: customer.nickname })}</Heading>
-      <p className="lc-helper">{isBest ? tell.bestHelper : tell.painfulHelper}</p>
+    <form onSubmit={submit} noValidate className="lc-form">
+      <div className="lc-content">
+        <Heading size="md">{fill(isBest ? tell.bestPrompt : tell.painfulPrompt, { nickname: customer.nickname })}</Heading>
+        {!listening && <p className="lc-helper">{isBest ? tell.bestHelper : tell.painfulHelper}</p>}
+      </div>
 
-      <DictationField
-        id={`${uid}-tell`}
-        value={customer.transcript}
-        onChange={(transcript) => {
-          dispatch({ type: "setTranscript", id: customer.id, transcript });
-          if (status === "short" || status === "error") setStatus("idle");
-        }}
-        onMicStart={() => setUsedMic(true)}
-        showPrivacy={isFirst}
-      />
+      <MicHero into={into} showPrivacy={isFirst} />
 
-      {status === "short" && (
-        <p className="lc-error" role="alert">
-          {tell.tooShort}
-        </p>
-      )}
-      {status === "error" && (
-        <div className="lc-error-box" role="alert">
-          <p>{tell.extractFailed}</p>
-          <button type="button" className="lc-link" onClick={() => goReview(dispatch, customer.id)}>
-            {tell.fillByHand}
-          </button>
-        </div>
-      )}
-
-      <div className="lc-actions">
-        <button type="submit" className="button button--yellow lc-icon-button" disabled={status === "reading"}>
-          {status === "reading" ? (
-            <>
-              <SpinnerIcon />
-              {tell.reading}
-            </>
-          ) : (
-            <>
-              {status === "error" ? tell.retry : tell.submit}
-              <ArrowRightIcon />
-            </>
+      {listening ? (
+        <LiveTranscript into={into} />
+      ) : (
+        <>
+          {into.d.isSupported && (
+            <div className="lc-divider" aria-hidden="true">
+              <span>{tell.divider}</span>
+            </div>
           )}
-        </button>
+          <div className="lc-content lc-content--tight">
+            <label htmlFor={`${uid}-tell`} className="lc-visually-hidden">
+              {tell.textareaLabel}
+            </label>
+            <textarea
+              id={`${uid}-tell`}
+              ref={textRef}
+              className="lc-input lc-textarea"
+              rows={into.d.isSupported ? 4 : 10}
+              placeholder={tell.textareaPlaceholder}
+              value={customer.transcript}
+              onChange={(e) => {
+                setTranscript(e.target.value);
+                if (status === "error") setStatus("idle");
+              }}
+            />
+            {status === "error" && (
+              <div className="lc-error-box" role="alert">
+                <p>{tell.extractFailed}</p>
+                <button type="button" className="lc-link" onClick={() => goReview(dispatch, customer.id)}>
+                  {tell.fillByHand}
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      <div className={listening ? "lc-foot lc-foot--center" : "lc-foot"}>
+        {listening ? (
+          <button type="button" className="lc-btn lc-btn--dark" onClick={into.toggle}>
+            {lineCheck.mic.stop}
+          </button>
+        ) : (
+          <Primary type="submit" disabled={!hasText} busy={status === "reading"}>
+            {status === "reading" ? tell.reading : status === "error" ? tell.retry : tell.submit}
+          </Primary>
+        )}
       </div>
     </form>
   );
 }
 
-/* 1d · Follow-up -------------------------------------------------------------- */
+/* 1e · Follow-up -------------------------------------------------------------- */
 
 function FollowUpScreen({ customer, index, dispatch }: { customer: DraftCustomer; index: number; dispatch: Dispatch }) {
   const { followUp: copy } = lineCheck;
@@ -457,8 +555,14 @@ function FollowUpScreen({ customer, index, dispatch }: { customer: DraftCustomer
   const [answer, setAnswer] = useState("");
   const [usedMic, setUsedMic] = useState(false);
   const [status, setStatus] = useState<"idle" | "merging" | "error">("idle");
+  const textRef = useRef<HTMLTextAreaElement>(null);
   const followUp = customer.followUps[index];
   const total = customer.followUps.length;
+  const into = useDictationInto(answer, setAnswer, () => setUsedMic(true));
+
+  useEffect(() => {
+    if (into.d.stopReason === "denied") textRef.current?.focus();
+  }, [into.d.stopReason]);
 
   const advance = () => {
     if (index + 1 < total) dispatch({ type: "go", step: { screen: "followUp", id: customer.id, index: index + 1 } });
@@ -474,6 +578,7 @@ function FollowUpScreen({ customer, index, dispatch }: { customer: DraftCustomer
     event.preventDefault();
     const text = answer.trim();
     if (!text) return;
+    if (into.d.isListening) into.d.stop();
     track(usedMic ? events.dictationUsed : events.typed, { where: "followup" });
     setStatus("merging");
     try {
@@ -493,6 +598,7 @@ function FollowUpScreen({ customer, index, dispatch }: { customer: DraftCustomer
   };
 
   const skip = () => {
+    if (into.d.isListening) into.d.stop();
     dispatch({
       type: "setProfile",
       id: customer.id,
@@ -503,209 +609,235 @@ function FollowUpScreen({ customer, index, dispatch }: { customer: DraftCustomer
   };
 
   return (
-    <form onSubmit={submit} noValidate>
-      <p className="kicker">
-        {fill(copy.kicker, { nickname: customer.nickname })}
-        <span className="lc-kicker-count"> · {fill(copy.counter, { current: index + 1, total })}</span>
-      </p>
-      <Heading>{followUp.question}</Heading>
-      <DictationField
-        id={`${uid}-fu`}
-        value={answer}
-        rows={3}
-        onChange={(v) => {
-          setAnswer(v);
-          if (status === "error") setStatus("idle");
-        }}
-        onMicStart={() => setUsedMic(true)}
-      />
-      {status === "error" && (
-        <p className="lc-error" role="alert">
-          {copy.failed}
-        </p>
-      )}
-      <div className="lc-actions">
-        <button
-          type="submit"
-          className="button button--yellow lc-icon-button"
-          disabled={!answer.trim() || status === "merging"}
-        >
-          {status === "merging" ? (
-            <>
-              <SpinnerIcon />
-              {copy.merging}
-            </>
-          ) : (
-            copy.answer
-          )}
-        </button>
-        <button type="button" className="button button--outline" onClick={skip} disabled={status === "merging"}>
+    <form onSubmit={submit} noValidate className="lc-form">
+      <div className="lc-content lc-content--roomy">
+        <Kicker tone={customer.type === "painful" ? "rust" : undefined}>
+          {fill(copy.kicker, { current: index + 1, total })}
+        </Kicker>
+        <Heading size="md">{followUp.question}</Heading>
+        <MicInline into={into} />
+        <label htmlFor={`${uid}-fu`} className="lc-visually-hidden">
+          {copy.answerLabel}
+        </label>
+        <textarea
+          id={`${uid}-fu`}
+          ref={textRef}
+          className="lc-input lc-textarea"
+          rows={4}
+          value={answer}
+          readOnly={into.d.isListening}
+          onChange={(e) => {
+            setAnswer(e.target.value);
+            if (status === "error") setStatus("idle");
+          }}
+        />
+        {status === "error" && (
+          <p className="lc-error" role="alert">
+            {copy.failed}
+          </p>
+        )}
+      </div>
+      <div className="lc-foot">
+        <Primary type="submit" disabled={!answer.trim()} busy={status === "merging"}>
+          {status === "merging" ? copy.merging : copy.answer}
+        </Primary>
+        <Ghost onClick={skip} disabled={status === "merging"}>
           {copy.skip}
-        </button>
+        </Ghost>
       </div>
     </form>
   );
 }
 
-/* 1c · Here's what I heard ------------------------------------------------------ */
+/* 1d, 2b · Here's what I heard -------------------------------------------------- */
 
 function ReviewScreen({ state, customer, dispatch }: { state: State; customer: DraftCustomer; dispatch: Dispatch }) {
   const { review } = lineCheck;
   const isBest = customer.type === "best";
-  const count = countDone(state, customer.type, customer.id) + 1;
+  const painfulCount = countDone(state, "painful", customer.id) + 1;
 
   const remove = () => {
     if (!window.confirm(fill(review.removeConfirm, { nickname: customer.nickname }))) return;
     dispatch({ type: "removeCustomer", id: customer.id });
   };
 
-  let actions: ReactNode;
-  if (isBest && count < MIN_BEST) {
-    actions = (
-      <>
-        <button type="button" className="button button--yellow lc-icon-button" onClick={() => startCustomer(dispatch, "best")}>
-          <PlusIcon />
-          {review.addSecondBest}
-        </button>
-        <p className="lc-fine lc-actions__note">{review.needTwo}</p>
-      </>
-    );
-  } else if (isBest) {
-    actions = (
-      <>
-        <button
-          type="button"
-          className="button button--yellow lc-icon-button"
-          onClick={() => dispatch({ type: "go", step: { screen: "painIntro" } })}
-        >
-          {review.nextToPainful}
-          <ArrowRightIcon />
-        </button>
-        {count < MAX_BEST && (
-          <button type="button" className="button button--outline lc-icon-button" onClick={() => startCustomer(dispatch, "best")}>
-            <PlusIcon />
-            {review.addAnotherBest}
-          </button>
-        )}
-      </>
-    );
-  } else {
-    actions = (
-      <>
-        <button
-          type="button"
-          className="button button--yellow lc-icon-button"
-          onClick={() => dispatch({ type: "go", step: { screen: "grid" } })}
-        >
-          {review.nextToCheck}
-          <ArrowRightIcon />
-        </button>
-        {count < MAX_PAINFUL && (
-          <button
-            type="button"
-            className="button button--outline lc-icon-button"
-            onClick={() => startCustomer(dispatch, "painful")}
-          >
-            <PlusIcon />
-            {review.addAnotherPainful}
-          </button>
-        )}
-      </>
-    );
-  }
-
   return (
-    <div>
-      <Heading>{fill(review.headline, { nickname: customer.nickname })}</Heading>
-      <p className="lc-helper">{review.body}</p>
+    <>
+      <div className="lc-content">
+        <Heading size="sm">{fill(review.headline, { nickname: customer.nickname })}</Heading>
+        <p className="lc-body">{review.body}</p>
+      </div>
       <ProfileCards
         profile={customer}
         tone={customer.type}
         onChange={(profile) => dispatch({ type: "setProfile", id: customer.id, profile: profileOf(profile) })}
       />
-      <div className="lc-actions">{actions}</div>
-      <button type="button" className="lc-link lc-remove" onClick={remove}>
-        {review.remove}
-      </button>
-    </div>
-  );
-}
-
-/* 2 · Painful customers ---------------------------------------------------------- */
-
-function PainIntroScreen({ dispatch }: { dispatch: Dispatch }) {
-  const { painIntro } = lineCheck;
-  return (
-    <div>
-      <Heading>{painIntro.headline}</Heading>
-      <p className="lc-lead">{painIntro.body}</p>
-      <div className="lc-actions">
-        <button
-          type="button"
-          className="button button--yellow lc-icon-button"
-          onClick={() => startCustomer(dispatch, "painful")}
-        >
-          <PlusIcon />
-          {painIntro.add}
-        </button>
-        <button
-          type="button"
-          className="button button--outline"
-          onClick={() => dispatch({ type: "go", step: { screen: "grid" } })}
-        >
-          {painIntro.skip}
+      <div className="lc-content lc-content--tight">
+        <button type="button" className="lc-link lc-link--muted" onClick={remove}>
+          {review.remove}
         </button>
       </div>
-    </div>
+      <div className="lc-foot">
+        <Primary onClick={() => dispatch({ type: "go", step: { screen: isBest ? "bestList" : "grid" } })}>
+          {review.looksRight}
+        </Primary>
+        {!isBest && painfulCount < MAX_PAINFUL && (
+          <Ghost onClick={() => dispatch({ type: "go", step: { screen: "painIntro" } })}>
+            {review.addAnotherPainfulGhost}
+          </Ghost>
+        )}
+      </div>
+    </>
   );
 }
 
-/* 3 · Side by side ------------------------------------------------------------- */
+/* 1f · Customers so far ------------------------------------------------------------ */
+
+function BestListScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) {
+  const { bestList: copy } = lineCheck;
+  const best = state.customers.filter((c) => c.done && c.type === "best");
+  const n = Math.min(Math.max(best.length, 1), MAX_BEST);
+  const addBest = () => dispatch({ type: "newCustomer", customerType: "best", id: newId() });
+
+  return (
+    <>
+      <div className="lc-content lc-content--roomy">
+        <Heading>{copy.headlines[n - 1]}</Heading>
+        <p className="lc-body">{copy.bodies[n - 1]}</p>
+      </div>
+      <ul className="lc-rows">
+        {best.map((c) => (
+          <li key={c.id} className="lc-row">
+            <span className="lc-checkdot">
+              <CheckIcon />
+            </span>
+            <span className="lc-row__name">{c.nickname}</span>
+            <button
+              type="button"
+              className="lc-row__edit"
+              aria-label={fill(copy.editLabel, { nickname: c.nickname })}
+              onClick={() => dispatch({ type: "go", step: { screen: "review", id: c.id } })}
+            >
+              {copy.edit}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div className="lc-foot">
+        {best.length < MIN_BEST ? (
+          <Primary onClick={addBest}>{copy.addSecond}</Primary>
+        ) : (
+          <>
+            {best.length < MAX_BEST && (
+              <button type="button" className="lc-btn lc-btn--outline lc-btn--full" onClick={addBest}>
+                {copy.addAnother}
+              </button>
+            )}
+            <Primary onClick={() => dispatch({ type: "go", step: { screen: "painIntro" } })}>{copy.next}</Primary>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
+/* 2a · The one you wish you'd never signed ----------------------------------------- */
+
+function PainIntroScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) {
+  const { painIntro: copy, nickname } = lineCheck;
+  const uid = useId();
+  const [value, setValue] = useState("");
+  const [error, setError] = useState(false);
+  const already = countDone(state, "painful");
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    const name = value.trim();
+    if (!name) {
+      setError(true);
+      return;
+    }
+    dispatch({ type: "newCustomer", customerType: "painful", id: newId(), nickname: name });
+  };
+
+  return (
+    <form onSubmit={submit} noValidate className="lc-form">
+      <div className="lc-content lc-content--roomy">
+        <Kicker tone="rust">{already > 0 ? fill(nickname.painfulKicker, { n: already + 1 }) : copy.kicker}</Kicker>
+        <Heading>{copy.headline}</Heading>
+        <p className="lc-body">{copy.body}</p>
+        <label htmlFor={`${uid}-nick`} className="lc-visually-hidden">
+          {copy.nicknameLabel}
+        </label>
+        <input
+          id={`${uid}-nick`}
+          className="lc-input"
+          autoComplete="off"
+          maxLength={120}
+          placeholder={copy.placeholder}
+          value={value}
+          aria-invalid={error}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setError(false);
+          }}
+        />
+        {error && (
+          <p className="lc-error" role="alert">
+            {copy.needNickname}
+          </p>
+        )}
+        <p className="lc-helper">{copy.helper}</p>
+      </div>
+      <div className="lc-foot">
+        <Primary type="submit" tone="rust">
+          {copy.add}
+        </Primary>
+        <Ghost onClick={() => dispatch({ type: "go", step: { screen: "grid" } })}>{copy.skip}</Ghost>
+      </div>
+    </form>
+  );
+}
+
+/* 3a · Side by side ------------------------------------------------------------- */
 
 function GridScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   const { grid } = lineCheck;
   const customers = finishedCustomers(state);
   return (
-    <div>
-      <Heading>{grid.headline}</Heading>
-      <p className="lc-helper">{grid.body}</p>
-      <Grid
-        customers={customers}
-        onChange={(id, profile) => dispatch({ type: "setProfile", id, profile: profileOf(profile) })}
-      />
-      <div className="lc-actions">
-        <button
-          type="button"
-          className="button button--yellow lc-icon-button"
-          onClick={() => dispatch({ type: "go", step: { screen: "draft" } })}
-        >
-          {grid.button}
-          <ArrowRightIcon />
-        </button>
+    <>
+      <div className="lc-content">
+        <Heading>{grid.headline}</Heading>
       </div>
-    </div>
+      <Grid customers={customers} onChange={(id, profile) => dispatch({ type: "setProfile", id, profile: profileOf(profile) })} />
+      <div className="lc-content lc-content--tight">
+        <p className="lc-fine">{grid.hint}</p>
+      </div>
+      <div className="lc-foot">
+        <Primary onClick={() => dispatch({ type: "go", step: { screen: "draft" } })}>{grid.button}</Primary>
+      </div>
+    </>
   );
 }
 
-/* 4 · Draft ICP (ungated) ---------------------------------------------------------- */
+/* 4a, 4b · Finding the pattern, then the draft ICP (ungated) --------------------------- */
 
 function DraftScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   const { draft } = lineCheck;
   const customers = finishedCustomers(state);
   const key = synthesisKeyFor(customers);
   const current = state.synthesisKey === key ? state.synthesis : null;
-  const [status, setStatus] = useState<"idle" | "loading" | "error">(current ? "idle" : "loading");
+  const [failed, setFailed] = useState(false);
   const shownFor = useRef<string | null>(null);
-  const hasPainful = customers.some((c) => c.type === "painful");
+  const painful = customers.filter((c) => c.type === "painful");
 
   const load = useCallback(async () => {
-    setStatus("loading");
+    setFailed(false);
     try {
       const out = await post<SynthesizeResponse>("/api/line-check/synthesize", { customers: forApi(customers) });
       dispatch({ type: "synthesized", synthesis: out.synthesis, key });
-      setStatus("idle");
     } catch {
-      setStatus("error");
+      setFailed(true);
     }
     // customers is derived from state each render; key captures its content
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -725,48 +857,115 @@ function DraftScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) 
 
   if (!current) {
     return (
-      <div>
-        <p className="kicker">{draft.kicker}</p>
-        {status === "error" ? (
-          <>
-            <Heading>{draft.failed}</Heading>
-            <div className="lc-actions">
-              <button type="button" className="button button--yellow lc-icon-button" onClick={() => void load()}>
-                <RotateIcon />
-                {draft.retry}
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="lc-loading" role="status">
-            <SpinnerIcon />
-            <Heading>{draft.loading}</Heading>
-          </div>
-        )}
-      </div>
+      <Finding
+        count={customers.length}
+        painfulName={painful[0]?.nickname}
+        failed={failed}
+        onRetry={() => void load()}
+        onBack={() => dispatch({ type: "back" })}
+      />
     );
   }
 
   return (
-    <div>
-      <p className="kicker">{draft.kicker}</p>
-      <SynthesisBody synthesis={current} customerCount={customers.length} hasPainful={hasPainful} dispatch={dispatch} />
-
-      <section className="lc-teaser lc-noprint">
-        <h2 className="lc-h2">{draft.teaserHeadline}</h2>
-        <p className="lc-body">{draft.teaserBody}</p>
-        <div className="lc-actions">
-          <button
-            type="button"
-            className="button button--yellow lc-icon-button"
-            onClick={() => dispatch({ type: "go", step: { screen: state.submitted ? "rubric" : "gate" } })}
-          >
+    <>
+      <div className="lc-content">
+        <Kicker>{draft.kicker}</Kicker>
+        <SynthesisBody synthesis={current} customerCount={customers.length} hasPainful={painful.length > 0} dispatch={dispatch} />
+      </div>
+      <div className="lc-foot lc-noprint">
+        <section className="lc-teaser">
+          <h2 className="lc-display lc-display--card">{draft.teaserHeadline}</h2>
+          <p className="lc-body">{draft.teaserBody}</p>
+          <Primary onClick={() => dispatch({ type: "go", step: { screen: state.submitted ? "rubric" : "gate" } })}>
             {draft.teaserButton}
-            <ArrowRightIcon />
-          </button>
-        </div>
-      </section>
+          </Primary>
+        </section>
+      </div>
+    </>
+  );
+}
+
+/**
+ * Finding the pattern (handoff 4a). The synthesis is one call, so the stages
+ * tick over on a timer while it runs; the last one only completes when the
+ * answer arrives (and this screen gives way to the profile).
+ */
+function Finding({
+  count,
+  painfulName,
+  failed,
+  onRetry,
+  onBack,
+}: {
+  count: number;
+  painfulName?: string;
+  failed: boolean;
+  onRetry: () => void;
+  onBack: () => void;
+}) {
+  const { draft } = lineCheck;
+  const [done, setDone] = useState(0);
+  const stages = painfulName ? draft.stages : draft.stagesNoPainful;
+
+  useEffect(() => {
+    if (failed) return;
+    const a = window.setTimeout(() => setDone(1), 2200);
+    const b = window.setTimeout(() => setDone(2), 5200);
+    return () => {
+      window.clearTimeout(a);
+      window.clearTimeout(b);
+    };
+  }, [failed]);
+
+  return (
+    <div className="lc-finding" role="status">
+      <Kicker>{fill(draft.loadingKicker, { n: count })}</Kicker>
+      {failed ? (
+        <>
+          <Heading size="md">{draft.failed}</Heading>
+          <Primary onClick={onRetry}>{draft.retry}</Primary>
+          <Ghost onClick={onBack}>{lineCheck.back}</Ghost>
+        </>
+      ) : (
+        <>
+          <Heading size="md">
+            {painfulName ? fill(draft.loadingAgainst, { nickname: painfulName }) : draft.loadingBest}
+          </Heading>
+          <div className="lc-progressbar" aria-hidden="true">
+            <span style={{ width: `${[24, 48, 72][done]}%` }} />
+          </div>
+          <ul className="lc-stages">
+            {stages.map((label, i) => (
+              <li key={label} className={i < done ? "lc-stage lc-stage--done" : "lc-stage"}>
+                <span className="lc-stage__dot">{i < done && <CheckIcon size={12} />}</span>
+                {label}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
+  );
+}
+
+/** The profile paragraph with its key phrases on the highlighter. */
+function Highlighted({ text, phrases = [] }: { text: string; phrases?: string[] }) {
+  const usable = phrases.filter((p) => p && text.includes(p));
+  if (usable.length === 0) return <>{text}</>;
+  const pattern = new RegExp(`(${usable.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`);
+  return (
+    <>
+      {text.split(pattern).map((part, i) =>
+        usable.includes(part) ? (
+          <mark key={i} className="lc-mark">
+            {part}
+          </mark>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        ),
+      )}
+    </>
   );
 }
 
@@ -784,49 +983,49 @@ function SynthesisBody({
   asHeading?: boolean;
 }) {
   const { draft } = lineCheck;
+  const profile = <Highlighted text={synthesis.profile} phrases={synthesis.highlights} />;
   return (
     <div className="lc-synthesis">
-      {asHeading ? <Heading>{synthesis.profile}</Heading> : <p className="lc-profile">{synthesis.profile}</p>}
+      {asHeading ? (
+        <h1 className="lc-profile" tabIndex={-1}>
+          {profile}
+        </h1>
+      ) : (
+        <p className="lc-profile">{profile}</p>
+      )}
 
-      <div className="lc-synthesis__cols">
-        <section className="lc-list lc-list--best">
-          <h2 className="lc-h3">{draft.sharedHeading}</h2>
-          <ul>
-            {synthesis.shared.map((s) => (
+      <section className="lc-panel lc-panel--best">
+        <h2 className="lc-panel__label">{draft.sharedHeading}</h2>
+        <ul className="lc-bullets lc-bullets--pine">
+          {synthesis.shared.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ul>
+      </section>
+      <section className="lc-panel lc-panel--painful">
+        <h2 className="lc-panel__label">{draft.avoidHeading}</h2>
+        {hasPainful && synthesis.avoid.length > 0 ? (
+          <ul className="lc-bullets">
+            {synthesis.avoid.map((s) => (
               <li key={s}>{s}</li>
             ))}
           </ul>
-        </section>
-        <section className="lc-list lc-list--painful">
-          <h2 className="lc-h3">{draft.avoidHeading}</h2>
-          {hasPainful && synthesis.avoid.length > 0 ? (
-            <ul>
-              {synthesis.avoid.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
-          ) : dispatch ? (
-            <button
-              type="button"
-              className="lc-link"
-              onClick={() => dispatch({ type: "go", step: { screen: "painIntro" } })}
-            >
-              {draft.avoidEmpty}
-            </button>
-          ) : null}
-        </section>
-      </div>
+        ) : dispatch ? (
+          <button type="button" className="lc-link" onClick={() => dispatch({ type: "go", step: { screen: "painIntro" } })}>
+            {draft.avoidEmpty}
+          </button>
+        ) : null}
+      </section>
 
       <p className="lc-confidence">{fill(draft.confidence, { n: customerCount })}</p>
-      <aside className="lc-explainer">
-        <h2 className="lc-explainer__title">{draft.explainerHeading}</h2>
-        <p>{draft.explainer}</p>
-      </aside>
+      <p className="lc-explainer">
+        <strong>{draft.explainerHeading}</strong> {draft.explainer}
+      </p>
     </div>
   );
 }
 
-/* 5 · Email gate ------------------------------------------------------------------ */
+/* 5a · Email gate ------------------------------------------------------------------ */
 
 function GateScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   const { gate } = lineCheck;
@@ -872,11 +1071,11 @@ function GateScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) {
 
   const [failedBefore, failedAfter] = gate.failed.split("{email}");
   const field = (name: "firstName" | "company" | "email", label: string, type: string, autoComplete: string) => (
-    <label htmlFor={`${uid}-${name}`} className="field">
-      <span className="field__label">{label}</span>
+    <label htmlFor={`${uid}-${name}`} className="lc-field">
+      <span className="lc-field__label">{label}</span>
       <input
         id={`${uid}-${name}`}
-        className="input"
+        className="lc-input"
         type={type}
         autoComplete={autoComplete}
         value={contact[name]}
@@ -887,45 +1086,38 @@ function GateScreen({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   );
 
   return (
-    <form onSubmit={submit} noValidate className="lc-gate">
-      <Heading>{gate.headline}</Heading>
-      <div className="lc-gate__fields">
+    <form onSubmit={submit} noValidate className="lc-form">
+      <div className="lc-content lc-content--roomy">
+        <Heading>{gate.headline}</Heading>
         {field("firstName", gate.firstName, "text", "given-name")}
         {field("company", gate.company, "text", "organization")}
         {field("email", gate.email, "email", "email")}
+        <label className="lc-check">
+          <input type="checkbox" checked={contact.optIn} onChange={(e) => set({ optIn: e.target.checked })} />
+          <span className="lc-check__box" aria-hidden="true">
+            <CheckIcon size={14} />
+          </span>
+          <span>{gate.optIn}</span>
+        </label>
+        {error && (
+          <p className="lc-error" role="alert">
+            {error === "required" && gate.required}
+            {error === "email" && gate.invalidEmail}
+            {error === "failed" && (
+              <>
+                {failedBefore}
+                {site.email !== null && <a href={`mailto:${site.email}`}>{site.email}</a>}
+                {failedAfter}
+              </>
+            )}
+          </p>
+        )}
       </div>
-      <label className="lc-check">
-        <input type="checkbox" checked={contact.optIn} onChange={(e) => set({ optIn: e.target.checked })} />
-        <span>{gate.optIn}</span>
-      </label>
-      {error && (
-        <p className="lc-error" role="alert">
-          {error === "required" && gate.required}
-          {error === "email" && gate.invalidEmail}
-          {error === "failed" && (
-            <>
-              {failedBefore}
-              {site.email !== null && <a href={`mailto:${site.email}`}>{site.email}</a>}
-              {failedAfter}
-            </>
-          )}
-        </p>
-      )}
-      <p className="lc-fine">{gate.small}</p>
-      <div className="lc-actions">
-        <button type="submit" className="button button--yellow lc-icon-button" disabled={sending}>
-          {sending ? (
-            <>
-              <SpinnerIcon />
-              {gate.sending}
-            </>
-          ) : (
-            <>
-              {gate.button}
-              <ArrowRightIcon />
-            </>
-          )}
-        </button>
+      <div className="lc-foot">
+        <p className="lc-fine">{gate.small}</p>
+        <Primary type="submit" busy={sending}>
+          {sending ? gate.sending : gate.button}
+        </Primary>
       </div>
     </form>
   );
@@ -982,22 +1174,22 @@ async function sendToSophie(state: State, contact: State["contact"], synthesis: 
   await postForm(fields);
 }
 
-/* 6 · Rubric and live scorer (gated) ---------------------------------------------- */
+/* 6a, 6b · Rubric, live scorer and close -------------------------------------------- */
 
-function RubricScreen({ state }: { state: State }) {
-  const { rubric: copy } = lineCheck;
+function RubricScreen({ state, onStartOver }: { state: State; onStartOver: () => void }) {
+  const { rubric: copy, closing } = lineCheck;
   const synthesis = state.synthesis;
   const customers = finishedCustomers(state);
   if (!synthesis) return null;
+  const name = state.contact.firstName.trim();
   return (
-    <div>
-      <p className="kicker">{copy.kicker}</p>
-      <Heading>{copy.headline}</Heading>
-      <p className="lc-helper">{copy.body}</p>
-      <RubricView rubric={synthesis.rubric} />
+    <div className="lc-content lc-content--stack">
+      <Kicker>{copy.kicker}</Kicker>
+      <Heading size="md">{name ? fill(copy.headline, { name }) : copy.headlineNoName}</Heading>
+      <RubricCards rubric={synthesis.rubric} />
 
       <section className="lc-printonly">
-        <h2 className="lc-h2">{copy.profileHeading}</h2>
+        <h2 className="lc-display lc-display--card">{copy.profileHeading}</h2>
         <SynthesisBody
           synthesis={synthesis}
           customerCount={customers.length}
@@ -1006,7 +1198,11 @@ function RubricScreen({ state }: { state: State }) {
         />
       </section>
 
+      <Scorer rubric={synthesis.rubric} />
       <Closing />
+      <button type="button" className="lc-link lc-link--muted lc-center lc-noprint" onClick={onStartOver}>
+        {closing.startOver}
+      </button>
     </div>
   );
 }
@@ -1014,17 +1210,15 @@ function RubricScreen({ state }: { state: State }) {
 function SharedRubricScreen({ rubric, onMakeOwn }: { rubric: Rubric; onMakeOwn: () => void }) {
   const { rubric: copy } = lineCheck;
   return (
-    <div>
-      <p className="kicker">{copy.kicker}</p>
-      <Heading>{copy.headline}</Heading>
-      <p className="lc-helper">{copy.sharedBody}</p>
-      <RubricView rubric={rubric} shared />
-      <div className="lc-actions lc-noprint">
-        <button type="button" className="button button--outline lc-icon-button" onClick={onMakeOwn}>
-          {copy.makeYourOwn}
-          <ArrowRightIcon />
-        </button>
-      </div>
+    <div className="lc-content lc-content--stack">
+      <Kicker>{copy.kicker}</Kicker>
+      <Heading size="md">{copy.headlineNoName}</Heading>
+      <p className="lc-body">{copy.sharedBody}</p>
+      <RubricCards rubric={rubric} actions={false} />
+      <Scorer rubric={rubric} />
+      <button type="button" className="lc-btn lc-btn--outline lc-btn--full lc-noprint" onClick={onMakeOwn}>
+        {copy.makeYourOwn}
+      </button>
       <Closing />
     </div>
   );
@@ -1034,26 +1228,21 @@ function Closing() {
   const { closing } = lineCheck;
   return (
     <section className="lc-closing lc-noprint">
-      <h2 className="lc-h2">{closing.headline}</h2>
-      <p className="lc-body">{closing.body}</p>
+      <h2 className="lc-display lc-display--card">{closing.headline}</h2>
+      <p>{closing.body}</p>
       {lineCheck.bookingUrl !== null && (
-        <div className="lc-actions">
-          <a
-            href={lineCheck.bookingUrl}
-            className="button button--yellow"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => track(events.bookingClicked)}
-          >
-            {closing.button}
-          </a>
-        </div>
+        <a
+          href={lineCheck.bookingUrl}
+          className="lc-btn lc-btn--block"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => track(events.bookingClicked)}
+        >
+          <span>{closing.button}</span>
+          <span aria-hidden="true">→</span>
+        </a>
       )}
-      <p className="lc-signoff">
-        {closing.signOff}
-        <br />
-        {closing.name}
-      </p>
+      <p className="lc-signoff">{closing.signOff}</p>
     </section>
   );
 }

@@ -27,6 +27,7 @@ export type Step =
   | { screen: "tell"; id: string }
   | { screen: "followUp"; id: string; index: number }
   | { screen: "review"; id: string }
+  | { screen: "bestList" }
   | { screen: "painIntro" }
   | { screen: "grid" }
   | { screen: "draft" }
@@ -68,7 +69,7 @@ export type Action =
   | { type: "reset" }
   | { type: "go"; step: Step }
   | { type: "back" }
-  | { type: "newCustomer"; customerType: CustomerType; id: string }
+  | { type: "newCustomer"; customerType: CustomerType; id: string; nickname?: string }
   | { type: "setNickname"; id: string; nickname: string }
   | { type: "setTranscript"; id: string; transcript: string }
   | { type: "extracted"; id: string; profile: CustomerProfile; followUps: FollowUp[] }
@@ -101,7 +102,7 @@ export function reducer(state: State, action: Action): State {
       const customer: DraftCustomer = {
         id: action.id,
         type: action.customerType,
-        nickname: "",
+        nickname: action.nickname ?? "",
         transcript: "",
         ...emptyProfile(),
         done: false,
@@ -113,7 +114,8 @@ export function reducer(state: State, action: Action): State {
       return {
         ...state,
         customers: [...state.customers.filter(reachable), customer],
-        history: [...state.history, { screen: "nickname", id: action.id }],
+        // A nickname given up front (the painful intro) goes straight to "tell".
+        history: [...state.history, { screen: action.nickname ? "tell" : "nickname", id: action.id }],
       };
     }
     case "setNickname":

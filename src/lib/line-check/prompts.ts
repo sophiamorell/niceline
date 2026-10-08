@@ -33,6 +33,7 @@ Rules:
 - Write for someone who may never have heard the term "ICP." Plain language, no jargon, no marketing buzzwords. Speak to the founder as "you" and "your customers."
 - Do not use em dashes or en dashes. Use American English spelling.
 - The profile is 2 to 3 sentences describing the kind of company, the situation they're in when they buy, and who buys.
+- "highlights" holds 1 or 2 short phrases (2 to 6 words each) copied exactly, character for character, from the profile: the phrases that most clearly separate the best customers from the rest.
 - "shared" lists 3 to 5 things the best customers have in common, each one short sentence.
 - "avoid" lists 2 to 3 disqualifiers drawn from the painful customers, each one short sentence. If there are no painful customers, return an empty array.
 - Build a scoring rubric with exactly 5 criteria a salesperson could judge from a first call or a website visit. Prefer observable criteria (industry, size, trigger, buyer role, current tool) over ones that only show up after the sale (retention, referrals). Weight the criteria that most clearly separate best from painful customers highest. Weights are whole numbers that sum to 100. Each criterion has 2 to 4 levels, ordered from best fit to worst fit; the top level earns the full weight and the lowest earns 0. Level labels are short and concrete enough to pick from on a call (for example "Owner-led practice, 2 to 10 locations").
