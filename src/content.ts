@@ -92,6 +92,7 @@ export const site = {
     "Fractional marketing for B2B companies with product-market fit and no marketing team. A fixed-price program in three steps, run by Sophie Williams in Durango, Colorado.",
   tagline: "People buy what you built. I'll help you sell more of it.",
   location: "Durango, Colorado",
+  owner: { name: "Sophie Williams", jobTitle: "Founder" }, // the Person in the page's structured data
   email: "sophie@niceline.marketing" as string | null,
   linkedin: "https://www.linkedin.com/in/sophiamwilliams/" as string | null, // About and the footer
   bookingUrl: null as string | null, // TODO(sophie): Calendly or equivalent; used in thank-you state and results email only

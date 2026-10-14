@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { release } from "@/content";
 import { Nav } from "@/components/Nav";
+import { StructuredData } from "@/components/StructuredData";
 import { Hero } from "@/components/Hero";
 import { WhyNow } from "@/components/WhyNow";
 import { Checklist } from "@/components/Checklist";
@@ -19,9 +21,18 @@ import { ContactModal } from "@/components/ContactModal";
  * and the diagnostic and contact popups. Sections behind a release flag exist in code and
  * render only when the flag is true.
  */
+
+/* The canonical URL, resolved against metadataBase in the layout: one
+   preferred address for the page whether it's reached with or without a
+   trailing slash, a hash, or a tracking parameter. */
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
 export default function HomePage() {
   return (
     <div className="page">
+      <StructuredData />
       <Nav />
       <main id="main">
         <Hero />
