@@ -2804,9 +2804,96 @@ textarea.input {
   white-space: nowrap;
 }
 
+/* The verdict and done headings are sentences, so they wrap. */
+.modal__heading--wrap {
+  white-space: normal;
+  text-wrap: balance;
+}
+
 .modal__heading:focus,
 .modal__progress-label:focus {
   outline: none;
+}
+
+/* The verdict screen: the three gaps as a numbered list, then the email ask. */
+.modal__gaps-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modal__gaps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  counter-reset: gap;
+  border-top: 2px solid var(--ink);
+}
+
+.modal__gaps li {
+  counter-increment: gap;
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  column-gap: 12px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.modal__gaps li::before {
+  content: counter(gap, decimal-leading-zero);
+  font-family: var(--fm-slab);
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.modal__gap {
+  display: block;
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.modal__gap-from {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.modal__ask {
+  padding: 20px 22px 22px;
+  background: var(--mist);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+}
+
+.modal__ask-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.modal__ask .modal__body {
+  margin-bottom: 14px;
+}
+
+.modal__ask .modal__submit {
+  margin-top: 14px;
+}
+
+.modal__ask .modal__submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.modal__actions--results {
+  justify-content: flex-start;
 }
 
 .modal__body {
