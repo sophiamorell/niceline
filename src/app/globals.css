@@ -1511,6 +1511,32 @@ textarea.input {
   background: #f3ad17;
 }
 
+/* The strip's two actions: the booking link as the button, "Let's talk" as a text link beside it */
+.bundle__actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.bundle__alt {
+  border: 0;
+  background: transparent;
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--on-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 10px 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bundle__alt:hover {
+  color: var(--mist);
+}
+
 .how__footnote {
   margin-top: 18px;
   font-size: 14px;
@@ -1548,8 +1574,10 @@ textarea.input {
   .bundle__title {
     white-space: normal;
   }
-  .bundle__cta {
-    align-self: flex-end; /* the button sits on the right */
+  .bundle__actions {
+    align-self: flex-end; /* the buttons sit on the right */
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
   /* Collapsed cards: one line with the step, badge, price and +/−, then the
      outcome. Opening a card adds the question, what you keep and your time. */
@@ -3135,6 +3163,12 @@ textarea.input {
 
 .footer__links a:hover {
   color: var(--sea-ink);
+}
+
+.footer__cta-col {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
 }
 
 .footer__cta {

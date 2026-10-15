@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useSyncExternalStore, type MouseEvent } from "react";
-import { anchors, howItWorks, phases, pricing, release, type PhaseId } from "@/content";
+import { anchors, howItWorks, phases, pricing, release, site, type PhaseId } from "@/content";
 import { fill, formatPrice, mutedClass } from "@/lib/copy";
 import { openContact } from "@/lib/contact-modal";
+import { BookingLink } from "@/components/BookingLink";
 
 /* Matches the CSS breakpoint where step cards collapse. */
 const COLLAPSE_QUERY = "(max-width: 900px)";
@@ -176,9 +177,12 @@ export function HowItWorks() {
           {pricing.bundle.campaigns}
         </span>
         <p className="bundle__note">{pricing.bundle.note}</p>
-        <button type="button" className="bundle__cta" onClick={openContact}>
-          {pricing.ctaLabel}
-        </button>
+        <div className="bundle__actions">
+          <BookingLink place="steps" className="bundle__cta" />
+          <button type="button" className={site.bookingUrl === null ? "bundle__cta" : "bundle__alt"} onClick={openContact}>
+            {pricing.ctaLabel}
+          </button>
+        </div>
       </div>
 
       {release.showLocalsNote && (

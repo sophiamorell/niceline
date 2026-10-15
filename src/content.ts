@@ -104,8 +104,12 @@ export const site = {
   owner: { name: "Sophie Williams", jobTitle: "Founder" }, // the Person in the page's structured data
   email: "sophie@niceline.marketing" as string | null,
   linkedin: "https://www.linkedin.com/in/sophiamwilliams/" as string | null, // About and the footer
-  bookingUrl: null as string | null, // TODO(sophie): Calendly or equivalent; used in thank-you state and results email only
-  bookingLabel: "Book the free 45-minute walkthrough",
+  // The booking link (a Google Calendar appointment schedule, 30 minutes). Shown by
+  // <BookingLink /> in the hero, the step strip, the footer and the diagnostic's
+  // done screen, and in the results email. null hides every one of them.
+  bookingUrl: "https://calendar.app.google/qhgEXaiF82W8FAzc7" as string | null,
+  bookingLabel: "Book a free 30-minute walkthrough", // the diagnostic's done screen and the results email
+  bookingLabelShort: "Book a 30-minute walkthrough", // the hero, the step strip and the footer
 };
 
 export const anchors = {
@@ -158,7 +162,8 @@ export const hero = {
     "You know you'll eventually need a marketer, but not who or when",
   ],
   primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
-  secondaryCta: { label: "Steps", href: `#${anchors.howItWorks}` },
+  // The second button is the booking link while site.bookingUrl is set; this is the fallback
+  secondaryCta: { label: "What you get", href: `#${anchors.deliverables}` },
   // The clickable card on the right: a picture of question 1 that opens the diagnostic popup
   card: {
     ariaLabel: "See what to fix first: start the 10-question diagnostic",
@@ -544,7 +549,8 @@ export const pricing = {
     campaigns: "5-7 campaigns live", // a pink pill, like the campaign boxes in the cards
     note: "About half the cost of a senior marketer for four months, with no three-month search first.",
   },
-  ctaLabel: "Let's talk", // opens the contact popup
+  // The strip's buttons: the booking link (while site.bookingUrl is set), then "Let's talk", which opens the contact popup
+  ctaLabel: "Let's talk",
   // Shown while release.showLocalsNote is true
   localsNote: {
     before: "Own a business in Durango, CO? Let's ",
@@ -944,7 +950,7 @@ export const diagnostic = {
       "The three things to fix first, one line each on what they cost",
       "The free-fix list in full",
       "The verdict",
-      "One link: book the free 45-minute walkthrough",
+      "One link: book the free 30-minute walkthrough",
       "Signed off: Tips up, Sophie",
     ],
     excludes: ["Pricing recap", "Attachments", "Anything else"],
@@ -960,6 +966,7 @@ export const footer = {
   taglineLines: [site.tagline, site.location],
   linkedinLabel: "LinkedIn", // under the email, when site.linkedin is set; opens in a new tab
   cta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
+  // Under it, the booking link, while site.bookingUrl is set
 };
 
 /* ------------------------------------------------------------------ */
