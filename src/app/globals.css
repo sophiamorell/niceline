@@ -600,12 +600,15 @@ img {
   white-space: nowrap;
   transition:
     background-color 160ms var(--ease),
-    border-color 160ms var(--ease);
+    border-color 160ms var(--ease),
+    color 160ms var(--ease);
 }
 
+/* Hover: pink, ink text (pink never carries light text), border matches the fill so no ring shows */
 .hero-bar__cta:hover {
-  background: var(--primary-dark);
-  border-color: var(--primary-dark);
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--ink);
 }
 
 .hero__headline {
@@ -1573,7 +1576,8 @@ textarea.input {
   color: var(--on-primary);
 }
 
-/* The strip's button: the booking link, in the same mist pill as the hero bar's */
+/* The strip's button: the booking link, the same teal pill as the hero bar's. The
+   strip is already sea glass, so the pill is one step darker (deep sea) to stay visible. */
 .bundle__cta {
   flex: none;
   display: inline-block;
@@ -1581,18 +1585,24 @@ textarea.input {
   font-weight: 700;
   font-size: 16px;
   line-height: 1.2;
-  background: var(--mist);
-  color: var(--ink);
-  border: 2px solid var(--mist);
+  background: var(--primary-dark);
+  color: var(--on-primary);
+  border: 2px solid var(--primary-dark);
   border-radius: 999px;
   padding: 15px 28px;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 160ms var(--ease);
+  transition:
+    background-color 160ms var(--ease),
+    border-color 160ms var(--ease),
+    color 160ms var(--ease);
 }
 
+/* Hover: pink, ink text, border matches the fill so no ring shows */
 .bundle__cta:hover {
-  background: var(--sunflower);
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--ink);
 }
 
 .how__footnote {
