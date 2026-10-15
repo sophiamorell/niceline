@@ -63,8 +63,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${slab.variable} ${head.variable} ${body.variable} ${label.variable}`}>
       <head>
-        {/* Umami analytics */}
-        <script defer src="https://cloud.umami.is/script.js" data-website-id="a816ca7e-d4e9-4bec-a30d-6acac2dce084" />
+        {/* Umami analytics (cookieless). Pageviews are automatic; the quiz and
+            booking events go through src/lib/track.ts. data-domains keeps
+            Netlify deploy previews and local builds out of the numbers. */}
+        <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="a816ca7e-d4e9-4bec-a30d-6acac2dce084"
+          data-domains="niceline.marketing"
+        />
       </head>
       <body>{children}</body>
     </html>

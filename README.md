@@ -49,6 +49,17 @@ One-time setup in the Netlify dashboard:
 Submissions are also listed under Forms in Netlify. No environment variables
 are needed.
 
+## Analytics
+
+Umami Cloud (free plan), cookieless. The script tag is in `src/app/layout.tsx`
+with `data-domains="niceline.marketing"`, so deploy previews and local builds
+send nothing. Pageviews are automatic. Custom events go through
+`src/lib/track.ts` (`track(name, props)`): `diagnostic_start`,
+`diagnostic_step` (with the step number), `diagnostic_submit` (with the
+verdict and score), `booking_click` (with `place`: hero, steps, footer or
+diagnostic), and Line Check's `icp_*` events. In development they log to the
+console instead.
+
 ## Line Check (/line-check)
 
 A free lead-magnet tool: a founder describes their best and worst customers
