@@ -2869,10 +2869,17 @@ textarea.input {
 
 .modal__gaps li::before {
   content: counter(gap, decimal-leading-zero);
+  grid-row: 1 / span 2; /* the numeral spans both lines of text */
   font-family: var(--fm-slab);
   font-size: 1.25rem;
   line-height: 1;
   color: var(--primary);
+}
+
+/* Both lines sit in the text column, never under the numeral */
+.modal__gap,
+.modal__gap-from {
+  grid-column: 2;
 }
 
 .modal__gap {

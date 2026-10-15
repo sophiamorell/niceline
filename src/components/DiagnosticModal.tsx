@@ -312,7 +312,13 @@ export function DiagnosticModal() {
             {modal.done.closeLabel}
           </button>
           {site.bookingUrl !== null && (
-            <a href={site.bookingUrl} className="button button--outline" onClick={() => track(BOOKING_EVENT)}>
+            <a
+              href={site.bookingUrl}
+              className="button button--outline"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => track(BOOKING_EVENT, { place: "diagnostic" })}
+            >
               {modal.done.bookingLabel}
             </a>
           )}
