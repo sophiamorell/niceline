@@ -542,18 +542,20 @@ img {
   align-items: start;
 }
 
-/* The teal bar under the hero: category line and one sentence on the left,
-   the booking link on the right. Same inset as the page's sections. */
+/* The mist bar under the hero: category line and one sentence on the left,
+   the booking link on the right. Square on the left with a sea-glass rule,
+   rounded on the right. Same inset as the page's sections. */
 .hero-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 28px;
   margin: clamp(36px, 5vw, 56px) var(--page-x) 0;
-  padding: 24px 24px 24px 36px;
-  background: var(--primary);
-  border-radius: 24px;
-  color: var(--on-primary);
+  padding: 18px 14px 18px 28px;
+  background: var(--mist);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 40px 40px 0;
+  color: var(--ink-2);
 }
 
 .hero-bar__heading {
@@ -561,36 +563,36 @@ img {
   font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.3;
-  color: #fff;
-  margin-bottom: 6px;
+  color: var(--primary);
+  margin-bottom: 4px;
 }
 
 .hero-bar__body {
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--on-primary);
+  color: var(--ink-2);
 }
 
 .hero-bar__link {
   font-weight: 700;
-  color: #fff;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-color: var(--mist);
+  color: var(--ink);
+  text-decoration: none;
 }
 
 .hero-bar__link:hover {
-  color: var(--mist);
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .hero-bar__cta {
   flex: none;
   display: inline-block;
-  padding: 15px 28px;
+  padding: 14px 24px;
   border-radius: 999px;
-  border: 2px solid var(--mist); /* no ink outline on the teal bars, per the mockup */
-  background: var(--mist);
-  color: var(--ink);
+  border: 2px solid var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
   font-family: var(--fm-head);
   font-weight: 700;
   font-size: 16px;
@@ -598,11 +600,12 @@ img {
   white-space: nowrap;
   transition:
     background-color 160ms var(--ease),
-    color 160ms var(--ease);
+    border-color 160ms var(--ease);
 }
 
 .hero-bar__cta:hover {
-  background: var(--sunflower);
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
 }
 
 .hero__headline {
@@ -692,14 +695,14 @@ img {
   line-height: 1.4;
 }
 
-/* Pink dots, on the first line (the only list markers on the page) */
+/* Sea-glass dots, on the first line (the only list markers on the page) */
 .dots li::before {
   content: "";
   flex: none;
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: var(--pink);
+  background: var(--primary);
   transform: translateY(-2px);
 }
 
@@ -885,7 +888,8 @@ textarea.input {
     flex-direction: column;
     align-items: flex-start;
     gap: 18px;
-    padding: 24px;
+    padding: 22px 22px 22px 24px;
+    border-radius: 0 24px 24px 0;
   }
 }
 
