@@ -155,14 +155,16 @@ export const hero = {
   headline: "Now build the marketing to",
   headlineHighlight: "sell more", // on the highlighter band
   headlineAfter: " of it.",
-  subhead: "Growth stalls when nobody owns marketing.",
+  subhead: "Growth stalls when nobody is building your sales pipeline.",
   bullets: [
-    "Pipeline shows up when it feels like it, so the forecast is mostly hope",
+    "Pipeline is opportunistic, resulting in unreliable revenue",
     "Nobody owns the story, so everyone tells it differently",
-    "You know you'll eventually need a marketer, but not who or when",
+    "You know you need marketing support, but don't know where to start",
   ],
   primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
-  // The second button is the booking link while site.bookingUrl is set; this is the fallback
+  // The second button: the booking link while bookingInHero is true and site.bookingUrl is set,
+  // otherwise secondaryCta ("What you get", Sara's suggestion)
+  bookingInHero: true,
   secondaryCta: { label: "What you get", href: `#${anchors.deliverables}` },
   // The clickable card on the right: a picture of question 1 that opens the diagnostic popup
   card: {
@@ -197,7 +199,7 @@ export const whyNow = {
       status: "Built",
       title: "Sales",
       lead: "You've perfected your pitch.",
-      body: "Awesome, and now you have real, dependable revenue.",
+      body: "Awesome, and now you have real revenue.",
       current: false,
     },
     {
@@ -221,12 +223,12 @@ export const checklist = {
   heading: "Does this sound like you?",
   subheading: "Check all that feel true to you.",
   items: [
-    "Your CRM has thousands of contacts and no way to tell which ones matter",
-    "You'd hesitate to show the board your pipeline report",
+    "Your CRM has thousands of contacts and no way to tell which ones matter ... or you have no idea what a CRM is",
+    "You'd hesitate to show the board or your investors your pipeline report",
     "Most of your wins come from referrals and personal connections, and you can't forecast either",
     "Ask five people who your ideal customer is and you'll get five answers",
     "Your website says one thing, your deck says another, and every rep says something else",
-    "You can't point to hard numbers on what's actually filling your pipeline",
+    "Without dependable pipeline, you lack dependable revenue analytics",
   ], // no closing periods: they read as list items next to the checkboxes
   // The verdict bar under the checks. {n} = checked count, {total} = items.length
   verdicts: {

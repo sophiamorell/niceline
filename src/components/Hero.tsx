@@ -34,7 +34,7 @@ export function Hero() {
           <a href={hero.primaryCta.href} className="button button--primary">
             {hero.primaryCta.label}
           </a>
-          {site.bookingUrl !== null ? (
+          {hero.bookingInHero && site.bookingUrl !== null ? (
             <BookingLink place="hero" className="button button--outline" />
           ) : (
             <a href={hero.secondaryCta.href} className="button button--outline">
