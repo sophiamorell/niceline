@@ -608,6 +608,7 @@ img {
 .hero-bar__cta:hover {
   background: var(--pink);
   border-color: var(--pink);
+  color: var(--on-primary); /* set here, or the global a:hover teal wins */
 }
 
 .hero__headline {
@@ -1601,6 +1602,7 @@ textarea.input {
 .bundle__cta:hover {
   background: var(--pink);
   border-color: var(--pink);
+  color: var(--on-primary); /* set here, or the global a:hover teal wins */
 }
 
 .how__footnote {
