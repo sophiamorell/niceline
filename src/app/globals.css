@@ -604,11 +604,10 @@ img {
     color 160ms var(--ease);
 }
 
-/* Hover: pink, ink text (pink never carries light text), border matches the fill so no ring shows */
+/* Hover: pink, text stays white, border matches the fill so no ring shows */
 .hero-bar__cta:hover {
   background: var(--pink);
   border-color: var(--pink);
-  color: var(--ink);
 }
 
 .hero__headline {
@@ -1598,11 +1597,10 @@ textarea.input {
     color 160ms var(--ease);
 }
 
-/* Hover: pink, ink text, border matches the fill so no ring shows */
+/* Hover: pink, text stays white, border matches the fill so no ring shows */
 .bundle__cta:hover {
   background: var(--pink);
   border-color: var(--pink);
-  color: var(--ink);
 }
 
 .how__footnote {
