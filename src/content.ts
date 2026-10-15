@@ -65,6 +65,15 @@ export interface FaqItem {
   show: boolean;
 }
 
+export interface DiagnosticVerdict {
+  minScore: number;
+  maxScore: number;
+  id: "notYet" | "phase1" | "dontNeed";
+  label: string; // the verdict screen's heading
+  note: string; // one line under it, before the gaps
+  requires?: Record<string, string>; // answers that must match, e.g. { q1: "marketer" }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Release switches                                                   */
 /* ------------------------------------------------------------------ */
@@ -701,7 +710,7 @@ export const proof = {
 
 export const diagnostic = {
   heading: "See what to fix first.",
-  intro: "Ten questions, results and the three things to fix first will be emailed to you.",
+  intro: "Ten questions. Your verdict and your three biggest gaps show up right away; the fix for each one lands in your inbox.",
   startLabel: "See what to fix first",
   comesBack: {
     label: "What comes back",
@@ -713,27 +722,37 @@ export const diagnostic = {
     note: "Your answers are used to write your results and nothing else.",
   },
   netlifyFormName: "diagnostic",
-  netlifyStartFormName: "diagnostic-start", // the email alone, saved before question 1
-  // The popup: email first, then the questions one at a time, then done
+  // The popup: the questions one at a time, then the verdict and the three
+  // gaps on screen, then the email ask (for the fixes), then done. Nothing is
+  // asked for until the visitor has seen something.
   modal: {
     closeLabel: "Close",
-    email: {
-      heading: "See what to fix first.",
-      body: "Ten questions, results and the three things to fix first will be emailed to you.",
-      label: "Work email",
-      placeholder: "you@company.com",
-      invalid: "That email doesn't look right.",
-      submitLabel: "Start the 10 questions",
-    },
     progressLabel: "Question {current} of {total}",
     backLabel: "Back",
     nextLabel: "Next",
-    finishLabel: "Finish",
+    finishLabel: "See my verdict",
+    // The verdict screen: scoring.verdicts supplies the heading and the note
+    results: {
+      kicker: "Your verdict",
+      gapsLabel: "Your biggest gaps, in order", // up to scoring.gapsReported; full-marks answers are never gaps
+      noGaps: "Nothing scored low enough to call a gap. Nice line.",
+      emailHeading: "Want the fix for each one?",
+      emailBody: "Enter your work email and I'll send one fix per gap you can run yourself, plus the recommended next step.",
+      // With no gaps to fix, the email buys the next step only
+      emailHeadingNoGaps: "Want a second opinion anyway?",
+      emailBodyNoGaps: "Enter your work email and I'll send the recommended next step, and whether a walkthrough is worth your time.",
+      label: "Work email",
+      placeholder: "you@company.com",
+      invalid: "That email doesn't look right.",
+      submitLabel: "Send me the fixes",
+      sendingLabel: "Sending…",
+      backLabel: "Change an answer",
+    },
     sendFailed: "That didn't send. Please try again, or email Sophie at {email}.",
     done: {
-      kicker: "{total} of {total}",
-      heading: "That's all ten.",
-      bodyBefore: "Your three things to fix first will land in ",
+      kicker: "Sent",
+      heading: "Your fixes are on their way.",
+      bodyBefore: "One fix per gap and your next step will land in ",
       bodyAfter: " within two business days.",
       closeLabel: "Back to the site",
       bookingLabel: site.bookingLabel, // shown only when site.bookingUrl is set
@@ -869,7 +888,9 @@ export const diagnostic = {
     },
   ] as DiagnosticQuestion[],
 
-  /* Scoring: applied by hand for now, in code later */
+  /* Scoring: computed in the browser (src/lib/diagnostic-score.ts) for the
+     verdict screen, and sent with the answers so the results email can be
+     written from the submission */
   scoring: {
     scoredQuestions: [1, 2, 3, 4, 5, 6, 7, 8],
     maxScore: 16,
@@ -883,11 +904,36 @@ export const diagnostic = {
     gapTieBreak: [3, 4, 2, 6, 7, 5, 8, 1],
     gapsReported: 3,
     verdicts: [
-      { minScore: 0, maxScore: 5, id: "notYet", label: "Not yet: do the free fixes first" },
-      { minScore: 6, maxScore: 12, id: "phase1", label: "Step 1 is the right next step" },
-      { minScore: 13, maxScore: 16, id: "dontNeed", label: "You don't need this program", requires: { q1: "marketer" } },
-      { minScore: 13, maxScore: 16, id: "phase1", label: "Step 1 is the right next step" }, // 13-16 without a marketer
-    ],
+      {
+        minScore: 0,
+        maxScore: 5,
+        id: "notYet",
+        label: "Not yet: do the free fixes first",
+        note: "Marketing isn't anyone's job yet, and that's fixable without a program. Close the gaps below first; they cost time, not money.",
+      },
+      {
+        minScore: 6,
+        maxScore: 12,
+        id: "phase1",
+        label: "Step 1 is the right next step",
+        note: "You have product and revenue, and the pieces of a marketing function are half there. The gaps below are what Step 1 closes in four weeks.",
+      },
+      {
+        minScore: 13,
+        maxScore: 16,
+        id: "dontNeed",
+        label: "You don't need this program",
+        note: "You have a marketer and most of the function built. Hand them the gaps below. If you'd like a second opinion, the walkthrough is still free.",
+        requires: { q1: "marketer" },
+      },
+      {
+        minScore: 13,
+        maxScore: 16,
+        id: "phase1",
+        label: "Step 1 is the right next step",
+        note: "Most of the function is built; what's missing is someone to own it. Step 1 puts a campaign in market while you decide who that is.",
+      }, // 13-16 without a marketer
+    ] as DiagnosticVerdict[],
     q9MaybeNote: "Noted in the results email as the hiring conversation to have after Step 1.",
   },
 

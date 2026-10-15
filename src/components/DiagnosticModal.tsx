@@ -14,35 +14,34 @@ import { analytics, anchors, diagnostic, site, type DiagnosticQuestion } from "@
 import { fill, mutedClass } from "@/lib/copy";
 import { useDialog } from "@/lib/dialog";
 import { OPEN_EVENT } from "@/lib/diagnostic-modal";
+import { scoreDiagnostic, type Answers } from "@/lib/diagnostic-score";
 import { postForm } from "@/lib/forms";
 import { track } from "@/lib/track";
 
 /**
- * The diagnostic popup: email first, then the questions one at a time, then
- * a done screen. Opened by openDiagnostic() (the hero card, the mist
- * section's button) and by any link to #diagnostic.
+ * The diagnostic popup: the questions one at a time, then the verdict and
+ * the three gaps on screen, then the email ask, then a done screen. Nothing
+ * is asked for until the visitor has seen their result; the email buys the
+ * fix for each gap and the recommended next step. Opened by openDiagnostic()
+ * (the hero card, the mist section's button) and by any link to #diagnostic.
  *
  * Closing (×, backdrop, Escape) keeps the step, answers and email; reopening
- * after the done screen starts again at the email step. Focus is trapped in
- * the dialog and returns to whatever opened it; page scroll is locked.
+ * after the done screen starts again at question 1. Focus is trapped in the
+ * dialog and returns to whatever opened it; page scroll is locked.
  *
  * Single-choice questions advance on their own shortly after a tap; the
- * others use Next. The last question's button reads Finish and posts
- * everything at once.
+ * others use Next. The last question's button reads "See my verdict", which
+ * scores the answers in the browser (src/lib/diagnostic-score.ts). The
+ * verdict screen's email button posts everything at once.
  *
- * Field names are the long-run contract for the v1 scoring function:
- * q1…q10 (choice value = option id), q5_contactsTotal / q5_contactsEmailable,
- * and email. They must match public/__forms.html. Submission goes to Netlify
- * Forms: a urlencoded POST, including form-name, to that static file.
- *
- * The email is also saved on its own (the diagnostic-start form) as soon as
- * it's entered, so people who stop partway can still be followed up. That
- * post is fire-and-forget: a failure never holds up the questions.
+ * Field names are the long-run contract: q1…q10 (choice value = option id),
+ * q5_contactsTotal / q5_contactsEmailable, email, and the computed score,
+ * verdict and gaps. They must match public/__forms.html. Submission goes to
+ * Netlify Forms: a urlencoded POST, including form-name, to that static file.
  */
 
-type Step = "email" | number | "done"; // a number is the question index
+type Step = number | "results" | "done"; // a number is the question index
 type Status = "idle" | "submitting" | "error";
-type Answers = Record<string, string>;
 
 /* analytics.v0 = ["diagnostic_start", "diagnostic_step", "diagnostic_submit", "booking_click"] */
 const [START_EVENT, STEP_EVENT, SUBMIT_EVENT, BOOKING_EVENT] = analytics.v0;
@@ -64,12 +63,12 @@ function questionAnswered(question: DiagnosticQuestion, answers: Answers): boole
 }
 
 export function DiagnosticModal() {
-  const { questions, modal, netlifyFormName, netlifyStartFormName } = diagnostic;
+  const { questions, modal, netlifyFormName } = diagnostic;
   const total = questions.length;
   const uid = useId();
 
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<Step>("email");
+  const [step, setStep] = useState<Step>(0);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [answers, setAnswers] = useState<Answers>({});
@@ -80,6 +79,7 @@ export function DiagnosticModal() {
   const openerRef = useRef<HTMLElement | null>(null);
   const stepRef = useRef<Step>(step);
   const advanceTimer = useRef<number | null>(null);
+  const startedRef = useRef(false); // diagnostic_start fires once, on the first answer
 
   useEffect(() => {
     stepRef.current = step;
@@ -88,9 +88,10 @@ export function DiagnosticModal() {
   const show = useCallback((opener: Element | null) => {
     openerRef.current = opener instanceof HTMLElement ? opener : null;
     if (stepRef.current === "done") {
-      setStep("email");
+      setStep(0);
       setAnswers({});
       setStatus("idle");
+      startedRef.current = false;
     }
     setOpen(true);
   }, []);
@@ -132,6 +133,10 @@ export function DiagnosticModal() {
   }, [open, step]);
 
   const setAnswer = (name: string, value: string) => {
+    if (!startedRef.current) {
+      startedRef.current = true;
+      track(START_EVENT);
+    }
     setAnswers((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -144,24 +149,20 @@ export function DiagnosticModal() {
     setStep(index);
   };
 
-  const onEmailSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!EMAIL_PATTERN.test(email.trim())) {
-      setEmailError(true);
-      return;
-    }
-    track(START_EVENT);
-    postForm({ "form-name": netlifyStartFormName, email: email.trim() }).catch(() => {});
-    setStep(0);
-  };
-
   const send = async () => {
     setStatus("submitting");
     try {
-      const fields: Record<string, string> = { "form-name": netlifyFormName, email: email.trim() };
+      const result = scoreDiagnostic(answers);
+      const fields: Record<string, string> = {
+        "form-name": netlifyFormName,
+        email: email.trim(),
+        score: `${result.score} of ${result.maxScore}`,
+        verdict: result.verdict.label,
+        gaps: result.gaps.map((q) => q.gap ?? `Q${q.id}`).join("; "),
+      };
       for (const name of questions.flatMap(fieldNamesFor)) fields[name] = answers[name] ?? "";
       await postForm(fields);
-      track(SUBMIT_EVENT);
+      track(SUBMIT_EVENT, { verdict: result.verdict.id, score: result.score });
       setStatus("idle");
       setStep("done");
     } catch {
@@ -169,12 +170,22 @@ export function DiagnosticModal() {
     }
   };
 
-  const forward = (index: number) => {
-    if (index === total - 1) {
-      void send();
+  const onEmailSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!EMAIL_PATTERN.test(email.trim())) {
+      setEmailError(true);
       return;
     }
+    if (status !== "submitting") void send();
+  };
+
+  const forward = (index: number) => {
     track(STEP_EVENT, { step: index + 1 });
+    if (index === total - 1) {
+      goTo(index); // clears any pending auto-advance
+      setStep("results");
+      return;
+    }
     goTo(index + 1);
   };
 
@@ -193,54 +204,97 @@ export function DiagnosticModal() {
   const headingId = `${uid}-heading`;
   let screen: ReactNode;
 
-  if (step === "email") {
+  if (step === "results") {
+    const { results } = modal;
+    const result = scoreDiagnostic(answers);
     const emailId = `${uid}-email`;
     const errorId = `${uid}-email-error`;
+    const emailHeadingId = `${uid}-email-heading`;
+    const [failedBefore, failedAfter] = modal.sendFailed.split("{email}");
     screen = (
-      <form onSubmit={onEmailSubmit} noValidate>
-        <h2 id={headingId} className="modal__heading">
-          {modal.email.heading}
+      <div>
+        <p className="kicker">{results.kicker}</p>
+        <h2
+          id={headingId}
+          className="modal__heading modal__heading--wrap"
+          tabIndex={-1}
+          ref={(el) => {
+            focusTargetRef.current = el;
+          }}
+        >
+          {result.verdict.label}
         </h2>
-        <p className="modal__body">{modal.email.body}</p>
-        <label htmlFor={emailId} className="field">
-          <span className="field__label">{modal.email.label}</span>
-          <input
-            id={emailId}
-            ref={(el) => {
-              focusTargetRef.current = el;
-            }}
-            className="input modal__input"
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder={modal.email.placeholder}
-            value={email}
-            aria-invalid={emailError}
-            aria-describedby={emailError ? errorId : undefined}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailError(false);
-            }}
-          />
-        </label>
-        {emailError && (
-          <p id={errorId} className="modal__error" role="alert">
-            {modal.email.invalid}
-          </p>
+        <p className="modal__body">{result.verdict.note}</p>
+        <p className="label modal__gaps-label">{results.gapsLabel}</p>
+        {result.gaps.length > 0 ? (
+          <ol className="modal__gaps">
+            {result.gaps.map((question) => (
+              <li key={question.id}>
+                <span className="modal__gap">{question.gap}</span>
+                <span className="modal__gap-from">{question.prompt}</span>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="modal__body modal__no-gaps">{results.noGaps}</p>
         )}
-        <button type="submit" className="modal__submit">
-          <span>{modal.email.submitLabel}</span>
-          <span aria-hidden="true">→</span>
-        </button>
-      </form>
+
+        <form onSubmit={onEmailSubmit} noValidate className="modal__ask" aria-labelledby={emailHeadingId}>
+          <h3 id={emailHeadingId} className="modal__ask-heading">
+            {result.gaps.length > 0 ? results.emailHeading : results.emailHeadingNoGaps}
+          </h3>
+          <p className="modal__body">{result.gaps.length > 0 ? results.emailBody : results.emailBodyNoGaps}</p>
+          <label htmlFor={emailId} className="field">
+            <span className="field__label">{results.label}</span>
+            <input
+              id={emailId}
+              className="input modal__input"
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder={results.placeholder}
+              value={email}
+              aria-invalid={emailError}
+              aria-describedby={emailError ? errorId : undefined}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError(false);
+              }}
+            />
+          </label>
+          {emailError && (
+            <p id={errorId} className="modal__error" role="alert">
+              {results.invalid}
+            </p>
+          )}
+          {status === "error" && (
+            <p className="modal__error" role="alert">
+              {failedBefore}
+              {site.email !== null && <a href={`mailto:${site.email}`}>{site.email}</a>}
+              {failedAfter}
+            </p>
+          )}
+          <button type="submit" className="modal__submit" disabled={status === "submitting"}>
+            <span>{status === "submitting" ? results.sendingLabel : results.submitLabel}</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        <div className="modal__actions modal__actions--results">
+          <button type="button" className="modal__back" onClick={() => goTo(total - 1)}>
+            <span aria-hidden="true">← </span>
+            {results.backLabel}
+          </button>
+        </div>
+      </div>
     );
   } else if (step === "done") {
     screen = (
       <div>
-        <p className="kicker">{fill(modal.done.kicker, { total })}</p>
+        <p className="kicker">{modal.done.kicker}</p>
         <h2
           id={headingId}
-          className="modal__heading"
+          className="modal__heading modal__heading--wrap"
           tabIndex={-1}
           ref={(el) => {
             focusTargetRef.current = el;
@@ -270,13 +324,12 @@ export function DiagnosticModal() {
     const question = questions[index];
     const isLast = index === total - 1;
     const canAdvance = questionAnswered(question, answers);
-    const [failedBefore, failedAfter] = modal.sendFailed.split("{email}");
 
     screen = (
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          if (canAdvance && status !== "submitting") forward(index);
+          if (canAdvance) forward(index);
         }}
       >
         <p
@@ -314,14 +367,6 @@ export function DiagnosticModal() {
           />
         )}
 
-        {status === "error" && (
-          <p className="modal__error" role="alert">
-            {failedBefore}
-            {site.email !== null && <a href={`mailto:${site.email}`}>{site.email}</a>}
-            {failedAfter}
-          </p>
-        )}
-
         <div className="modal__actions">
           <button
             type="button"
@@ -332,11 +377,7 @@ export function DiagnosticModal() {
             <span aria-hidden="true">← </span>
             {modal.backLabel}
           </button>
-          <button
-            type="submit"
-            className="button button--yellow button--small"
-            disabled={!canAdvance || status === "submitting"}
-          >
+          <button type="submit" className="button button--yellow button--small" disabled={!canAdvance}>
             {isLast ? modal.finishLabel : modal.nextLabel}
           </button>
         </div>

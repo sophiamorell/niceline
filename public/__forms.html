@@ -24,6 +24,11 @@
       <input name="q9" type="text" />
       <textarea name="q10"></textarea>
       <input name="email" type="email" />
+      <!-- Computed in the browser (src/lib/diagnostic-score.ts), so the
+           results email can be written straight from the notification. -->
+      <input name="score" type="text" />
+      <input name="verdict" type="text" />
+      <input name="gaps" type="text" />
     </form>
 
     <!-- The "Talk to Sophie" contact popup (src/components/ContactModal.tsx). -->
@@ -35,11 +40,6 @@
       <textarea name="message"></textarea>
     </form>
 
-    <!-- The email alone, posted as soon as it's entered (before question 1). -->
-    <form name="diagnostic-start" data-netlify="true" netlify hidden>
-      <input type="hidden" name="form-name" value="diagnostic-start" />
-      <input name="email" type="email" />
-    </form>
     <!-- Line Check's email gate (src/components/line-check/LineCheck.tsx,
          sendToSophie): contact details, the profile and rubric as text, every
          customer as text, and the raw JSON in "data". -->

@@ -12,8 +12,10 @@ is the only place text, prices, lists and the diagnostic questions live.
 - Each step has one price in `pricing.steps`, shown on its card in How it
   works. A `null` price renders as `pricing.emptyPrice`, and the "All three
   steps" total only appears when every step has a price.
-- The diagnostic runs in a popup (`diagnostic.modal`): email first, then the
-  questions one at a time. Any link to `#diagnostic` opens it.
+- The diagnostic runs in a popup (`diagnostic.modal`): the questions one at a
+  time, then the verdict and the three gaps on screen (scored in the browser
+  from `diagnostic.scoring`, see `src/lib/diagnostic-score.ts`), then the
+  email ask for the fixes. Any link to `#diagnostic` opens it.
 - Text in `[square brackets]` or marked `status: "placeholder"` renders muted so
   it's obvious on the preview what still needs writing.
 - `release.*` flags turn v1 sections on. The components already exist.
@@ -32,12 +34,13 @@ npm run lint
 `netlify.toml` carries the build settings and the Next.js runtime plugin.
 One-time setup in the Netlify dashboard:
 
-1. **Forms → Enable form detection**, then trigger a deploy. Two forms appear
-   (their definitions are in `public/__forms.html`): `diagnostic`, the full
-   answers, and `diagnostic-start`, the email alone, saved as soon as it's
-   entered so partial completions can be followed up.
-   A third form, `contact`, holds the "Let's talk" messages from the
-   pricing section.
+1. **Forms → Enable form detection**, then trigger a deploy. The forms are
+   defined in `public/__forms.html`: `diagnostic` holds the full answers plus
+   the computed `score`, `verdict` and `gaps`, so the results email can be
+   written straight from the notification. `contact` holds the "Let's talk"
+   messages from the pricing section. (An earlier `diagnostic-start` form,
+   which saved the email before question 1, is gone: the email is now asked
+   for after the verdict.)
 2. Open that form → **Notifications** → email notification to Sophie's address.
 3. **Domain management** → make `niceline.marketing` the primary domain.
    Keep `thefoundersmarketer.com` attached as a domain alias: `netlify.toml`
