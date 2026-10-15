@@ -4,7 +4,7 @@ import { HeckYes } from "@/components/HeckYes";
 
 /**
  * 1 · Hero (#top): two columns. Left, the opener line with its tooltip, the
- * headline with "sell more" on the highlighter, subhead and three pink-dot
+ * headline with "sell more" on the highlighter, subhead and three sea-glass-dot
  * bullets. Right, the stacked question card that opens the diagnostic popup.
  * No kicker and no buttons: the category line and the one CTA are in the
  * HeroBar directly under this.

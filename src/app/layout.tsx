@@ -62,6 +62,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${slab.variable} ${head.variable} ${body.variable} ${label.variable}`}>
+      <head>
+        {/* Umami analytics */}
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="a816ca7e-d4e9-4bec-a30d-6acac2dce084" />
+      </head>
       <body>{children}</body>
     </html>
   );

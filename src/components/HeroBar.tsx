@@ -2,7 +2,7 @@ import { heroBar, site } from "@/content";
 import { BookingLink } from "@/components/BookingLink";
 
 /**
- * The teal bar under the hero: the category line (the old hero kicker), one
+ * The mist bar under the hero: the category line (the old hero kicker), one
  * sentence with a link to the steps, and the booking link as the page's one
  * above-the-fold CTA. Stacks on phones, where it is also the first CTA after
  * the nav because the question card is hidden there.
