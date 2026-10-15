@@ -3,6 +3,7 @@ import { release } from "@/content";
 import { Nav } from "@/components/Nav";
 import { StructuredData } from "@/components/StructuredData";
 import { Hero } from "@/components/Hero";
+import { HeroBar } from "@/components/HeroBar";
 import { WhyNow } from "@/components/WhyNow";
 import { Checklist } from "@/components/Checklist";
 import { HowItWorks } from "@/components/HowItWorks";
@@ -36,6 +37,7 @@ export default function HomePage() {
       <Nav />
       <main id="main">
         <Hero />
+        <HeroBar />
         <WhyNow />
         <Checklist />
         <HowItWorks />

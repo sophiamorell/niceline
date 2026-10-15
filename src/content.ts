@@ -149,7 +149,7 @@ export const nav = {
 /* ------------------------------------------------------------------ */
 
 export const hero = {
-  kicker: "Fractional marketing leadership for B2B companies", // small line above the opener; the name no longer says who this is for
+  // No kicker and no buttons: the category line and the one CTA live in heroBar, under the hero
   opener: "You built something people buy.", // the 40px regular line; hover shows the tooltip
   tooltip: "Nice", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
@@ -161,20 +161,26 @@ export const hero = {
     "Nobody owns the story, so everyone tells it differently",
     "You know you need marketing support, but don't know where to start",
   ],
-  primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
-  // The second button: the booking link while bookingInHero is true and site.bookingUrl is set,
-  // otherwise secondaryCta ("What you get", Sara's suggestion)
-  bookingInHero: true,
-  secondaryCta: { label: "What you get", href: `#${anchors.deliverables}` },
   // The clickable card on the right: a picture of question 1 that opens the diagnostic popup
   card: {
     ariaLabel: "See what to fix first: start the 10-question diagnostic",
     progressLabel: "Question 1 of 10",
+    timeLabel: "About 2 min", // right of the progress label
     prompt: "Who owns marketing at your company today?",
     options: ["Nobody. Marketing, who?", "Someone, on the side", "We're about to hire for it"], // the three answers founders give most
     selectedIndex: 0, // drawn as selected
     buttonLabel: "See what to fix first",
+    footnote: "Nine more like this.", // under the button
   },
+};
+
+/* The teal bar under the hero: the category line, one sentence with a link to
+   the steps, and the page's one above-the-fold CTA, the booking link. */
+export const heroBar = {
+  heading: "Fractional marketing leadership for B2B companies.",
+  body: "I'll build your marketing function in about four months. ", // first person, like the tagline
+  link: { label: "See steps and pricing", href: `#${anchors.howItWorks}` },
+  cta: "Book 30 minutes", // the booking link; the bar hides the button while site.bookingUrl is null
 };
 
 /* ------------------------------------------------------------------ */
@@ -551,7 +557,7 @@ export const pricing = {
     campaigns: "5-7 campaigns live", // a pink pill, like the campaign boxes in the cards
     note: "About half the cost of a senior marketer for four months, with no three-month search first.",
   },
-  // The strip's buttons: the booking link (while site.bookingUrl is set), then "Let's talk", which opens the contact popup
+  // The strip's button is the booking link. Without one (site.bookingUrl null) it falls back to this, which opens the contact popup
   ctaLabel: "Let's talk",
   // Shown while release.showLocalsNote is true
   localsNote: {
@@ -992,6 +998,7 @@ export const content = {
   logo,
   nav,
   hero,
+  heroBar,
   whyNow,
   checklist,
   howItWorks,

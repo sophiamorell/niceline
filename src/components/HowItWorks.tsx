@@ -177,12 +177,13 @@ export function HowItWorks() {
           {pricing.bundle.campaigns}
         </span>
         <p className="bundle__note">{pricing.bundle.note}</p>
-        <div className="bundle__actions">
-          <BookingLink place="steps" className="bundle__cta" />
-          <button type="button" className={site.bookingUrl === null ? "bundle__cta" : "bundle__alt"} onClick={openContact}>
+        {site.bookingUrl !== null ? (
+          <BookingLink place="steps" className="bundle__cta" label={site.bookingLabelShort} />
+        ) : (
+          <button type="button" className="bundle__cta" onClick={openContact}>
             {pricing.ctaLabel}
           </button>
-        </div>
+        )}
       </div>
 
       {release.showLocalsNote && (
