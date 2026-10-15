@@ -1,11 +1,13 @@
-import { anchors, hero } from "@/content";
+import { anchors, hero, site } from "@/content";
+import { BookingLink } from "@/components/BookingLink";
 import { DiagnosticCard } from "@/components/DiagnosticCard";
 import { HeckYes } from "@/components/HeckYes";
 
 /**
  * 1 · Hero (#top): two columns. Left, the kicker, the opener line with its tooltip, the
  * headline with "sell more" on the highlighter, subhead, three pink-dot
- * bullets and two buttons.
+ * bullets and two buttons: the diagnostic, then the booking link (or the
+ * content's secondary CTA while there is no booking link).
  * Right, the stacked question card that opens the diagnostic popup.
  */
 export function Hero() {
@@ -32,9 +34,13 @@ export function Hero() {
           <a href={hero.primaryCta.href} className="button button--primary">
             {hero.primaryCta.label}
           </a>
-          <a href={hero.secondaryCta.href} className="button button--outline">
-            {hero.secondaryCta.label}
-          </a>
+          {site.bookingUrl !== null ? (
+            <BookingLink place="hero" className="button button--outline" />
+          ) : (
+            <a href={hero.secondaryCta.href} className="button button--outline">
+              {hero.secondaryCta.label}
+            </a>
+          )}
         </div>
       </div>
 

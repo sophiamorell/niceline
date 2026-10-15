@@ -22,8 +22,9 @@ export const lineCheck = {
       "A free five-minute tool. Describe your best and worst customers and get a draft ideal customer profile and a scoring rubric for new leads.",
   },
 
-  // TODO(sophie): the booking link for the closing block. null hides the button.
-  bookingUrl: null as string | null,
+  // The booking link for the closing block (the same Google Calendar schedule as the
+  // main site, 30 minutes). null hides the button.
+  bookingUrl: "https://calendar.app.google/qhgEXaiF82W8FAzc7" as string | null,
 
   // Shown on the intro screen and next to the mic on first use (brief, section 9).
   privacy:
