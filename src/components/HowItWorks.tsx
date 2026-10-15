@@ -178,7 +178,7 @@ export function HowItWorks() {
         </span>
         <p className="bundle__note">{pricing.bundle.note}</p>
         {site.bookingUrl !== null ? (
-          <BookingLink place="steps" className="bundle__cta" label={site.bookingLabelShort} />
+          <BookingLink place="steps" className="bundle__cta" label={pricing.bundle.cta} />
         ) : (
           <button type="button" className="bundle__cta" onClick={openContact}>
             {pricing.ctaLabel}

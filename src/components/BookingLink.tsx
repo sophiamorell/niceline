@@ -27,7 +27,13 @@ export function BookingLink({
       className={className}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => track(BOOKING_EVENT, { place })}
+      onClick={(e) => {
+        track(BOOKING_EVENT, { place });
+        // The link opens a new tab and keeps focus here, so the focus ring is still
+        // on the button when the reader comes back. A mouse click (detail > 0)
+        // drops it; a keyboard activation (detail 0) keeps focus where it was.
+        if (e.detail > 0) e.currentTarget.blur();
+      }}
     >
       {label}
     </a>

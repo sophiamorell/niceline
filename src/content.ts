@@ -556,8 +556,9 @@ export const pricing = {
     title: "All three steps · {total}", // with prices on; {total} renders in sunflower
     campaigns: "5-7 campaigns live", // a pink pill, like the campaign boxes in the cards
     note: "About half the cost of a senior marketer for four months, with no three-month search first.",
+    cta: "Book 30 minutes", // the booking link, worded like the hero bar's; the footer keeps the longer label
   },
-  // The strip's button is the booking link. Without one (site.bookingUrl null) it falls back to this, which opens the contact popup
+  // Without a booking link (site.bookingUrl null) the strip's button falls back to this, which opens the contact popup
   ctaLabel: "Let's talk",
   // Shown while release.showLocalsNote is true
   localsNote: {
