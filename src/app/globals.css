@@ -542,8 +542,67 @@ img {
   align-items: start;
 }
 
-.hero__kicker {
-  margin-bottom: 22px;
+/* The teal bar under the hero: category line and one sentence on the left,
+   the booking link on the right. Same inset as the page's sections. */
+.hero-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin: clamp(36px, 5vw, 56px) var(--page-x) 0;
+  padding: 24px 24px 24px 36px;
+  background: var(--primary);
+  border-radius: 24px;
+  color: var(--on-primary);
+}
+
+.hero-bar__heading {
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.hero-bar__body {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--on-primary);
+}
+
+.hero-bar__link {
+  font-weight: 700;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--mist);
+}
+
+.hero-bar__link:hover {
+  color: var(--mist);
+}
+
+.hero-bar__cta {
+  flex: none;
+  display: inline-block;
+  padding: 15px 28px;
+  border-radius: 999px;
+  border: 2px solid var(--mist); /* no ink outline on the teal bars, per the mockup */
+  background: var(--mist);
+  color: var(--ink);
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition:
+    background-color 160ms var(--ease),
+    color 160ms var(--ease);
+}
+
+.hero-bar__cta:hover {
+  background: var(--sunflower);
 }
 
 .hero__headline {
@@ -645,7 +704,7 @@ img {
 }
 
 .hero__bullets {
-  margin-bottom: 34px;
+  margin-bottom: 0;
 }
 
 .actions {
@@ -736,6 +795,18 @@ textarea.input {
   margin-bottom: 12px;
 }
 
+.dcard__time {
+  color: var(--primary);
+}
+
+.dcard__footnote {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
 .dcard__progress {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -805,10 +876,16 @@ textarea.input {
   .hero {
     grid-template-columns: minmax(0, 1fr);
   }
-  /* On phones and narrow tablets the hero goes straight from the buttons
-     to the next section; the preview card is desktop only. */
+  /* On phones and narrow tablets the hero goes straight from the bullets
+     to the teal bar; the preview card is desktop only. */
   .dcard {
     display: none;
+  }
+  .hero-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 24px;
   }
 }
 
@@ -1492,49 +1569,26 @@ textarea.input {
   color: var(--on-primary);
 }
 
+/* The strip's button: the booking link, in the same mist pill as the hero bar's */
 .bundle__cta {
   flex: none;
+  display: inline-block;
   font-family: var(--fm-head);
   font-weight: 700;
   font-size: 16px;
-  background: var(--sunflower);
+  line-height: 1.2;
+  background: var(--mist);
   color: var(--ink);
-  border: 2px solid var(--ink);
+  border: 2px solid var(--mist);
   border-radius: 999px;
-  padding: 16px 28px;
+  padding: 15px 28px;
   cursor: pointer;
   white-space: nowrap;
   transition: background-color 160ms var(--ease);
 }
 
 .bundle__cta:hover {
-  background: #f3ad17;
-}
-
-/* The strip's two actions: the booking link as the button, "Let's talk" as a text link beside it */
-.bundle__actions {
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-.bundle__alt {
-  border: 0;
-  background: transparent;
-  font-family: var(--fm-head);
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--on-primary);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  padding: 10px 4px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.bundle__alt:hover {
-  color: var(--mist);
+  background: var(--sunflower);
 }
 
 .how__footnote {
@@ -1574,10 +1628,8 @@ textarea.input {
   .bundle__title {
     white-space: normal;
   }
-  .bundle__actions {
-    align-self: flex-end; /* the buttons sit on the right */
-    flex-wrap: wrap;
-    justify-content: flex-end;
+  .bundle__cta {
+    align-self: flex-end; /* the button sits on the right */
   }
   /* Collapsed cards: one line with the step, badge, price and +/−, then the
      outcome. Opening a card adds the question, what you keep and your time. */

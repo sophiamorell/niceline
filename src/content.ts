@@ -149,30 +149,38 @@ export const nav = {
 /* ------------------------------------------------------------------ */
 
 export const hero = {
-  kicker: "Fractional marketing leadership for B2B companies", // small line above the opener; the name no longer says who this is for
+  // No kicker and no buttons: the category line and the one CTA live in heroBar, under the hero
   opener: "You built something people buy.", // the 40px regular line; hover shows the tooltip
   tooltip: "Nice", // what you say at the bottom of a good run
   headline: "Now build the marketing to",
   headlineHighlight: "sell more", // on the highlighter band
   headlineAfter: " of it.",
-  subhead: "Growth stalls when nobody owns marketing.",
+  subhead: "Growth stalls when nobody is building your sales pipeline.",
   bullets: [
-    "Pipeline shows up when it feels like it, so the forecast is mostly hope",
+    "Pipeline is opportunistic, resulting in unreliable revenue",
     "Nobody owns the story, so everyone tells it differently",
-    "You know you'll eventually need a marketer, but not who or when",
+    "You know you need marketing support, but don't know where to start",
   ],
-  primaryCta: { label: "See what to fix first", href: `#${anchors.diagnostic}` },
-  // The second button is the booking link while site.bookingUrl is set; this is the fallback
-  secondaryCta: { label: "What you get", href: `#${anchors.deliverables}` },
   // The clickable card on the right: a picture of question 1 that opens the diagnostic popup
   card: {
     ariaLabel: "See what to fix first: start the 10-question diagnostic",
     progressLabel: "Question 1 of 10",
+    timeLabel: "About 2 min", // right of the progress label
     prompt: "Who owns marketing at your company today?",
     options: ["Nobody. Marketing, who?", "Someone, on the side", "We're about to hire for it"], // the three answers founders give most
     selectedIndex: 0, // drawn as selected
     buttonLabel: "See what to fix first",
+    footnote: "Nine more like this.", // under the button
   },
+};
+
+/* The teal bar under the hero: the category line, one sentence with a link to
+   the steps, and the page's one above-the-fold CTA, the booking link. */
+export const heroBar = {
+  heading: "Fractional marketing leadership for B2B companies.",
+  body: "I'll build your marketing function in about four months. ", // first person, like the tagline
+  link: { label: "See steps and pricing", href: `#${anchors.howItWorks}` },
+  cta: "Book 30 minutes", // the booking link; the bar hides the button while site.bookingUrl is null
 };
 
 /* ------------------------------------------------------------------ */
@@ -197,7 +205,7 @@ export const whyNow = {
       status: "Built",
       title: "Sales",
       lead: "You've perfected your pitch.",
-      body: "Awesome, and now you have real, dependable revenue.",
+      body: "Awesome, and now you have real revenue.",
       current: false,
     },
     {
@@ -221,12 +229,12 @@ export const checklist = {
   heading: "Does this sound like you?",
   subheading: "Check all that feel true to you.",
   items: [
-    "Your CRM has thousands of contacts and no way to tell which ones matter",
-    "You'd hesitate to show the board your pipeline report",
+    "Your CRM has thousands of contacts and no way to tell which ones matter ... or you have no idea what a CRM is",
+    "You'd hesitate to show the board or your investors your pipeline report",
     "Most of your wins come from referrals and personal connections, and you can't forecast either",
     "Ask five people who your ideal customer is and you'll get five answers",
     "Your website says one thing, your deck says another, and every rep says something else",
-    "You can't point to hard numbers on what's actually filling your pipeline",
+    "Without dependable pipeline, you lack dependable revenue analytics",
   ], // no closing periods: they read as list items next to the checkboxes
   // The verdict bar under the checks. {n} = checked count, {total} = items.length
   verdicts: {
@@ -549,7 +557,7 @@ export const pricing = {
     campaigns: "5-7 campaigns live", // a pink pill, like the campaign boxes in the cards
     note: "About half the cost of a senior marketer for four months, with no three-month search first.",
   },
-  // The strip's buttons: the booking link (while site.bookingUrl is set), then "Let's talk", which opens the contact popup
+  // The strip's button is the booking link. Without one (site.bookingUrl null) it falls back to this, which opens the contact popup
   ctaLabel: "Let's talk",
   // Shown while release.showLocalsNote is true
   localsNote: {
@@ -990,6 +998,7 @@ export const content = {
   logo,
   nav,
   hero,
+  heroBar,
   whyNow,
   checklist,
   howItWorks,
