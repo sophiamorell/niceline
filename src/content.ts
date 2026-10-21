@@ -695,12 +695,17 @@ export const faq = {
 export const proof = {
   kicker: "From clients",
   heading: "What clients say",
+  // A quote with `clamp: true` is cut to the height of the row's other cards,
+  // with a button to read the rest.
+  readMore: "Read more",
+  readLess: "Show less",
   testimonials: [
     {
       quote: "Sophie found me at a time when I was incredibly stressed and frustrated. Launching my own nursing practice was exciting, but I had absolutely no idea how to handle the marketing side of things. Sophie took me on as a client, and for four months, we met every single week. She invested so much time into educating me, helping me find the perfect words to describe my work, and setting up all the online tools required to promote my practice. I walked away from our sessions feeling completely at ease and energized about my business journey. Thanks to Sophie, I now have a beautiful website, an optimized Google Business profile, a solid social media strategy, and a fully professional business email and phone setup. I could never have accomplished this without her. If you are a local business owner looking for marketing support from a genuinely kind, honest human being, look no further than Sophie.",
       name: "Allison Scobie",
       title: "Founder, Flowing Rivers Health",
       logo: "/images/clients/flowing-rivers-health.png",
+      clamp: true,
     },
     {
       quote: "Sophie turned our CRM with thousands of random contacts into a pipeline machine. We now have a documented ICP, a scored pipeline, and multiple campaigns that are giving our sales team leads to win.",
@@ -714,7 +719,7 @@ export const proof = {
       title: "MondayBids.com",
       logo: "/images/clients/mondaybids.png",
     },
-  ] as { quote: string; name: string; title: string; logo: string | null }[],
+  ] as { quote: string; name: string; title: string; logo: string | null; clamp?: boolean }[],
   status: "final" as CopyStatus,
 };
 

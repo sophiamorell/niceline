@@ -2606,6 +2606,50 @@ textarea.input {
   color: var(--ink);
 }
 
+.quote__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+}
+
+/* A clamped quote has no height of its own (contain: size), so the row is
+   as tall as the other cards and this one fills what's left, fading out. */
+.quote--clamped blockquote {
+  flex: 1;
+  contain: size;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent);
+}
+
+.quote__more {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.quote__more:hover {
+  color: var(--pink);
+}
+
+/* While one card is open, the others keep their own height instead of
+   stretching to match it. */
+.quotes--open > li:not(.is-open) {
+  align-self: start;
+}
+
 .quote figcaption {
   display: flex;
   align-items: center;
