@@ -179,7 +179,7 @@ export const hero = {
 export const heroBar = {
   heading: "Fractional marketing leadership for B2B companies.",
   body: "I'll build your marketing function in about four months. ", // first person, like the tagline
-  link: { label: "See steps and pricing", href: `#${anchors.howItWorks}` },
+  link: { label: "See steps", href: `#${anchors.howItWorks}` },
   cta: "Book 30 minutes", // the booking link; the bar hides the button while site.bookingUrl is null
 };
 
