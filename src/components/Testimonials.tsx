@@ -4,10 +4,9 @@ import { mutedClass } from "@/lib/copy";
 
 /**
  * 9 · Testimonials (#testimonials): three quote cards, each opening with a
- * pink quote mark, with an 84px circular
- * photo slot (a swipeable gallery on phones, focusable so arrow keys scroll
- * it). Rendered while release.showProof is true; the quotes, names and
- * photos are the design's slots until real ones arrive.
+ * pink quote mark, with the client's logo in an 84px circle beside the name
+ * (a swipeable gallery on phones, focusable so arrow keys scroll it).
+ * Rendered while release.showProof is true.
  */
 export function Testimonials() {
   const muted = mutedClass("", proof.status);
@@ -26,8 +25,12 @@ export function Testimonials() {
               </span>
               <blockquote className={muted}>{t.quote}</blockquote>
               <figcaption>
-                <div className="quote__photo">
-                  {t.photo && <Image src={t.photo} alt="" fill sizes="84px" style={{ objectFit: "cover" }} />}
+                <div className="quote__logo">
+                  {t.logo && (
+                    <div className="quote__logo-img">
+                      <Image src={t.logo} alt="" fill sizes="52px" style={{ objectFit: "contain" }} />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <div className={["quote__name", muted].filter(Boolean).join(" ")}>{t.name}</div>

@@ -82,7 +82,7 @@ export const release = {
   version: "v1" as "v0" | "v1",
   directDiagnosticRoute: false, // /diagnostic
   showWhatYouGet: true, // the deliverables grid (titles final, bodies and screenshots pending)
-  showProof: false, // testimonials: off until real quotes arrive
+  showProof: true, // testimonials
   showPricingTerms: false, // payment terms + add-ons under the bundle row
   showLocalsNote: false, // the Durango locals footnote under the bundle row
   showPrices: false, // step prices and the total; off for now (the prices stay in pricing.steps)
@@ -695,28 +695,27 @@ export const faq = {
 export const proof = {
   kicker: "From clients",
   heading: "What clients say",
-  // TODO(sophie): real quotes, names and photos. These are the design's slots.
   testimonials: [
     {
-      quote: "Testimonial one goes here, ideally a sentence that names a number and the decision it changed.",
-      name: "Founder name",
-      title: "Title, Company",
-      photo: null as string | null,
+      quote: "Sophie found me at a time when I was incredibly stressed and frustrated. Launching my own nursing practice was exciting, but I had absolutely no idea how to handle the marketing side of things. Sophie took me on as a client, and for four months, we met every single week. She invested so much time into educating me, helping me find the perfect words to describe my work, and setting up all the online tools required to promote my practice. I walked away from our sessions feeling completely at ease and energized about my business journey. Thanks to Sophie, I now have a beautiful website, an optimized Google Business profile, a solid social media strategy, and a fully professional business email and phone setup. I could never have accomplished this without her. If you are a local business owner looking for marketing support from a genuinely kind, honest human being, look no further than Sophie.",
+      name: "Allison Scobie",
+      title: "Founder, Flowing Rivers Health",
+      logo: "/images/clients/flowing-rivers-health.png",
     },
     {
-      quote: "Testimonial two goes here: what the team does differently now, in the founder's own words.",
-      name: "Founder name",
-      title: "Title, Company",
-      photo: null as string | null,
+      quote: "Sophie turned our CRM with thousands of random contacts into a pipeline machine. We now have a documented ICP, a scored pipeline, and multiple campaigns that are giving our sales team leads to win.",
+      name: "Holly O'Hare",
+      title: "CEO, Shareable Forms",
+      logo: "/images/clients/shareable-forms.png",
     },
     {
-      quote: "Testimonial three goes here: the moment they knew it was working.",
-      name: "Founder name",
-      title: "Title, Company",
-      photo: null as string | null,
+      quote: "With Sophie, we went from a business struggling to find our spot in the market to knowing who our audience is and how to reach them. Sophie is incredibly hands-on; she really got to know our business. Each step was clear \u2013 I feel like I know our marketing inside and out. Like any small business we were worried about spending without knowing we'd get our money out of the investment, and Sophie has proven marketing was the next step we needed.",
+      name: "Founder",
+      title: "MondayBids.com",
+      logo: "/images/clients/mondaybids.png",
     },
-  ],
-  status: "placeholder" as CopyStatus,
+  ] as { quote: string; name: string; title: string; logo: string | null }[],
+  status: "final" as CopyStatus,
 };
 
 /* ------------------------------------------------------------------ */

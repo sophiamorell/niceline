@@ -2614,14 +2614,22 @@ textarea.input {
   border-top: 1px solid var(--rule);
 }
 
-.quote__photo {
-  position: relative;
+/* The logo sits whole inside the circle, inset so its corners clear the edge. */
+.quote__logo {
   flex: none;
   width: 84px;
   height: 84px;
   border-radius: 999px;
-  overflow: hidden;
-  background: var(--mist);
+  border: 1px solid var(--rule);
+  background: #fff;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.quote__logo-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .quote__name {
