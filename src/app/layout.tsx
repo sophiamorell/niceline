@@ -63,6 +63,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${slab.variable} ${head.variable} ${body.variable} ${label.variable}`}>
       <head>
+        {/* Google tag (GA4), pasted as Google Analytics supplied it. One Google
+            tag per page: add further Google products to this one, not a second
+            snippet. Unlike Umami below, it also loads on deploy previews. */}
+        <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NL5KMNFG" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+`,
+          }}
+        />
         {/* Umami analytics (cookieless). Pageviews are automatic; the quiz and
             booking events go through src/lib/track.ts. data-domains keeps
             Netlify deploy previews and local builds out of the numbers. */}
