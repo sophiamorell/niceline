@@ -60,6 +60,14 @@ verdict and score), `booking_click` (with `place`: hero, steps, footer or
 diagnostic), and Line Check's `icp_*` events. In development they log to the
 console instead.
 
+Google Analytics 4 runs alongside Umami through the Google tag
+(`GTM-NL5KMNFG`), also in the `<head>` of `src/app/layout.tsx`. It is the
+snippet exactly as Google Analytics supplied it, so it sets cookies and loads
+on deploy previews too. Keep it to one Google tag per page. `track()` sends
+the custom events above to GA4 as well, under the same names, with the props
+as event parameters. To report on a parameter in GA4 (`place`, `step`,
+`verdict`, `score`), register it there as a custom dimension or metric.
+
 ## Line Check (/line-check)
 
 A free lead-magnet tool: a founder describes their best and worst customers
