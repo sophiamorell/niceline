@@ -63,8 +63,10 @@ console instead.
 Google Analytics 4 runs alongside Umami through the Google tag
 (`GTM-NL5KMNFG`), also in the `<head>` of `src/app/layout.tsx`. It is the
 snippet exactly as Google Analytics supplied it, so it sets cookies and loads
-on deploy previews too. Keep it to one Google tag per page. The custom events
-above go to Umami only.
+on deploy previews too. Keep it to one Google tag per page. `track()` sends
+the custom events above to GA4 as well, under the same names, with the props
+as event parameters. To report on a parameter in GA4 (`place`, `step`,
+`verdict`, `score`), register it there as a custom dimension or metric.
 
 ## Line Check (/line-check)
 
