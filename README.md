@@ -86,6 +86,37 @@ with a few founders, so it isn't linked from the nav and is set to noindex.
 - Locally, the gate logs to the console instead of posting (Netlify Forms only
   exists on a deploy); the AI routes need `ANTHROPIC_API_KEY` in `.env.local`.
 
+## Durango pages (/durango/...)
+
+"Durango" shows in the header after About and in the footer, as a label with
+a location pin, not a page: hovering, focusing or clicking it opens a short
+menu of the pages under it (`nav.durango` in `src/content.ts`). Below 900px
+the header hides it with the other links, so on phones it's reached from the
+footer.
+
+`release.showDurangoNav` turns the menu on and off, in the header and footer
+together, and adds or removes the Durango pages in the sitemap. They are also
+listed by hand in `public/llms.txt`.
+
+- `/durango/will-they-find-you` is the landing page for the Durango
+  small-business packages. Its copy lives in `src/content-durango.ts`; the
+  prices, dates and lines match the printed packet, so change them in both.
+  Styles are in `src/app/durango/durango.css`.
+- The hero's browser picture has a dividing line that drags
+  (`SearchPicture`), and the packages are tabs that take one tour when they
+  scroll into view (`PackagePicker`). Both skip their motion under
+  reduced-motion.
+- "Hold a spot" and "Send Sophie a message" open the home page's contact
+  popup with this page's wording (`willTheyFindYou.contact`). It posts to the
+  same Netlify form, `contact`, with two extra fields: `phone` and `source`.
+  Messages from this page arrive with `source` set, so they are told apart
+  from the home page's in the same notification.
+- To add a page: add its route under `src/app/durango/`, then an item to
+  `nav.durango.items` and a sitemap entry.
+- The page's own header and footer button ("Hold your spot") jumps to its
+  closing card; the other header links go back to the home page's sections.
+- There is no `/durango` page yet. When there is one, make the label a link.
+
 ## Layout
 
 ```

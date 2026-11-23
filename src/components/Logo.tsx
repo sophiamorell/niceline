@@ -7,17 +7,20 @@ import { anchors, logo } from "@/content";
  * header stacks the simple white logo on it and CSS cross-fades to that one on
  * the scrolled teal bar; the footer shows the same lockup, larger. Each image
  * has the brand name as alt text; the link's label names the destination.
+ * On the home page it jumps to the top; on any other page (home false) it
+ * goes home.
  */
-export function Logo({ variant = "header" }: { variant?: "header" | "footer" }) {
+export function Logo({ variant = "header", home = true }: { variant?: "header" | "footer"; home?: boolean }) {
+  const href = home ? `#${anchors.top}` : "/";
   if (variant === "footer") {
     return (
-      <a href={`#${anchors.top}`} className="logo logo--footer" aria-label={logo.ariaLabel}>
+      <a href={href} className="logo logo--footer" aria-label={logo.ariaLabel}>
         <Image className="logo__img" src={logo.header.src} width={logo.header.width} height={logo.header.height} alt={logo.alt} />
       </a>
     );
   }
   return (
-    <a href={`#${anchors.top}`} className="logo logo--header" aria-label={logo.ariaLabel}>
+    <a href={href} className="logo logo--header" aria-label={logo.ariaLabel}>
       <Image
         className="logo__img logo__img--full"
         src={logo.header.src}

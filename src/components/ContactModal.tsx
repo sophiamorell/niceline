@@ -1,15 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { contact, site } from "@/content";
-import { CONTACT_OPEN_EVENT } from "@/lib/contact-modal";
+import { contact as homeContact, site } from "@/content";
+import { CONTACT_OPEN_EVENT, type ContactPrefill } from "@/lib/contact-modal";
 import { useDialog } from "@/lib/dialog";
 import { postForm } from "@/lib/forms";
 
 /**
  * The "Let's talk" popup, opened by openContact() (the bundle row's
- * button). Name, work email, company and a free-text note, posted to the
- * Netlify "contact" form. Required and email checks run on submit and show
+ * button) or openContactWith() (which fills in the message). Name, work
+ * email, company and a free-text note, posted to the Netlify "contact" form.
+ * Another page can pass its own wording and fields as `copy` (same shape as
+ * content.ts's `contact`, and the same Netlify form) and a `source`, sent
+ * with the submission so the notification says where it came from. Required and email checks run on submit and show
  * inline under each field; an error clears as soon as that field changes.
  * On success the dialog shows the sent state; reopening after that starts a
  * fresh form. Closes on ×, a click on the backdrop, or Escape.
@@ -20,7 +23,9 @@ type Values = Record<string, string>;
 
 const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-function validate(values: Values): Record<string, string> {
+export type ContactCopy = typeof homeContact;
+
+function validate(values: Values, contact: ContactCopy): Record<string, string> {
   const errors: Record<string, string> = {};
   for (const field of contact.fields) {
     const value = (values[field.id] ?? "").trim();
@@ -30,7 +35,7 @@ function validate(values: Values): Record<string, string> {
   return errors;
 }
 
-export function ContactModal() {
+export function ContactModal({ copy: contact = homeContact, source }: { copy?: ContactCopy; source?: string }) {
   const uid = useId();
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
@@ -50,13 +55,16 @@ export function ContactModal() {
   const close = useCallback(() => setOpen(false), []);
 
   useEffect(() => {
-    const onOpen = () => {
+    const onOpen = (event: Event) => {
       openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       if (statusRef.current === "sent") {
         setValues({});
         setErrors({});
         setStatus("idle");
       }
+      const prefill = event instanceof CustomEvent ? (event.detail as ContactPrefill | null) : null;
+      const message = prefill?.message;
+      if (message) setValues((prev) => ({ ...prev, message }));
       setOpen(true);
     };
     window.addEventListener(CONTACT_OPEN_EVENT, onOpen);
@@ -80,7 +88,7 @@ export function ContactModal() {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const found = validate(values);
+    const found = validate(values, contact);
     if (Object.keys(found).length > 0) {
       setErrors(found);
       const firstBad = contact.fields.find((field) => found[field.id]);
@@ -91,6 +99,7 @@ export function ContactModal() {
     try {
       const fields: Record<string, string> = { "form-name": contact.netlifyFormName };
       for (const field of contact.fields) fields[field.id] = (values[field.id] ?? "").trim();
+      if (source) fields.source = source;
       await postForm(fields);
       setStatus("sent");
     } catch {
@@ -157,7 +166,7 @@ export function ContactModal() {
                         ref={index === 0 ? firstFieldRef : undefined}
                         className="input"
                         type={field.type}
-                        autoComplete={field.id === "company" ? "organization" : field.id}
+                        autoComplete={field.id === "company" ? "organization" : field.id === "phone" ? "tel" : field.id}
                         onChange={(e) => set(field.id, e.target.value)}
                       />
                     )}
