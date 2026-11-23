@@ -87,6 +87,7 @@ export const release = {
   showLocalsNote: false, // the Durango locals footnote under the bundle row
   showPrices: false, // step prices and the total; off for now (the prices stay in pricing.steps)
   showExclusionsFaq: false, // until exclusions are decided
+  showDurangoNav: false, // the Durango menu in the header and footer; off while its page is unlisted
 };
 
 /* ------------------------------------------------------------------ */
@@ -141,6 +142,14 @@ export const nav = {
     { label: "What you get", href: `#${anchors.deliverables}` },
     { label: "About", href: `#${anchors.about}` },
   ],
+  // After the links, while release.showDurangoNav is true: a label with a location pin
+  // that opens a short menu. It isn't a page of its own; each item under it is. Also
+  // listed in the footer.
+  durango: {
+    label: "Durango",
+    menuLabel: "Durango pages", // the menu's accessible name
+    items: [{ label: "Will They Find You?", href: "/durango/will-they-find-you" }],
+  },
   cta: { label: "See what to fix first", href: `#${anchors.diagnostic}` }, // matches every other CTA
 };
 

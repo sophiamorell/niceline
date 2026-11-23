@@ -1,13 +1,15 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/content";
+import { release, site } from "@/content";
+import { willTheyFindYou } from "@/content-durango";
 
 /**
- * /sitemap.xml. One page today. /line-check stays out while it's a noindex
+ * /sitemap.xml. The home page, plus the Durango landing page once it is listed
+ * in the nav (release.showDurangoNav). /line-check stays out while it's a noindex
  * prototype; add it here when it leaves prototype, and each blog post when
  * there is a blog.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+  const pages: MetadataRoute.Sitemap = [
     {
       url: `https://${site.domain}/`,
       lastModified: new Date(),
@@ -15,4 +17,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
   ];
+  if (release.showDurangoNav) {
+    pages.push({
+      url: `https://${site.domain}${willTheyFindYou.path}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    });
+  }
+  return pages;
 }

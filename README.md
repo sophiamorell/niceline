@@ -86,6 +86,29 @@ with a few founders, so it isn't linked from the nav and is set to noindex.
 - Locally, the gate logs to the console instead of posting (Netlify Forms only
   exists on a deploy); the AI routes need `ANTHROPIC_API_KEY` in `.env.local`.
 
+## Durango pages (/durango/...)
+
+The Durango pages are live but unlisted for now: reachable by their address,
+not linked from the header or footer, and not in the sitemap or `llms.txt`.
+
+To list them, set `release.showDurangoNav` to `true` in `src/content.ts` (and
+add the page to `public/llms.txt`). "Durango" then shows in the header after
+About and in the footer, as a label with a location pin, not a page: hovering,
+focusing or clicking it opens a short menu of the pages under it
+(`nav.durango`). Below 900px the header hides it with the other links, so on
+phones it's reached from the footer. The sitemap picks the page up from the
+same flag.
+
+- `/durango/will-they-find-you` is the landing page for the Durango
+  small-business packages, the web version of the printed packet. Its copy
+  lives in `src/content-durango.ts`; change prices, dates and lines there and
+  in the packet together. Styles are in `src/app/durango/durango.css`.
+- To add a page: add its route under `src/app/durango/`, then an item to
+  `nav.durango.items` and a sitemap entry.
+- The page's own header and footer button ("Hold your spot") jumps to its
+  closing card; the other header links go back to the home page's sections.
+- There is no `/durango` page yet. When there is one, make the label a link.
+
 ## Layout
 
 ```

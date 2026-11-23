@@ -455,6 +455,92 @@ img {
   color: var(--ink);
 }
 
+/* The Durango menu: a pin, the label and a chevron, styled like the links.
+   It isn't a link (there's no Durango page); its pages drop down on hover,
+   on keyboard focus, or when it's clicked open (.nav__group--open). */
+.nav__group {
+  position: relative;
+}
+
+.nav__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color var(--nav-t);
+}
+
+.nav__trigger:hover,
+.nav__group:focus-within .nav__trigger,
+.nav__group--open .nav__trigger {
+  color: var(--sea-ink);
+}
+
+.nav__trigger svg {
+  flex: none;
+}
+
+.nav--scrolled .nav__trigger {
+  color: var(--on-primary);
+}
+
+.nav--scrolled .nav__trigger:hover,
+.nav--scrolled .nav__group:focus-within .nav__trigger,
+.nav--scrolled .nav__group--open .nav__trigger {
+  color: var(--mist);
+}
+
+/* The wrapper starts at the label's bottom edge and its top padding bridges
+   the gap, so the pointer can travel from the label to the list. */
+.nav__menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 10px;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 160ms var(--ease),
+    visibility 160ms var(--ease);
+}
+
+.nav__group:hover .nav__menu,
+.nav__group:focus-within .nav__menu,
+.nav__group--open .nav__menu {
+  visibility: visible;
+  opacity: 1;
+}
+
+.nav__menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+}
+
+.nav__links .nav__menu a:not(.nav__cta),
+.nav--scrolled .nav__links .nav__menu a:not(.nav__cta) {
+  display: block;
+  padding: 9px 14px;
+  border-radius: 9px;
+  color: var(--ink);
+}
+
+.nav__links .nav__menu a:not(.nav__cta):hover,
+.nav--scrolled .nav__links .nav__menu a:not(.nav__cta):hover,
+.nav__links .nav__menu a[aria-current="page"] {
+  background: var(--mist);
+  color: var(--ink);
+}
+
 /* The logo: the Nice Line Marketing lockup (SVG files in public/brand). */
 .logo {
   display: block;
@@ -513,7 +599,8 @@ img {
 }
 
 @media (max-width: 900px) {
-  .nav__links a:not(.nav__cta) {
+  .nav__links a:not(.nav__cta),
+  .nav__group {
     display: none;
   }
 }
@@ -3288,6 +3375,26 @@ textarea.input {
 
 .footer__links a:hover {
   color: var(--sea-ink);
+}
+
+/* The Durango pages: the label with its pin, then its pages, indented under it */
+.footer__group-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+}
+
+.footer__group-label svg {
+  flex: none;
+}
+
+.footer__group ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 0 0 22px;
+  display: grid;
+  gap: 8px;
 }
 
 .footer__cta-col {

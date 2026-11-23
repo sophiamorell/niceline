@@ -1,0 +1,695 @@
+/* The Durango pages (/durango/...). Built from the site's tokens in
+   globals.css: Sea Glass colours, 2px ink outlines, the echo on the browser
+   picture and the closing card only. Open columns under an ink rule instead
+   of boxes, like the printed packet. Copy comes from content-durango.ts. */
+
+.dgo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dgo-intro {
+  color: var(--ink-2);
+  margin-bottom: 24px;
+}
+
+.dgo-h3 {
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 28px 0 10px;
+}
+
+.dgo-h3--first {
+  margin-top: 0;
+}
+
+.dgo-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Hero: the words, then the search picture beside them on wide screens */
+.dgo-hero {
+  padding-top: clamp(40px, 6vw, 72px);
+  display: grid;
+  gap: clamp(32px, 5vw, 56px);
+  align-items: center;
+}
+
+@media (min-width: 1040px) {
+  .dgo-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  }
+}
+
+.dgo-hero__headline {
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+}
+
+.dgo-hero__body {
+  margin: 18px 0 28px;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+
+/* The browser picture -------------------------------------------------- */
+
+.dgo-browser {
+  margin: 0 12px 12px 0; /* room for the echo */
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--echo);
+  color: var(--ink);
+}
+
+.dgo-browser__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  background: var(--desk);
+  border-bottom: 2px solid var(--ink);
+}
+
+.dgo-browser__dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+}
+
+.dgo-browser__dot--pink {
+  background: var(--pink);
+}
+
+.dgo-browser__dot--sun {
+  background: var(--sunflower);
+}
+
+.dgo-browser__dot--mist {
+  background: var(--mist);
+}
+
+.dgo-browser__address {
+  flex: 1;
+  height: 16px;
+  margin-left: 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1.5px solid var(--ink);
+}
+
+.dgo-browser__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+}
+
+.dgo-browser__wordmark {
+  font-family: var(--fm-head);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.dgo-browser__field {
+  flex: 0 1 420px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.dgo-browser__field svg {
+  flex: none;
+}
+
+.dgo-split {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 2px solid var(--ink);
+}
+
+.dgo-split__half {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 18px;
+}
+
+.dgo-split__half--today {
+  padding-right: 28px;
+  background: var(--desk);
+  border-right: 2px solid var(--ink);
+}
+
+.dgo-split__half--spring {
+  padding-left: 28px;
+}
+
+/* The slider handle on the dividing line */
+.dgo-split__handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+}
+
+.dgo-chip {
+  align-self: flex-start;
+  font-family: var(--fm-label);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  border: 1.5px solid var(--ink-2);
+  border-radius: 999px;
+  padding: 3px 12px;
+}
+
+.dgo-chip--sun {
+  color: var(--ink);
+  background: var(--sunflower);
+  border-color: var(--ink);
+}
+
+.dgo-result {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dgo-result__title {
+  display: block;
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 17px;
+  color: var(--sea-ink);
+}
+
+.dgo-result__detail {
+  display: block;
+  font-size: 12.5px;
+  line-height: 17px;
+  color: var(--ink-2);
+}
+
+/* Your business today: way down the list */
+.dgo-result--buried {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 7px 10px;
+  background: var(--ground);
+  border: 2px dashed var(--pink);
+  border-radius: 10px;
+}
+
+.dgo-result--buried .dgo-result__title {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.dgo-result__tag {
+  flex: none;
+  font-family: var(--fm-label);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--pink-light);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+/* Your business by spring: the first result */
+.dgo-listing {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  background: var(--mist);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+}
+
+.dgo-listing__title {
+  font-family: var(--fm-head);
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.dgo-listing__detail {
+  font-size: 12.5px;
+  line-height: 17px;
+}
+
+.dgo-listing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.dgo-pill {
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.dgo-pill--sun {
+  background: var(--sunflower);
+}
+
+/* Phones: today above, by spring below */
+@media (max-width: 560px) {
+  .dgo-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dgo-split__half--today {
+    padding-right: 18px;
+    border-right: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .dgo-split__half--spring {
+    padding-left: 18px;
+  }
+  .dgo-split__handle {
+    display: none;
+  }
+  .dgo-browser__wordmark {
+    display: none;
+  }
+}
+
+/* The three packages side by side --------------------------------------- */
+
+.dgo-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 2px solid var(--ink);
+  padding-top: 22px;
+}
+
+.dgo-summary__col {
+  padding: 0 24px;
+  border-left: 1px solid rgba(29, 42, 41, 0.3);
+}
+
+.dgo-summary__col:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.dgo-summary__col:last-child {
+  padding-right: 0;
+}
+
+.dgo-summary__name {
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.dgo-summary__price {
+  font-family: var(--fm-head);
+  font-weight: 800;
+  font-size: 2.1rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.dgo-summary__pay {
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.dgo-summary__text {
+  margin-top: 10px;
+}
+
+.dgo-summary__link {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--fm-head);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .dgo-summary {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 0;
+  }
+  .dgo-summary__col,
+  .dgo-summary__col:first-child,
+  .dgo-summary__col:last-child {
+    padding: 20px 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+/* Each package in full --------------------------------------------------- */
+
+.dgo-packages {
+  display: grid;
+  gap: clamp(44px, 6vw, 72px);
+}
+
+.dgo-package {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 330px);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+  border-top: 2px solid var(--ink);
+  padding-top: 28px;
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+
+.dgo-package__name {
+  font-size: clamp(2.1rem, 4vw, 3.1rem);
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.dgo-package__promise {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  max-width: 50ch;
+}
+
+.dgo-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  max-width: 62ch;
+  color: var(--ink-2);
+}
+
+.dgo-list--dots li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--ink);
+}
+
+.dgo-list--dots li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--pink);
+  border: 1.5px solid var(--ink);
+}
+
+.dgo-list--checks li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.dgo-list--checks svg {
+  flex: none;
+  margin-top: 5px;
+  color: var(--primary);
+}
+
+.dgo-list--checks strong {
+  color: var(--ink);
+}
+
+/* The numbers: price, timeline and ways to pay */
+.dgo-panel {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+}
+
+.dgo-panel > div + div {
+  border-top: 1px solid rgba(29, 42, 41, 0.3);
+  padding-top: 18px;
+}
+
+.dgo-panel__label {
+  font-family: var(--fm-label);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.dgo-panel__price {
+  font-family: var(--fm-head);
+  font-weight: 800;
+  font-size: 2.6rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.dgo-panel__note {
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.dgo-steps {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.dgo-steps dt {
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.dgo-steps dd {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.dgo-panel__deposit {
+  margin-bottom: 10px;
+}
+
+.dgo-pays {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.dgo-pays li {
+  display: grid;
+}
+
+.dgo-pays strong {
+  font-family: var(--fm-head);
+  font-weight: 800;
+  font-size: 1.0625rem;
+}
+
+.dgo-pays span {
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+@media (max-width: 860px) {
+  .dgo-package {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Care plans and add-ons ------------------------------------------------- */
+
+.dgo-block {
+  border-top: 2px solid var(--ink);
+  padding-top: 22px;
+  margin-top: 32px;
+}
+
+.dgo-plans {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.dgo-plans__col {
+  padding: 0 18px;
+  border-left: 1px solid rgba(29, 42, 41, 0.3);
+}
+
+.dgo-plans__col:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.dgo-plans__name {
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+}
+
+.dgo-plans__price {
+  font-family: var(--fm-head);
+  font-weight: 800;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.dgo-plans__price span {
+  margin-left: 4px;
+  font-family: var(--fm-body);
+  font-weight: 400;
+  font-size: 14.5px;
+  letter-spacing: 0;
+  color: var(--ink-2);
+}
+
+.dgo-plans__detail {
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .dgo-plans {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 0;
+  }
+  .dgo-plans__col:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .dgo-plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dgo-plans__col {
+    padding: 0;
+    border-left: 0;
+  }
+}
+
+.dgo-addons {
+  list-style: none;
+  padding: 0;
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 36px;
+}
+
+.dgo-addons li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.dgo-addons strong {
+  white-space: nowrap;
+}
+
+.dgo-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 36px;
+  color: var(--ink-2);
+}
+
+.dgo-notes h3 {
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+@media (max-width: 760px) {
+  .dgo-addons,
+  .dgo-notes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Hold your spot ---------------------------------------------------------- */
+
+.dgo-spot {
+  margin: 0 16px 16px 0; /* room for the echo */
+  padding: clamp(28px, 5vw, 52px);
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 24px;
+  box-shadow: var(--echo-lg);
+}
+
+.dgo-spot__heading {
+  font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.dgo-spot__body {
+  margin: 10px 0 26px;
+  font-size: 1.2rem;
+  color: var(--ink-2);
+}
+
+.dgo-spot__signoff {
+  margin-top: 22px;
+  font-size: 15px;
+  color: var(--muted);
+}
