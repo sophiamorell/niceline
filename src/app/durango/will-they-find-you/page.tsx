@@ -3,6 +3,7 @@ import { willTheyFindYou } from "@/content-durango";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { WillTheyFindYou } from "@/components/durango/WillTheyFindYou";
+import { ContactModal } from "@/components/ContactModal";
 import "../durango.css";
 
 /**
@@ -12,7 +13,8 @@ import "../durango.css";
  *
  * Shares the site header and footer. Here their links point back to the home
  * page's sections, and the button holds a spot instead of opening the B2B
- * diagnostic.
+ * diagnostic. The contact popup is the home page's, with this page's wording;
+ * it posts to the same Netlify form.
  */
 export const metadata: Metadata = {
   title: willTheyFindYou.meta.title,
@@ -29,6 +31,7 @@ export default function WillTheyFindYouPage() {
         <WillTheyFindYou />
       </main>
       <Footer home={false} cta={willTheyFindYou.navCta} />
+      <ContactModal copy={willTheyFindYou.contact} source={willTheyFindYou.contact.source} />
     </div>
   );
 }

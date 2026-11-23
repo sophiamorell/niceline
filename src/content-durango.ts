@@ -1,7 +1,7 @@
 /**
  * Every word on /durango/will-they-find-you, the landing page for the Durango
- * small-business packages. It mirrors the printed "Will they find you?"
- * packet: change a price, a date or a line here and in the packet together.
+ * small-business packages. Prices, dates and lines match the printed "Will
+ * they find you?" packet: change them here and in the packet together.
  *
  * Components carry no copy of their own (same rule as content.ts).
  */
@@ -9,15 +9,12 @@
 const phone = { display: "(404) 861-9411", tel: "+14048619411" };
 
 export type DurangoPackage = {
-  id: string; // the section anchor
+  id: string; // the tab and panel ids
   name: string;
   price: string;
-  payLine: string; // under the price in the summary strip
-  summary: string; // one sentence in the summary strip
-  promise: string; // under the name in the detail block
-  ifs: string[]; // "Sounds like you if..."
+  tabLine: string; // under the price on the tab
+  promise: string; // under the name in the panel
   gets: { lead: string; rest: string }[]; // "What you get.": bold lead, then the rest
-  steps: { when: string; what: string }[]; // "How it goes"
   deposit: string; // "{deposit} holds your spot. Then pick one:"
   pays: { amount: string; note: string }[];
 };
@@ -38,13 +35,16 @@ export const willTheyFindYou = {
     headlineLines: ["Your customers are searching.", "Will they "],
     headlineHighlight: "find you?", // on the highlighter band, ends the second line
     body: "We build your website, fix your Google listing and keep both fresh.",
-    primary: { label: "See the packages", href: "#packages" },
+    priceLine: "Three fixed prices, from $1,250.",
+    primary: { label: "Pick a package", href: "#packages" },
     secondary: { label: `Text or call ${phone.display}`, href: `tel:${phone.tel}` },
   },
 
-  // The browser picture: one search, today on the left and by spring on the right
+  // The browser picture: one search, today on the left and by spring on the right.
+  // The line between them drags.
   visual: {
-    label: "A search results page: today your business is on page 2; by spring it is the first result, with a Book online button.",
+    label: "A search results page. Today your business is on page 2. By spring it is the first result, with a Book online button.",
+    sliderLabel: "Drag to compare today with by spring",
     wordmark: "Search",
     query: "what you do, near me",
     today: {
@@ -63,21 +63,16 @@ export const willTheyFindYou = {
     },
   },
 
-  packagesIntro: {
-    heading: "We'll get you found and booked.",
-    body: "Pick a package.",
-    detailLink: "See what's included",
-  },
-
-  packageLabels: {
-    kicker: "Package {n} of 3",
-    ifs: "Sounds like you if...",
+  picker: {
+    heading: "Pick a package.",
+    tabsLabel: "Packages", // the tab list's accessible name
     gets: "What you get.",
-    price: "Price",
     priceNote: "through December 31",
-    steps: "How it goes",
     pays: "Ways to pay",
     deposit: "{deposit} holds your spot. Then pick one:",
+    cta: "Hold a spot for {deposit}",
+    // What the button puts in the contact popup's message box
+    ctaMessage: "I'd like to hold a spot for {name}.",
   },
 
   packages: [
@@ -85,14 +80,8 @@ export const willTheyFindYou = {
       id: "get-found",
       name: "Get Found",
       price: "$1,250",
-      payLine: "or $350 down, then $300/mo",
-      summary: "One-page site and Google listing, live in 2 weeks.",
+      tabLine: "One-page site and Google listing, live in 2 weeks.",
       promise: "You show up when people search, with a real one-page website on your own domain.",
-      ifs: [
-        "Customers mainly find you by word of mouth or referral.",
-        "When people search your name, they land on a directory or another site you don't control.",
-        "You may have a Facebook page or Instagram account, but no website where people can learn more, buy or book.",
-      ],
       gets: [
         { lead: "A one-page website", rest: "on your own domain, with your hours, map, services and contact info." },
         { lead: "Google Business Profile", rest: "set up, verified and filled out." },
@@ -100,12 +89,6 @@ export const willTheyFindYou = {
         { lead: "A review kit:", rest: "counter card with QR code, plus text and email templates." },
         { lead: "Words written for you.", rest: "Send a few photos and we'll do the rest." },
         { lead: "Hosting and care", rest: "for the first month, then $49 a month." },
-      ],
-      steps: [
-        { when: "Day 1", what: "A virtual or in-person meeting. You send photos and your hours." },
-        { when: "Week 1", what: "Google profile claimed and filled out. Listings fixed." },
-        { when: "Week 2", what: "Your site is written, built and checked on your phone." },
-        { when: "Launch", what: "Live on your domain, plus a 15-minute handoff." },
       ],
       deposit: "$350",
       pays: [
@@ -117,14 +100,8 @@ export const willTheyFindYou = {
       id: "front-door",
       name: "Front Door",
       price: "$3,900",
-      payLine: "or $1,000 down, then $484/mo",
-      summary: "Up to 6 pages with booking or a quote form, in 4 weeks.",
+      tabLine: "Up to 6 pages with booking or a quote form, in 4 weeks.",
       promise: "A full website where people can book, schedule or ask for a quote, and you can update it yourself.",
-      ifs: [
-        "Your reviews are great, but other businesses show up in search before you.",
-        "New customers have to call to schedule or ask what you offer.",
-        "You quote and book by phone and email, and your site (if you have one) is dated.",
-      ],
       gets: [
         { lead: "Up to 6 pages,", rest: "built mobile-first." },
         { lead: "Words written for you", rest: "from a one-hour interview." },
@@ -132,12 +109,6 @@ export const willTheyFindYou = {
         { lead: "One add-on included:", rest: "online booking, a quote form or shop buttons." },
         { lead: "Edit it yourself", rest: "from a simple form, or text us the change." },
         { lead: "Everything in Get Found:", rest: "Google profile, listings and the review kit." },
-      ],
-      steps: [
-        { when: "Week 1", what: "Interview and photos. Google profile goes live." },
-        { when: "Week 2", what: "You review the words and a first look at the design." },
-        { when: "Week 3", what: "Full site and your add-on, ready to try on your phone." },
-        { when: "Week 4", what: "Launch, a 30-minute handoff and your review kit." },
       ],
       deposit: "$1,000",
       pays: [
@@ -150,14 +121,8 @@ export const willTheyFindYou = {
       id: "full-season",
       name: "Full Season",
       price: "$6,900",
-      payLine: "or $1,750 down, then $859/mo",
-      summary: "Up to 10 pages, online booking and 3 months of marketing.",
+      tabLine: "Up to 10 pages, online booking and 3 months of marketing.",
       promise: "A full website with online reservations before the rush, then 3 months of marketing done for you.",
-      ifs: [
-        "Guests can only reserve by phone or through an online form.",
-        "Booking sites send you guests, then keep a cut of every stay.",
-        "Your busy season starts in spring, and the website has to be ready first.",
-      ],
       gets: [
         { lead: "Up to 10 pages plus a blog,", rest: "built mobile-first." },
         { lead: "Online booking or reservations,", rest: "connected to your system or one we set up." },
@@ -165,12 +130,6 @@ export const willTheyFindYou = {
         { lead: "Words and photos", rest: "from an interview and an on-site shoot." },
         { lead: "Everything in Get Found:", rest: "Google profile, listings and the review kit." },
         { lead: "3 months of marketing:", rest: "weekly Google posts, 2 blog posts a month, a newsletter and review follow-up." },
-      ],
-      steps: [
-        { when: "Weeks 1-2", what: "Interview, photos and your booking system set up." },
-        { when: "Weeks 3-5", what: "Site built. You review it and test a booking." },
-        { when: "Week 6", what: "Launch, a 30-minute handoff and your review kit." },
-        { when: "Months 1-3", what: "Posts, blog, newsletter and reviews, done for you." },
       ],
       deposit: "$1,750",
       pays: [
@@ -182,11 +141,9 @@ export const willTheyFindYou = {
   ] as DurangoPackage[],
 
   care: {
-    kicker: "After launch",
-    headingBefore: "We keep it ",
+    headingBefore: "After launch, we keep it ",
     headingHighlight: "fresh.",
     body: "Every site comes with hosting and a care plan, so it never goes stale or expires. Your first month is included.",
-    plansHeading: "Care plans.",
     perMonth: "/mo",
     plans: [
       { name: "Starter", price: "$49", detail: "Hosting and SSL certificate." },
@@ -194,33 +151,49 @@ export const willTheyFindYou = {
       { name: "Plus", price: "$299", detail: "Up to 2 hours of consulting or web edits, 2 posts a month and analytics." },
       { name: "Growth", price: "$599", detail: "Up to 2 hours of consulting or web edits, 4 posts a month and analytics." },
     ],
-    addOnsHeading: "Add-ons, any package.",
-    addOns: [
-      { name: "Online booking or reservations", price: "$800" },
-      { name: "Online ordering", price: "$800" },
-      { name: "3 posts per month", price: "$900" },
-      { name: "Email list", price: "$900" },
-      { name: "Social media setup and campaign", price: "$650/platform" },
-      { name: "Custom work", price: "Quoted" },
-    ],
-    notes: [
-      {
-        heading: "Posts that bring in business.",
-        body: "Each post is written to show up on Google and in AI answers like ChatGPT (SEO and AEO), so more searches end at your site. You can update your own site any time.",
-      },
-      {
-        heading: "The fine print.",
-        body: "Deposit due by December 31, refundable until we start. Monthly payments begin the month your project starts. Leave any time after 12 months with a full copy of your site. Your domain always stays in your name.",
-      },
-    ],
+    addOnsLabel: "Add-ons:",
+    addOns:
+      "online booking or reservations $800 · online ordering $800 · 3 posts per month $900 · email list $900 · social media setup and campaign $650/platform · custom work, quoted.",
+    finePrint:
+      "Deposit due by December 31, refundable until we start. Monthly payments begin the month your project starts. Leave any time after 12 months with a full copy of your site. Your domain always stays in your name.",
   },
 
   spot: {
     heading: "12 spots at these prices.",
     body: "First come, first served. Sign by December 31.",
     primary: { label: `Text or call ${phone.display}`, href: `tel:${phone.tel}` },
-    // The email button: site.email with this subject line
-    email: { label: "Email Sophie", subject: "Will they find you?" },
-    signOff: "Sophie Williams · Nice Line Marketing · Durango, Colorado",
+    message: "Send Sophie a message", // opens the contact popup
+  },
+
+  // The contact popup on this page. It posts to the same Netlify form as the home
+  // page's popup ("contact"), so its notifications go to the same place; the
+  // field ids must stay within that form's fields in public/__forms.html.
+  contact: {
+    netlifyFormName: "contact",
+    source: "Durango: Will they find you?", // sent with the message, so the notification says where it came from
+    closeLabel: "Close",
+    kicker: "Hold your spot",
+    heading: "Tell me about your business.",
+    fields: [
+      { id: "name", label: "Name", type: "text", required: true },
+      { id: "company", label: "Business", type: "text", required: false },
+      { id: "email", label: "Email", type: "email", required: true },
+      { id: "phone", label: "Phone (optional)", type: "tel", required: false },
+      { id: "message", label: "What do you need?", type: "textarea", required: false },
+    ],
+    errors: {
+      required: "Please fill this in.",
+      email: "That email doesn't look right.",
+    },
+    submitLabel: "Send to Sophie",
+    sendingLabel: "Sending…",
+    sendFailed: "That didn't send. Email {email} directly.",
+    sent: {
+      kicker: "Sent",
+      heading: "Thanks. I'll be in touch.",
+      sub: "Expect a reply within two business days.",
+      signOff: "Talk soon, Sophie",
+      closeLabel: "Close",
+    },
   },
 };

@@ -100,9 +100,18 @@ phones it's reached from the footer. The sitemap picks the page up from the
 same flag.
 
 - `/durango/will-they-find-you` is the landing page for the Durango
-  small-business packages, the web version of the printed packet. Its copy
-  lives in `src/content-durango.ts`; change prices, dates and lines there and
-  in the packet together. Styles are in `src/app/durango/durango.css`.
+  small-business packages. Its copy lives in `src/content-durango.ts`; the
+  prices, dates and lines match the printed packet, so change them in both.
+  Styles are in `src/app/durango/durango.css`.
+- The hero's browser picture has a dividing line that drags
+  (`SearchPicture`), and the packages are tabs that take one tour when they
+  scroll into view (`PackagePicker`). Both skip their motion under
+  reduced-motion.
+- "Hold a spot" and "Send Sophie a message" open the home page's contact
+  popup with this page's wording (`willTheyFindYou.contact`). It posts to the
+  same Netlify form, `contact`, with two extra fields: `phone` and `source`.
+  Messages from this page arrive with `source` set, so they are told apart
+  from the home page's in the same notification.
 - To add a page: add its route under `src/app/durango/`, then an item to
   `nav.durango.items` and a sitemap entry.
 - The page's own header and footer button ("Hold your spot") jumps to its
