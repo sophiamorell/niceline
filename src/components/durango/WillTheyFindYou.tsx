@@ -24,8 +24,9 @@ export function WillTheyFindYou() {
             {hero.headlineLines[1]}
             <span className="highlight">{hero.headlineHighlight}</span>
           </h1>
-          <p className="dgo-hero__body">{hero.body}</p>
-          <p className="dgo-hero__price">{hero.priceLine}</p>
+          <p className="dgo-hero__body">
+            {hero.body} <strong>{hero.priceLine}</strong>
+          </p>
           <div className="dgo-actions">
             <a href={hero.primary.href} className="button button--primary">
               {hero.primary.label}
@@ -71,8 +72,9 @@ export function WillTheyFindYou() {
 
       <section id="spot" className="section" aria-labelledby="dgo-spot-heading">
         <div className="dgo-spot">
-          <h2 id="dgo-spot-heading" className="dgo-spot__heading">
-            {spot.heading}
+          <h2 id="dgo-spot-heading" className="dgo-spot__heading" aria-label={spot.headingLabel}>
+            <s className="dgo-was">{spot.headingWas}</s> {spot.headingNow}
+            {spot.headingAfter}
           </h2>
           <p className="dgo-spot__body">{spot.body}</p>
           <div className="dgo-actions">
