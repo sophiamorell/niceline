@@ -172,9 +172,13 @@
 }
 
 /* Today | by spring. The first column is as wide as the dividing line's
-   position (--dgo-pos, set by the range input); each side keeps its own
-   width inside and is cut off at the line, so dragging uncovers more of one. */
+   position (--dgo-pos, set by the range input). Inside, each side is never
+   narrower than half the picture (50cqw: the split is a size container), so
+   a side that's being squeezed is cut off at its edge instead of re-wrapping.
+   Nothing in either side wraps, so the picture keeps one height as the line
+   moves. */
 .dgo-split {
+  container-type: inline-size;
   position: relative;
   display: grid;
   grid-template-columns: var(--dgo-pos, 50%) minmax(0, 1fr);
@@ -195,12 +199,13 @@
   flex-direction: column;
   gap: 8px;
   height: 100%;
-  min-width: 262px;
-  padding: 14px 26px 14px 18px;
+  min-width: calc(50cqw - 2px); /* the line itself is 2px of this side */
+  padding: 14px 22px 14px 18px;
 }
 
 .dgo-split__half--spring .dgo-split__inner {
-  padding: 14px 18px 14px 26px;
+  min-width: 50cqw;
+  padding: 14px 14px 14px 22px;
 }
 
 /* The handle on the dividing line: a picture of where to grab */
@@ -316,6 +321,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
+  overflow: hidden; /* on a narrow picture the last button is cut off, not wrapped */
   padding: 10px 12px;
   background: var(--mist);
   border: 2px solid var(--ink);
@@ -337,8 +343,7 @@
 
 .dgo-listing__actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   margin-top: 5px;
 }
 
@@ -348,10 +353,11 @@
   font-size: 12px;
   line-height: 16px;
   white-space: nowrap;
+  flex: none;
   background: var(--surface);
   border: 2px solid var(--ink);
   border-radius: 999px;
-  padding: 4px 10px;
+  padding: 4px 8px;
 }
 
 .dgo-pill--sun {
@@ -371,6 +377,9 @@
   .dgo-split__half--spring .dgo-split__inner {
     min-width: 0;
     padding: 14px 18px;
+  }
+  .dgo-listing__actions {
+    flex-wrap: wrap;
   }
   .dgo-result__title,
   .dgo-result__detail,

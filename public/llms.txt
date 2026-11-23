@@ -20,6 +20,7 @@ Tagline: People buy what you built. I'll help you sell more of it.
 ## Pages
 
 - [Home](https://niceline.marketing/): the program, what you get, about Sophie, FAQ, and the free 10-question diagnostic ("See what to fix first").
+- [Will they find you?](https://niceline.marketing/durango/will-they-find-you): three fixed-price website and local marketing packages for Durango small businesses (Get Found $1,250, Front Door $3,900, Full Season $6,900), plus care plans and add-ons.
 - [Sitemap](https://niceline.marketing/sitemap.xml)
 
 ## About Sophie Williams

@@ -88,16 +88,15 @@ with a few founders, so it isn't linked from the nav and is set to noindex.
 
 ## Durango pages (/durango/...)
 
-The Durango pages are live but unlisted for now: reachable by their address,
-not linked from the header or footer, and not in the sitemap or `llms.txt`.
+"Durango" shows in the header after About and in the footer, as a label with
+a location pin, not a page: hovering, focusing or clicking it opens a short
+menu of the pages under it (`nav.durango` in `src/content.ts`). Below 900px
+the header hides it with the other links, so on phones it's reached from the
+footer.
 
-To list them, set `release.showDurangoNav` to `true` in `src/content.ts` (and
-add the page to `public/llms.txt`). "Durango" then shows in the header after
-About and in the footer, as a label with a location pin, not a page: hovering,
-focusing or clicking it opens a short menu of the pages under it
-(`nav.durango`). Below 900px the header hides it with the other links, so on
-phones it's reached from the footer. The sitemap picks the page up from the
-same flag.
+`release.showDurangoNav` turns the menu on and off, in the header and footer
+together, and adds or removes the Durango pages in the sitemap. They are also
+listed by hand in `public/llms.txt`.
 
 - `/durango/will-they-find-you` is the landing page for the Durango
   small-business packages. Its copy lives in `src/content-durango.ts`; the

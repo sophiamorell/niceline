@@ -87,7 +87,7 @@ export const release = {
   showLocalsNote: false, // the Durango locals footnote under the bundle row
   showPrices: false, // step prices and the total; off for now (the prices stay in pricing.steps)
   showExclusionsFaq: false, // until exclusions are decided
-  showDurangoNav: false, // the Durango menu in the header and footer; off while its page is unlisted
+  showDurangoNav: true, // the Durango menu in the header and footer, and its pages in the sitemap
 };
 
 /* ------------------------------------------------------------------ */
