@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { willTheyFindYou as page } from "@/content-durango";
 import { fill } from "@/lib/copy";
 import { openContactWith } from "@/lib/contact-modal";
@@ -14,8 +14,8 @@ const TOUR_STEP_MS = 3600;
  * the chosen package in full underneath.
  *
  * To show that the tabs switch, the picker takes one tour when it scrolls
- * into view: each package in turn, with a bar filling along the tab that's
- * showing, then back to the first. Hovering, focusing or clicking anywhere
+ * into view: each package in turn, with pink, sunflower and mist bars (the
+ * logo's echo) filling along the tab that's showing, then back to the first. Hovering, focusing or clicking anywhere
  * in the picker ends the tour for good, and reduced-motion skips it. The
  * panel eases in on every change (durango.css).
  *
@@ -106,7 +106,13 @@ export function PackagePicker() {
               <span className="dgo-tab__name">{p.name}</span>
               <span className="dgo-tab__price">{p.price}</span>
               <span className="dgo-tab__line">{p.tabLine}</span>
-              {selected && touring && <span className="dgo-tab__progress" style={{ animationDuration: `${TOUR_STEP_MS}ms` }} />}
+              {selected && touring && (
+                <span className="dgo-tab__progress" style={{ "--dgo-step": `${TOUR_STEP_MS}ms` } as CSSProperties}>
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              )}
             </button>
           );
         })}

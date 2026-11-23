@@ -35,7 +35,7 @@ export const willTheyFindYou = {
     headlineLines: ["Your customers are searching.", "Will they "],
     headlineHighlight: "find you?", // on the highlighter band, ends the second line
     body: "We build your website, fix your Google listing and keep both fresh.",
-    priceLine: "Three fixed prices, from $1,250.",
+    priceLine: "Three fixed prices, from $1,250.", // bold, on the end of the body line
     primary: { label: "Pick a package", href: "#packages" },
     secondary: { label: `Text or call ${phone.display}`, href: `tel:${phone.tel}` },
   },

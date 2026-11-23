@@ -74,17 +74,15 @@
 }
 
 .dgo-hero__body {
-  margin-top: 18px;
+  margin: 18px 0 28px;
   font-size: 1.2rem;
   line-height: 1.45;
   color: var(--ink-2);
   max-width: 44ch;
 }
 
-.dgo-hero__price {
-  margin: 6px 0 28px;
-  font-size: 1.2rem;
-  font-weight: 700;
+.dgo-hero__body strong {
+  color: var(--ink);
 }
 
 /* The browser picture -------------------------------------------------- */
@@ -408,7 +406,7 @@
   display: grid;
   align-content: start;
   gap: 2px;
-  padding: 16px 18px 20px;
+  padding: 16px 18px 26px;
   text-align: left;
   font: inherit;
   color: var(--ink);
@@ -454,24 +452,51 @@
   color: var(--ink);
 }
 
-/* The opening tour's timer: fills along the bottom of the tab that's showing */
+/* The opening tour's timer, along the bottom of the tab that's showing: the
+   logo's ribbon and its two echoes. Three bars grow along an ink line, pink
+   out in front, sunflower behind it and mist behind that, each with an ink
+   edge. --dgo-step is the time one package shows (set by PackagePicker). */
 .dgo-tab__progress {
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 5px;
-  background: var(--ink);
-  transform-origin: left;
-  animation: dgo-progress linear both;
+  height: 12px;
+  border-top: 2px solid var(--ink);
+  background: var(--surface);
+}
+
+.dgo-tab__progress span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  border-right: 2px solid var(--ink);
+  animation: dgo-progress var(--dgo-step, 3600ms) linear both;
+}
+
+.dgo-tab__progress span:nth-child(1) {
+  --dgo-reach: 100%;
+  background: var(--pink);
+}
+
+.dgo-tab__progress span:nth-child(2) {
+  --dgo-reach: 93%;
+  background: var(--sunflower);
+}
+
+.dgo-tab__progress span:nth-child(3) {
+  --dgo-reach: 86%;
+  background: var(--mist);
 }
 
 @keyframes dgo-progress {
   from {
-    transform: scaleX(0);
+    width: 0;
   }
   to {
-    transform: scaleX(1);
+    width: var(--dgo-reach);
   }
 }
 

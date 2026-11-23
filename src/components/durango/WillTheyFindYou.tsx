@@ -24,8 +24,9 @@ export function WillTheyFindYou() {
             {hero.headlineLines[1]}
             <span className="highlight">{hero.headlineHighlight}</span>
           </h1>
-          <p className="dgo-hero__body">{hero.body}</p>
-          <p className="dgo-hero__price">{hero.priceLine}</p>
+          <p className="dgo-hero__body">
+            {hero.body} <strong>{hero.priceLine}</strong>
+          </p>
           <div className="dgo-actions">
             <a href={hero.primary.href} className="button button--primary">
               {hero.primary.label}
