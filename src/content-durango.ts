@@ -159,7 +159,11 @@ export const willTheyFindYou = {
   },
 
   spot: {
-    heading: "12 spots at these prices.",
+    // "{was} {now} spots at these prices.", with {was} struck through: one spot is taken
+    headingWas: "12",
+    headingNow: "11",
+    headingAfter: " spots at these prices.",
+    headingLabel: "11 of 12 spots left at these prices.", // what screen readers hear
     body: "First come, first served. Sign by December 31.",
     primary: { label: `Text or call ${phone.display}`, href: `tel:${phone.tel}` },
     message: "Send Sophie a message", // opens the contact popup

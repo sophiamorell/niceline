@@ -708,6 +708,12 @@
   line-height: 1.1;
 }
 
+/* The spot count that's gone: struck through and faded */
+.dgo-was {
+  text-decoration-thickness: 0.09em;
+  opacity: 0.55;
+}
+
 .dgo-spot__body {
   margin: 10px 0 26px;
   font-size: 1.2rem;

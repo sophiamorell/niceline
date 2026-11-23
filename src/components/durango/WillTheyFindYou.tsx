@@ -72,8 +72,9 @@ export function WillTheyFindYou() {
 
       <section id="spot" className="section" aria-labelledby="dgo-spot-heading">
         <div className="dgo-spot">
-          <h2 id="dgo-spot-heading" className="dgo-spot__heading">
-            {spot.heading}
+          <h2 id="dgo-spot-heading" className="dgo-spot__heading" aria-label={spot.headingLabel}>
+            <s className="dgo-was">{spot.headingWas}</s> {spot.headingNow}
+            {spot.headingAfter}
           </h2>
           <p className="dgo-spot__body">{spot.body}</p>
           <div className="dgo-actions">
